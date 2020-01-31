@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="6dp"
+        android:weightSum="6">
+
+        <TextView
+            android:id="@+id/song_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3.85"
+            android:paddingLeft="12dp"
+            android:textIsSelectable="true"
+            android:text="Title"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/song_chord"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.8"
+            android:inputType="textCapSentences"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
+
+        <ToggleButton
+            android:id="@+id/toggleButton_song_detail"
+            android:layout_width="0dp"
+            android:layout_height="25dp"
+            android:layout_weight="1.25"
+            android:background="@drawable/rounded_toggle_button"
+            android:textOff="열기"
+            android:textOn="닫기" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_layout_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+    </LinearLayout>
+
+
+</LinearLayout>
+

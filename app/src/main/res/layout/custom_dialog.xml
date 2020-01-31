@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/rounded_dialog"
+    android:orientation="vertical"
+    android:layout_margin="10dp"
+    android:padding="10dp"
+    android:weightSum="10">
+
+    <EditText
+        android:id="@+id/editText_dialog_explanation"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="8.5"
+        android:autoLink="web"
+        android:gravity="left"
+        android:hint="세부콘티"
+        android:textColor="@android:color/black"
+        android:textSize="15sp"
+        android:overScrollMode="ifContentScrolls"
+        android:padding="15dp" />
+
+    <TextView
+        android:id="@+id/textView_dialog_explanation"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="8.5"
+        android:autoLink="web"
+        android:textIsSelectable="false"
+        android:textColor="@android:color/black"
+        android:textSize="15sp"
+        android:gravity="left"
+        android:overScrollMode="ifContentScrolls"
+        android:padding="15dp"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.5"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_dialog_save"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:background="@drawable/rounded_button"
+            android:layout_marginRight="5dp"
+            android:text="저장" />
+
+        <Button
+            android:id="@+id/button_dialog_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:background="@drawable/rounded_button"
+            android:text="취소" />
+
+    </LinearLayout>
+
+</LinearLayout>

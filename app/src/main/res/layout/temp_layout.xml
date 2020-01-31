@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linearLayout_song_hidden"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="6">
+
+        <CheckBox
+            android:id="@+id/song_check"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.4"
+            android:paddingTop="6dp"
+            android:theme="@style/Base.Widget.AppCompat.CompoundButton.RadioButton" />
+
+        <TextView
+            android:id="@+id/textView_conti_date"
+            android:layout_width="0dp"
+            android:layout_height="25dp"
+            android:layout_weight="2.8"
+            android:gravity="center"
+            android:text="2019/00/00" />
+
+
+        <Button
+            android:id="@+id/button_explanation"
+            android:layout_width="0dp"
+            android:layout_height="25dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="0.9"
+            android:background="@drawable/rounded_button"
+            android:text="내용" />
+
+        <Button
+            android:id="@+id/button_sheet"
+            android:layout_width="0dp"
+            android:layout_height="25dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="0.9"
+            android:background="@drawable/rounded_button"
+            android:text="악보" />
+
+        <Button
+            android:id="@+id/button_music"
+            android:layout_width="0dp"
+            android:layout_height="25dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="0.9"
+            android:background="@drawable/rounded_button"
+            android:text="링크" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/line_divider" />
+
+</LinearLayout>
+

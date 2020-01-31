@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "844308829870",
+    "firebase_url": "https://worship-plus.firebaseio.com",
+    "project_id": "worship-plus",
+    "storage_bucket": "worship-plus.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:844308829870:android:20622bf5323c8ff6ddff3f",
+        "android_client_info": {
+          "package_name": "com.hanarae.administrator.worshipplus"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "844308829870-7je511ia63pcqjifn7rl4oaiqrp5ki78.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBoG95JQExB3SRqnyrx0P2KG0Kru7SxpdU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "844308829870-7je511ia63pcqjifn7rl4oaiqrp5ki78.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
