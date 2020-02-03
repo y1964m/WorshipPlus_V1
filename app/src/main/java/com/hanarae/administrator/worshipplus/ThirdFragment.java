@@ -38,6 +38,7 @@ public class ThirdFragment extends Fragment {
     int width, height;
     String publicOn, pushOn;
     CustomDialog cd;
+    static boolean isUploaded;
 
 
     // newInstance constructor for creating fragment with arguments
@@ -248,24 +249,27 @@ public class ThirdFragment extends Fragment {
                         }
 
                         //초기화 시작
-                        adapter.listData.clear();
-                        adapter.notifyDataSetChanged();
+                        if(isUploaded){
+                            adapter.listData.clear();
+                            adapter.notifyDataSetChanged();
 
-                        MainActivity.args.clear();
-                        MainActivity.args.remove("someDate");
+                            MainActivity.args.clear();
+                            MainActivity.args.remove("someDate");
 
-                        SecondFragment.editText_bible.setText("");
-                        SecondFragment.editText_title1.setText("");
-                        SecondFragment.editText_title2.setText("");
+                            SecondFragment.editText_bible.setText("");
+                            SecondFragment.editText_title1.setText("");
+                            SecondFragment.editText_title2.setText("");
 
-                        state_code = 0;
-                        conti_info.setVisibility(View.GONE);
-                        button_add.setText("+");
-                        button_done.setText(">");
+                            state_code = 0;
+                            conti_info.setVisibility(View.GONE);
+                            button_add.setText("+");
+                            button_done.setText(">");
 
-                        adapter.num_on = false; //번호 가리기
+                            adapter.num_on = false; //번호 가리기
 
-                        Toast.makeText(getContext(),"저장되었습니다",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(),"저장되었습니다",Toast.LENGTH_SHORT).show();
+                        }else Toast.makeText(getContext(),"콘티내용 중 특수문자 에러입니다",Toast.LENGTH_SHORT).show();
+
                         break;
 
                     case 0: // 확인 단계

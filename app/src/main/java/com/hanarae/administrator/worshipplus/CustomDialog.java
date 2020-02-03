@@ -292,6 +292,9 @@ public class CustomDialog extends Dialog {
                         boolean fail = false;
                         for(int i = 0; i < arr.length; i++){
                             if (arr[i].length()<1) i++;
+                            if (arr[i].length()<1) i++;
+                            if (arr[i].length()<1) i++;
+
                             if ((arr[i].charAt(0)=='0'||arr[i].charAt(0)=='1'||arr[i].charAt(0)=='2'||arr[i].charAt(0)=='3'||arr[i].charAt(0)=='4'||arr[i].charAt(0)=='5'
                                     ||arr[i].charAt(0)=='6'||arr[i].charAt(0)=='7'||arr[i].charAt(0)=='8'||arr[i].charAt(0)=='9')
                                     &&(arr[i].charAt(1) == '.' || arr[i].charAt(1)==' ')){
@@ -318,7 +321,8 @@ public class CustomDialog extends Dialog {
                                temp_arr.clear();
                                //temp_arr.add(arr[i+1]);
                                //MainActivity.tempConti.setExplanationArrayList(temp_arr);
-                               MainActivity.tempConti.addExplanation(arr[i+1]);
+                               if(arr[i+1].equals("")||arr[i+1]==null) MainActivity.tempConti.addExplanation("없음");
+                               else MainActivity.tempConti.addExplanation(arr[i+1]);
 
                            }
                     }

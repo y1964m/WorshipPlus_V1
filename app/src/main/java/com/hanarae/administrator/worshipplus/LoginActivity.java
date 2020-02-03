@@ -198,11 +198,12 @@ public class LoginActivity extends AppCompatActivity {
                 /* 서버에서 응답 */
                 Log.e("RECV DATA", data);
 
-                if(data.contains("0")) error_code = 0; // 비밀번호 불일치
-                else if(data.contains("1")){
+                if(data.equals("0")) error_code = 0; // 비밀번호 불일치
+                else if(data.equals("1")){
                     error_code = 1;// 비밀번호 일치
                     result=id;
                 }
+                else if(data.equals("1146")) error_code = 6; // 그룹 없음
 
                 if(data.equals("invalid")) error_code = 2; // 아이디 중복
                 if(data.equals("added")) error_code = 3; // 생성 성공
@@ -249,6 +250,9 @@ public class LoginActivity extends AppCompatActivity {
                     break;
                 case 5:
                     Toast.makeText(getApplicationContext(),"I/O ERROR", Toast.LENGTH_SHORT).show();
+                    break;
+                case 6:
+                    Toast.makeText(getApplicationContext(),"그룹 아이디가 올바르지 않습니다", Toast.LENGTH_SHORT).show();
                     break;
             }
 

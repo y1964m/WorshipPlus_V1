@@ -31,6 +31,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.concurrent.CountDownLatch;
 
@@ -372,7 +373,7 @@ public class PhotoSelect extends AppCompatActivity {
             dos.writeBytes("Content-Disposition: form-data; name=\"user_account\"\r\n\r\n");
             dos.writeBytes(MainActivity.logged_in_db_id +lineEnd);
             dos.writeBytes( twoHyphens + boundary + lineEnd);
-            dos.writeBytes("Content-Disposition: form-data; name=\"uploadedfile\";filename=\"" + filename + "\"" + lineEnd);
+            dos.writeBytes("Content-Disposition: form-data; name=\"uploadedfile\";filename=\"" + URLEncoder.encode(filename,"utf-8") + "\"" + lineEnd);
             dos.writeBytes("Content-Type: application/octet-stream\r\n\r\n");
 
             int bytesAvailable = mFileInputStream.available();
@@ -396,11 +397,11 @@ public class PhotoSelect extends AppCompatActivity {
             // close streams
             int serverResponseCode = con.getResponseCode();
             String serverResponseMessage = con.getResponseMessage();
-            Log.i("uploadFile", "HTTP Response is : "
+            Log.i("Uploaded", "HTTP Response is : "
 
                     + serverResponseMessage + ": " + serverResponseCode);
 
-            Log.e("Test", "File is written");
+            Log.e("Test", "File is written:"+filename);
             //Log.e("Test", filename+"");
             mFileInputStream.close();
             dos.flush(); // finish upload...

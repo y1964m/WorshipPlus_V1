@@ -45,12 +45,13 @@
         <ToggleButton
             android:id="@+id/toggleButton_song_detail_main"
             android:layout_width="0dp"
-            android:layout_height="25dp"
+            android:layout_height="22dp"
             android:layout_weight="1"
             android:background="@drawable/rounded_toggle_button"
             android:textColor="@android:color/primary_text_light_nodisable"
-            android:textOff="열기"
-            android:textOn="닫기" />
+            android:textOn="열기"
+            android:textOff="닫기"
+            />
 
     </LinearLayout>
 

@@ -51,10 +51,11 @@ public class SecondFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_input_second, container, false);
-        editText_bible= (EditText)view.findViewById(R.id.editText_bible);
-        editText_title1= (EditText)view.findViewById(R.id.editText_title1);
-        editText_title2= (EditText)view.findViewById(R.id.editText_title2);
+        editText_bible= view.findViewById(R.id.editText_bible);
+        editText_title1= view.findViewById(R.id.editText_title1);
+        editText_title2= view.findViewById(R.id.editText_title2);
 
         imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         linearLayout = view.findViewById(R.id.linear_layout_second);

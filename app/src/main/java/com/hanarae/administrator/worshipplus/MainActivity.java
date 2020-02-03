@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -45,7 +46,8 @@ public class MainActivity extends AppCompatActivity {
    Button button, button_refresh, button_id;
    static  ArrayList autoText;
    RecyclerView recyclerView;
-   //ProgressDialog progressDialog;
+   BottomNavigationView bottomNavigationView;
+    //ProgressDialog progressDialog;
 
    static Bundle args = new Bundle();
    static Data tempData;
@@ -149,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
         tempPhoto = new Data(); //악보 그릇
         autoText = new ArrayList(); // 검색어 자동완성 그릇
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.navigation);
+        bottomNavigationView = findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
 
@@ -206,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
         //최근 콘티 부분
         getLatestConti(true);
 
-        vpPager = (ViewPager) findViewById(R.id.vpPager);
+        vpPager = findViewById(R.id.vpPager);
         adapterViewPager = new MyPagerAdapter(getSupportFragmentManager());
         vpPager.setAdapter(adapterViewPager);
         vpPager.setOnClickListener(new View.OnClickListener() {
@@ -217,7 +219,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        CircleIndicator indicator = (CircleIndicator) findViewById(R.id.indicator);
+        CircleIndicator indicator = findViewById(R.id.indicator);
         indicator.setViewPager(vpPager);
 
     }
@@ -267,11 +269,9 @@ public class MainActivity extends AppCompatActivity {
             MainActivity.tempData.Check.add(0);
             data.setTitle(MainActivity.tempLatestConti.getTitleArrayListItem(i));
             data.setContent(MainActivity.tempLatestConti.getChordArrayListItem(i));
-            //data.setDate(MainActivity.tempData.getDateArrayListItem(i));
             data.setDate(MainActivity.tempLatestConti.getDateArrayListItem(i));
             data.setExplanation(MainActivity.tempLatestConti.getExplanationArrayListItem(i));
             data.setMusic(MainActivity.tempLatestConti.getMusicArrayListItem(i));
-            //data.setSheet(MainActivity.tempLatestConti.getSheetArrayListItem(i));
             data.setSingle_Sheet_url(MainActivity.tempLatestConti.getSheet(i));
 
             // 각 값이 들어간 data를 adapter에 추가합니다.
@@ -349,8 +349,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public static class MyPagerAdapter extends FragmentPagerAdapter {
-        private static int NUM_ITEMS = 3;
+    public class MyPagerAdapter extends FragmentPagerAdapter {
+        private int NUM_ITEMS = 3;
 
         public MyPagerAdapter(FragmentManager fragmentManager) {
             super(fragmentManager);
@@ -370,6 +370,7 @@ public class MainActivity extends AppCompatActivity {
                 case 0:
                     return FirstFragment.newInstance(0, "예배일자");
                 case 1:
+                    //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
                     return SecondFragment.newInstance(1, "설교정보");
                 case 2:
                     return ThirdFragment.newInstance(2, "콘티작성");

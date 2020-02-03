@@ -29,7 +29,7 @@
             android:layout_marginRight="5dp"
             android:layout_weight="0.7"
 
-            android:background="@drawable/rounded_toggle_button"
+            android:background="@drawable/rounded_button"
             android:text="X" />
 
     </LinearLayout>

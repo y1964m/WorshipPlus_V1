@@ -66,7 +66,7 @@ public class InputDB extends AsyncTask<Void,Integer,Void>{
                         db_data +
                          "&user_account="+ MainActivity.logged_in_db_id;
                  param = param.replace("null", "");
-                 Log.e("RECV DATA", param);
+                 Log.e("SENT DATA", param);
                  break;
             case 1: // 곡 따로 추가할때
                 param = db_data+
@@ -82,7 +82,7 @@ public class InputDB extends AsyncTask<Void,Integer,Void>{
                 param = db_data+
                         "&user_account="+ MainActivity.logged_in_db_id;
                 param = param.replace("null", "");
-                Log.e("RECV DATA", param);
+                Log.e("SENT DATA", param);
                 break;
         }
 
@@ -123,6 +123,9 @@ public class InputDB extends AsyncTask<Void,Integer,Void>{
             Log.e("RECV DATA", data);
             if(data.contains("곡중복"))PraiseSearch.double_check =1;
             else PraiseSearch.double_check=0;
+
+            if(data.contains("1064")) ThirdFragment.isUploaded = false;
+            else ThirdFragment.isUploaded = true;
 
             latch.countDown();
 
