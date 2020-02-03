@@ -345,7 +345,7 @@ public class PhotoSelect extends AppCompatActivity {
 
         String lineEnd = "\r\n";
         String twoHyphens = "--";
-        String boundary = "*****";
+        String boundary = "******";
 
         try {
 
