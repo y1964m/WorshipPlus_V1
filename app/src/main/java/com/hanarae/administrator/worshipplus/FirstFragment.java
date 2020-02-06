@@ -298,6 +298,7 @@ public class FirstFragment extends Fragment {
                     SecondFragment.editText_bible.setText(MainActivity.tempConti.getBible().toString());
                     SecondFragment.editText_title1.setText(MainActivity.tempConti.getSermon().toString());
                     SecondFragment.editText_title2.setText(MainActivity.tempConti.getLeader().toString());
+                    MainActivity.vpPager.setCurrentItem(2);
 
                 }else{
                     MainActivity.tempConti.removeTitleArrayList();

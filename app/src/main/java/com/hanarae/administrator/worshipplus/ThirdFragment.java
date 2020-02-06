@@ -226,6 +226,7 @@ public class ThirdFragment extends Fragment {
                             if(adapter.listData.get(i).getSingle_explanation()!=null)
                                 temp_ex = adapter.listData.get(i).getSingle_explanation()
                                         .replace("\"","\\\'").replace("\'","\\\'").replace("\\\"","\\\'");
+                            else temp_ex = "없음";
 
                             db_data += "&id_date[]=" + MainActivity.args.getString("someDate") + "/"+i
                                     + "&title[]=" + adapter.listData.get(i).getTitle().trim()
@@ -268,6 +269,7 @@ public class ThirdFragment extends Fragment {
                             adapter.num_on = false; //번호 가리기
 
                             Toast.makeText(getContext(),"저장되었습니다",Toast.LENGTH_SHORT).show();
+                            MainActivity.vpPager.setCurrentItem(0);
                         }else Toast.makeText(getContext(),"콘티내용 중 특수문자 에러입니다",Toast.LENGTH_SHORT).show();
 
                         break;
@@ -287,7 +289,8 @@ public class ThirdFragment extends Fragment {
                         }
 
                         if(MainActivity.args.getString("someDate").equals("") || SecondFragment.editText_bible.getText().toString().equals("") || MainActivity.args.getString("someBible")==null || MainActivity.args.getString("someTitle1")==null || MainActivity.args.getString("someTitle2")==null){
-                            Toast.makeText(getContext(),"앞쪽의 기본정보를 작성해주세요",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(),"기본정보를 작성해주세요",Toast.LENGTH_SHORT).show();
+                            MainActivity.vpPager.setCurrentItem(1);
                         }
 
                         else {

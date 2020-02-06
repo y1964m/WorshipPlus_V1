@@ -13,6 +13,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -36,14 +37,15 @@ public class MainActivity extends AppCompatActivity {
 
    FragmentPagerAdapter adapterViewPager;
    LinearLayout linearLayout_latest_conti, linearLayout_viewpager;
+   SwipeRefreshLayout swipeRefreshLayout;
    static Latest_Conti_Adapter adapter_main;
    SearchDB searchDB_main;
    CountDownLatch latch;
    InputMethodManager imm;
    int width, height;
    TextView date,bible, sermon, leader;
-   ViewPager vpPager;
-   Button button, button_refresh, button_id;
+   static ViewPager vpPager;
+   Button button, button_id;
    static  ArrayList autoText;
    RecyclerView recyclerView;
    BottomNavigationView bottomNavigationView;
@@ -58,34 +60,7 @@ public class MainActivity extends AppCompatActivity {
    static SharedPreferences.Editor editor;
 
    static String logged_in_db_id;
-    static String logged_in_id;
-
-
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    //getLatestConti();
-                    linearLayout_latest_conti.setVisibility(View.VISIBLE);
-                    linearLayout_viewpager.setVisibility(View.GONE);
-                    return true;
-                case R.id.navigation_dashboard:
-                    linearLayout_latest_conti.setVisibility(View.GONE);
-                    linearLayout_viewpager.setVisibility(View.VISIBLE);
-                   // Intent intent_add = new Intent(MainActivity.this, PraiseSearch.class);
-                   // startActivity(intent_add);
-                    return true;
-                case R.id.navigation_notifications:
-                    Intent intent_search = new Intent(MainActivity.this, PraiseSearch.class);
-                    startActivity(intent_search);
-                    return false;
-            }
-            return false;
-        }
-    };
+   static String logged_in_id;
 
 
     @Override
@@ -154,6 +129,14 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+        swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getLatestConti(false);
+            }
+        });
+
 
         date = findViewById(R.id.textview_conti_info_date);
         bible = findViewById(R.id.textview_conti_info_bible_main);
@@ -166,15 +149,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent_login = new Intent(MainActivity.this, LoginActivity.class);
                 startActivityForResult(intent_login,1000);
-            }
-        });
-
-        button_refresh = findViewById(R.id.button_refresh);
-        button_refresh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getLatestConti(false);
-                Toast.makeText(getApplicationContext(),"업데이트 완료",Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -278,6 +252,10 @@ public class MainActivity extends AppCompatActivity {
             if(data.getTitle()!=null) adapter_main.addItem(data);
         }
         adapter_main.notifyDataSetChanged();
+
+        if(!isInitial) Toast.makeText(getApplicationContext(),"업데이트 완료",Toast.LENGTH_SHORT).show();
+        else Toast.makeText(getApplicationContext(),"환영합니다 "+ logged_in_id +"님!",Toast.LENGTH_SHORT).show();
+        swipeRefreshLayout.setRefreshing(false);
     }
 
 //네트워크 작업하는 테스크에 타임아웃 걸기
@@ -337,6 +315,32 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         //getLatestConti(false);
     }
+
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.navigation_home:
+                    //getLatestConti();
+                    swipeRefreshLayout.setVisibility(View.VISIBLE);
+                    linearLayout_viewpager.setVisibility(View.GONE);
+                    return true;
+                case R.id.navigation_dashboard:
+                    swipeRefreshLayout.setVisibility(View.GONE);
+                    linearLayout_viewpager.setVisibility(View.VISIBLE);
+                    // Intent intent_add = new Intent(MainActivity.this, PraiseSearch.class);
+                    // startActivity(intent_add);
+                    return true;
+                case R.id.navigation_notifications:
+                    Intent intent_search = new Intent(MainActivity.this, PraiseSearch.class);
+                    startActivity(intent_search);
+                    return false;
+            }
+            return false;
+        }
+    };
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
