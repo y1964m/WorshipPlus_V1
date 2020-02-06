@@ -65,7 +65,7 @@ public class Latest_Conti_Adapter extends RecyclerView.Adapter<Latest_Conti_Adap
 
         private TextView song_title;
         private TextView song_chord;
-        private ToggleButton toggleButton;
+        //private ToggleButton toggleButton;
         private LinearLayout container;
         private TextView song_date, numbering;
 
@@ -78,7 +78,7 @@ public class Latest_Conti_Adapter extends RecyclerView.Adapter<Latest_Conti_Adap
                 song_title = itemView.findViewById(R.id.song_title_main);
                 song_chord = itemView.findViewById(R.id.song_chord_main);
                 numbering = itemView.findViewById(R.id.song_check_main);
-                toggleButton = itemView.findViewById(R.id.toggleButton_song_detail_main);
+                //toggleButton = itemView.findViewById(R.id.toggleButton_song_detail_main);
             }
 
             song_title.setOnClickListener(new View.OnClickListener() {
@@ -95,7 +95,7 @@ public class Latest_Conti_Adapter extends RecyclerView.Adapter<Latest_Conti_Adap
                         imm.hideSoftInputFromWindow(v.getWindowToken(),0);
                 }
             });
-            toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        /*    toggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if(imm!=null)
@@ -106,7 +106,7 @@ public class Latest_Conti_Adapter extends RecyclerView.Adapter<Latest_Conti_Adap
                     }
                     else container.setVisibility(View.GONE);
                 }
-            });
+            });*/
 
         }
 
@@ -114,19 +114,26 @@ public class Latest_Conti_Adapter extends RecyclerView.Adapter<Latest_Conti_Adap
 
             container.removeAllViews();
 
-            song_title.setText(data.getTitle());
+            if(data.getTitle().contains("(")) song_title.setText(data.getTitle().substring(0,data.getTitle().indexOf("(")));
+            else song_title.setText(data.getTitle());
+
             song_chord.setText(data.getContent());
-            toggleButton.setChecked(false);
+            //toggleButton.setChecked(false);
             numbering.setText(""+getAdapterPosition());
 
             for (int i =0; i < data.getDateSize(); i++){
                 TempList tempList = new TempList(itemView.getContext(), width, height, imm,0, getAdapterPosition(),0);
 
-                    tempList.setExplanation(data.getExplanation(i));
-                    tempList.setMusic(data.getMusic(i));
-                    tempList.setDate(data.getDate(i));
-                    tempList.setSheet(data.getTitle(),888, data.getSingle_Sheet_url());
-                    container.addView(tempList);
+                tempList.setExplanation(data.getExplanation(i));
+                if(data.getTitle().contains("(")||data.getTitle().contains(")")){
+                    String title_sub=data.getTitle().substring(data.getTitle().indexOf("("),data.getTitle().indexOf(")")+1);
+                    tempList.setDate(title_sub);
+                }else tempList.setDate("- - - - -");
+                    //tempList.setDate(data.getDate(i));
+
+                tempList.setMusic(data.getMusic(i));
+                tempList.setSheet(data.getTitle(),888, data.getSingle_Sheet_url());
+                container.addView(tempList);
             }
 
             song_date = itemView.findViewById(R.id.textView_conti_date);

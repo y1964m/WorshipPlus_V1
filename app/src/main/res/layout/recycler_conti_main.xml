@@ -18,7 +18,7 @@
             android:id="@+id/song_check_main"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.7"
+            android:layout_weight="1"
             android:gravity="center"
             android:text="#"
             android:textColor="@android:color/black"
@@ -28,7 +28,7 @@
             android:id="@+id/song_title_main"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="3.5"
+            android:layout_weight="3.8"
             android:text="Title"
             android:textColor="@android:color/black"
             android:textSize="16sp" />
@@ -37,21 +37,22 @@
             android:id="@+id/song_chord_main"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.8"
+            android:layout_weight="1"
             android:inputType="textCapSentences"
             android:textColor="@android:color/black"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:gravity="center"/>
 
-        <ToggleButton
+      <!--  <ToggleButton
             android:id="@+id/toggleButton_song_detail_main"
             android:layout_width="0dp"
             android:layout_height="22dp"
             android:layout_weight="1"
             android:background="@drawable/rounded_toggle_button"
-            android:textColor="@android:color/primary_text_light_nodisable"
-            android:textOn="열기"
-            android:textOff="닫기"
-            />
+            android:textOn="∧"
+            android:textOff="∨"
+
+            />-->
 
     </LinearLayout>
 
@@ -61,6 +62,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="0dp"
         android:orientation="vertical"
-        android:visibility="gone"></LinearLayout>
+        android:visibility="visible">
+    </LinearLayout>
 
 </LinearLayout>

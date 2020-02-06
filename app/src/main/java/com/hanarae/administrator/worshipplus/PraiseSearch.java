@@ -1,6 +1,7 @@
 package com.hanarae.administrator.worshipplus;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
@@ -42,6 +43,7 @@ public class PraiseSearch extends AppCompatActivity {
     int width, height;
     static int double_check=0;
     static boolean song_search = false;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onResume() {
@@ -283,14 +285,17 @@ public class PraiseSearch extends AppCompatActivity {
         else all_good = true;
 
         if (all_good) {
+
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setMessage("정보를 불러오는 중...");
+            progressDialog.setCancelable(true);
+
             String temp_string = editText_search_content.getText().toString();
             MainActivity.args.putString("someContent", temp_string.replace(" ",""));
             MainActivity.args.putString("someChord", editText_search_chord.getText().toString());
             MainActivity.args.putString("someTag", editText_search_tag.getText().toString());
 
-
             latch_DB = new CountDownLatch(1);
-            latch_all = new CountDownLatch(1);
 
             //초기화작업
             MainActivity.tempData.removeTitleArrayList();
@@ -303,7 +308,7 @@ public class PraiseSearch extends AppCompatActivity {
 
             /*AsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR) 쓰레드 병령실행 때 */
 
-            searchDB = new SearchDB(2, this, latch_DB, latch_all);
+            searchDB = new SearchDB(2, this, latch_DB,progressDialog);
             new AsyncTaskCancelTimerTask(searchDB, 10000, 1000, true).start();
             searchDB.execute();
 
@@ -316,11 +321,9 @@ public class PraiseSearch extends AppCompatActivity {
             }
 
             getData();
-            //searchDB.cancel(true);
-
 
             if (MainActivity.tempData.getTitleArrayListSize() == 0){
-                Toast.makeText(getApplicationContext(), "No Data", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "일치하는 정보가 없습니다", Toast.LENGTH_SHORT).show();
                 button_save.setVisibility(View.GONE);
             }
 
@@ -342,12 +345,6 @@ public class PraiseSearch extends AppCompatActivity {
             adapter.notifyDataSetChanged();
 
         }
-
-       /* try {
-            latch_all.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }*/
 
     }
 
@@ -385,14 +382,13 @@ public class PraiseSearch extends AppCompatActivity {
         public void onFinish() {
             if(asyncTask == null || asyncTask.isCancelled() )
                 return;
-
             try {
-                if(asyncTask.getStatus() == AsyncTask.Status.FINISHED)
+                if(asyncTask.getStatus() == AsyncTask.Status.FINISHED){
+                    asyncTask.cancel(interrupt);
                     return;
-
-                if(asyncTask.getStatus() == AsyncTask.Status.PENDING ||
+                }
+                else if(asyncTask.getStatus() == AsyncTask.Status.PENDING ||
                         asyncTask.getStatus() == AsyncTask.Status.RUNNING ) {
-
                     asyncTask.cancel(interrupt);
                     Toast.makeText(PraiseSearch.this,"네트워크 에러",Toast.LENGTH_SHORT).show();
                 }

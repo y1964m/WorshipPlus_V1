@@ -82,7 +82,7 @@ public class Search_Recycler_Adapter extends RecyclerView.Adapter<Search_Recycle
                 song_title = itemView.findViewById(R.id.song_title_main);
                 song_chord = itemView.findViewById(R.id.song_chord_main);
                 numbering = itemView.findViewById(R.id.song_check_main);
-                toggleButton = itemView.findViewById(R.id.toggleButton_song_detail_main);
+                //toggleButton = itemView.findViewById(R.id.toggleButton_song_detail_main);
             }
             else {
                 container = itemView.findViewById(R.id.linear_layout_container);

@@ -2,6 +2,7 @@ package com.hanarae.administrator.worshipplus;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,8 +12,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -28,9 +31,24 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class LoginActivity extends AppCompatActivity {
 
+
+    public static String sha256(String str) {
+        String SHA = "";
+        try{
+            MessageDigest sh = MessageDigest.getInstance("SHA-256");
+            sh.update(str.getBytes());
+            byte byteData[] = sh.digest();
+            StringBuffer sb = new StringBuffer();
+            for(int i = 0 ; i < byteData.length ; i++) sb.append(Integer.toString((byteData[i]&0xff) + 0x100, 16).substring(1));
+            SHA = sb.toString();
+        }catch(NoSuchAlgorithmException e) { e.printStackTrace(); SHA = null; }
+        return SHA;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,6 +57,10 @@ public class LoginActivity extends AppCompatActivity {
 
         final EditText id, pw, db_id;
         Button login, join;
+        LinearLayout linearLayout;
+        final InputMethodManager imm;
+
+
 
         db_id= findViewById(R.id.editText_db_id);
         db_id.setText(MainActivity.logged_in_db_id);
@@ -50,10 +72,22 @@ public class LoginActivity extends AppCompatActivity {
         login = findViewById(R.id.button_login);
         join = findViewById(R.id.button_join);
 
+        imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        linearLayout = findViewById(R.id.background_login);
+        linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(imm!=null)
+                    imm.hideSoftInputFromWindow(v.getWindowToken(),0);
+            }
+        });
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(imm!=null)
+                    imm.hideSoftInputFromWindow(v.getWindowToken(),0);
                 FirebaseInstanceId.getInstance().getInstanceId()
                         .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
                             @Override
@@ -66,7 +100,7 @@ public class LoginActivity extends AppCompatActivity {
                                 // Get new Instance ID token
                                 String tokenID = task.getResult().getToken();
                                 Log.e("FirebaseMsgService", "Token: " + tokenID);
-                                LoginDB loginDB = new LoginDB(0, db_id.getText().toString(),id.getText().toString(),pw.getText().toString(),tokenID);
+                                LoginDB loginDB = new LoginDB(0, db_id.getText().toString(),id.getText().toString(),sha256(pw.getText().toString()),tokenID);
                                 loginDB.execute();
                             }
                         });
@@ -76,6 +110,9 @@ public class LoginActivity extends AppCompatActivity {
         join.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if(imm!=null)
+                    imm.hideSoftInputFromWindow(v.getWindowToken(),0);
 
                 if(db_id.getText().toString().equals("") || id.getText().toString().equals("") || pw.getText().toString().equals("")
                         || db_id.getText()==null  || id.getText()==null || pw.getText()==null){
@@ -107,7 +144,7 @@ public class LoginActivity extends AppCompatActivity {
                                             // Get new Instance ID token
                                             String tokenID = task.getResult().getToken();
                                             Log.e("FirebaseMsgService", "Token: " + tokenID);
-                                            LoginDB loginDB = new LoginDB(1, db_id.getText().toString(),id.getText().toString(),pw.getText().toString(),tokenID);
+                                            LoginDB loginDB = new LoginDB(1, db_id.getText().toString(),id.getText().toString(),sha256(pw.getText().toString()),tokenID);
                                             loginDB.execute();
                                         }
                                     });
@@ -231,7 +268,6 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),"로그인 정보가 일치하지 않습니다", Toast.LENGTH_SHORT).show();
                     break;
                 case 1:
-                    Toast.makeText(getApplicationContext(),"환영합니다! " + result, Toast.LENGTH_SHORT).show();
                     setResult(Activity.RESULT_OK);
                     MainActivity.editor.putString("db_id",db_id);
                     MainActivity.editor.putString("id",id);

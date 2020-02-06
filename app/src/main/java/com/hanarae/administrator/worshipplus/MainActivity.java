@@ -1,6 +1,7 @@
 package com.hanarae.administrator.worshipplus;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
    static  ArrayList autoText;
    RecyclerView recyclerView;
    BottomNavigationView bottomNavigationView;
-    //ProgressDialog progressDialog;
+   ProgressDialog progressDialog;
 
    static Bundle args = new Bundle();
    static Data tempData;
@@ -133,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                //swipeRefreshLayout.setRefreshing(true);
                 getLatestConti(false);
             }
         });
@@ -203,9 +205,10 @@ public class MainActivity extends AppCompatActivity {
         //최근 콘티 부분
         adapter_main.listData.clear();
 
-     /*   progressDialog = new ProgressDialog(this);
+        progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("정보를 불러오는 중...");
-        progressDialog.show();*/
+        progressDialog.setCancelable(true);
+
         MainActivity.tempLatestConti.removeContiInfo();
 
         MainActivity.tempLatestConti.removeTitleArrayList();
@@ -221,7 +224,8 @@ public class MainActivity extends AppCompatActivity {
         adapter_main = new Latest_Conti_Adapter(1, imm, width, height);
         recyclerView.setAdapter(adapter_main);
         if(isInitial) searchDB_main = new SearchDB(0, this, latch);
-        else searchDB_main = new SearchDB(1, this, latch);
+        //else searchDB_main = new SearchDB(1, this, latch);
+        else searchDB_main = new SearchDB(1, this, latch, progressDialog);
         new AsyncTaskCancelTimerTask(searchDB_main, 5000, 1000, true).start();
         searchDB_main.execute();
         adapter_main.listData.clear();//초기화 하고, 안그러면 밑으로 똑같은 뷰가 계속 붙음
@@ -230,7 +234,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        searchDB_main.cancel(true);
+        //searchDB_main.cancel(true);
 
         date.setText("@ "+tempLatestConti.getBibleDate());
         bible.setText("말씀본문: "+ tempLatestConti.getBible());
@@ -254,7 +258,7 @@ public class MainActivity extends AppCompatActivity {
         adapter_main.notifyDataSetChanged();
 
         if(!isInitial) Toast.makeText(getApplicationContext(),"업데이트 완료",Toast.LENGTH_SHORT).show();
-        else Toast.makeText(getApplicationContext(),"환영합니다 "+ logged_in_id +"님!",Toast.LENGTH_SHORT).show();
+        else Toast.makeText(getApplicationContext(),"환영합니다! "+ logged_in_id +"님",Toast.LENGTH_SHORT).show();
         swipeRefreshLayout.setRefreshing(false);
     }
 
@@ -295,10 +299,11 @@ public class MainActivity extends AppCompatActivity {
                 return;
 
             try {
-                if(asyncTask.getStatus() == AsyncTask.Status.FINISHED)
+                if(asyncTask.getStatus() == AsyncTask.Status.FINISHED) {
+                    asyncTask.cancel(interrupt);
                     return;
-
-                if(asyncTask.getStatus() == AsyncTask.Status.PENDING ||
+                }
+                else if(asyncTask.getStatus() == AsyncTask.Status.PENDING ||
                         asyncTask.getStatus() == AsyncTask.Status.RUNNING ) {
 
                     asyncTask.cancel(interrupt);
@@ -348,7 +353,9 @@ public class MainActivity extends AppCompatActivity {
 
         if(requestCode==1000){
             if(resultCode== Activity.RESULT_OK){
-                getLatestConti(false);
+                logged_in_db_id = sharedPreferences.getString("db_id","");
+                logged_in_id = sharedPreferences.getString("id","");
+                getLatestConti(true);
             }
         }
     }

@@ -63,7 +63,6 @@ public class TempList extends LinearLayout {
 
     public void setDate(String date){
 
-
         song_date = findViewById(R.id.textView_conti_date);
         song_date.setText(date);
 

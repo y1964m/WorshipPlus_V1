@@ -1,5 +1,6 @@
 package com.hanarae.administrator.worshipplus;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.PowerManager;
@@ -25,12 +26,19 @@ public class SearchDB extends AsyncTask<Void, Integer, Void> {
 
     int case_number;
     Context context;
-    CountDownLatch latch_DB, latch_all;
+    CountDownLatch latch_DB;
     PowerManager.WakeLock mWakeLock;
     int error_code = 0;
     String photo_param;
+    ProgressDialog pd;
     String server_address = "http://ssyp.synology.me:8812/";
 
+    SearchDB(int case_number, Context context, CountDownLatch latch_DB, ProgressDialog pd){
+        this.case_number = case_number;
+        this.context = context;
+        this.latch_DB = latch_DB;
+        this.pd = pd;
+    }
 
     SearchDB(int case_number, Context context, CountDownLatch latch_DB){
         this.case_number = case_number;
@@ -38,12 +46,6 @@ public class SearchDB extends AsyncTask<Void, Integer, Void> {
         this.latch_DB = latch_DB;
     }
 
-    SearchDB(int case_number, Context context, CountDownLatch latch_DB, CountDownLatch latch_all){
-        this.case_number = case_number;
-        this.context = context;
-        this.latch_DB = latch_DB;
-        this.latch_all = latch_all;
-    }
 
     SearchDB(int case_number, Context context, CountDownLatch latch_DB, String param){
         this.case_number = case_number;
@@ -62,13 +64,14 @@ public class SearchDB extends AsyncTask<Void, Integer, Void> {
     protected void onPreExecute() {
         super.onPreExecute();
 
+        if(pd!=null) {
+            pd.show();
+        }
 
         //cpu 잠들지 않도록 하는 처리
         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
         mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, getClass().getName());
         mWakeLock.acquire();
-
-
 
     }
 
@@ -466,8 +469,16 @@ public class SearchDB extends AsyncTask<Void, Integer, Void> {
                             JSONObject next_jsonObject = jsonArray.getJSONObject(i + 1);
 
                             if (!(
-                                    (jsonObject.getString("title").equalsIgnoreCase(next_jsonObject.getString("title")))&&
-                                    (jsonObject.getString("chord").equalsIgnoreCase((next_jsonObject.getString("chord"))))
+                                    (jsonObject.getString("title"))
+                                            .equalsIgnoreCase
+                                                    (next_jsonObject.getString("title"))
+                                            &&(jsonObject.getString("chord")
+                                            .equalsIgnoreCase(
+                                                    (next_jsonObject.getString("chord"))))
+                           /* (jsonObject.getString("title").substring(0,jsonObject.getString("title").indexOf("("))
+                                    .equalsIgnoreCase
+                                            (next_jsonObject.getString("title").substring(0,next_jsonObject.getString("title").indexOf("("))))
+                                    &&(jsonObject.getString("chord").equalsIgnoreCase((next_jsonObject.getString("chord"))))*/
                             )) {
                                 MainActivity.tempData.addTitleArrayListItem(jsonObject.getString("title"));
                                 MainActivity.tempData.setChordArrayList(jsonObject.getString("chord"));
@@ -739,13 +750,17 @@ public class SearchDB extends AsyncTask<Void, Integer, Void> {
 
     @Override
     protected void onPostExecute(Void aVoid) {
-        super.onPostExecute(aVoid);
+        //super.onPostExecute(aVoid);
+
+        if(pd!=null) pd.dismiss();
 
         if(error_code != 0) {
             if(error_code==3) Toast.makeText(context,"인터넷이 불안정합니다",Toast.LENGTH_SHORT).show();
             else Toast.makeText(context,"error: " + error_code,Toast.LENGTH_SHORT).show();
         }
         if(context==null) return;
+
+
 
     }
 
