@@ -22,7 +22,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -62,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
    static String logged_in_db_id;
    static String logged_in_id;
+   static String team_info;
 
 
     @Override
@@ -109,13 +109,14 @@ public class MainActivity extends AppCompatActivity {
         editor = sharedPreferences.edit();
 
         if(sharedPreferences.getString("id","")==null || sharedPreferences.getString("id","").equals("")){
-            Toast.makeText(getApplicationContext(),sharedPreferences.getString("id",""),Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(),sharedPreferences.getString("id",""),Toast.LENGTH_SHORT).show();
             Intent intent_login = new Intent(MainActivity.this, LoginActivity.class);
             startActivityForResult(intent_login,1000);
         }
         else {
             logged_in_db_id = sharedPreferences.getString("db_id","");
             logged_in_id = sharedPreferences.getString("id","");
+            team_info = sharedPreferences.getString("write","");
         }
 
 
@@ -258,7 +259,9 @@ public class MainActivity extends AppCompatActivity {
         adapter_main.notifyDataSetChanged();
 
         if(!isInitial) Toast.makeText(getApplicationContext(),"업데이트 완료",Toast.LENGTH_SHORT).show();
-        else Toast.makeText(getApplicationContext(),"환영합니다! "+ logged_in_id +"님",Toast.LENGTH_SHORT).show();
+        else if(sharedPreferences.getString("id","")!=null || !sharedPreferences.getString("id","").equals("")){
+            Toast.makeText(getApplicationContext(),"환영합니다! "+ logged_in_id +"님",Toast.LENGTH_SHORT).show();
+        }
         swipeRefreshLayout.setRefreshing(false);
     }
 
@@ -351,11 +354,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode==1000){
+        if(requestCode==1000){//회원정보 버튼 눌렀을 시
             if(resultCode== Activity.RESULT_OK){
                 logged_in_db_id = sharedPreferences.getString("db_id","");
                 logged_in_id = sharedPreferences.getString("id","");
                 getLatestConti(true);
+            }
+            if(resultCode== Activity.RESULT_CANCELED){
+                logged_in_db_id = sharedPreferences.getString("db_id","");
+                logged_in_id = sharedPreferences.getString("id","");
             }
         }
     }

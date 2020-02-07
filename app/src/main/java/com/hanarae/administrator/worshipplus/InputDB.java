@@ -64,23 +64,31 @@ public class InputDB extends AsyncTask<Void,Integer,Void>{
                         "&sermon=" + MainActivity.args.getString("someTitle1") +
                         "&leader=" + MainActivity.args.getString("someTitle2") +
                         db_data +
-                         "&user_account="+ MainActivity.logged_in_db_id;
+                         "&user_account="+ MainActivity.logged_in_db_id
+                         +"&author="+MainActivity.logged_in_id
+                         +"&team="+ MainActivity.team_info;
                  param = param.replace("null", "");
                  Log.e("SENT DATA", param);
                  break;
             case 1: // 곡 따로 추가할때
                 param = db_data+
-                        "&user_account="+ MainActivity.logged_in_db_id;
+                        "&user_account="+ MainActivity.logged_in_db_id
+                        +"&author="+MainActivity.logged_in_id
+                        +"&team="+ MainActivity.team_info;
                 param = param.replace("null", "");
                 break;
             case 2://곡 추가 후 기본정보에 상세내용 넣어서 업데이트
                 param = db_data +"&remark=updated"+
-                        "&user_account="+ MainActivity.logged_in_db_id;
+                        "&user_account="+ MainActivity.logged_in_db_id
+                        +"&author="+MainActivity.logged_in_id
+                        +"&team="+ MainActivity.team_info;
                 param = param.replace("null", "");
                 break;
             case 3://악보 및 사진 삭제 시
                 param = db_data+
-                        "&user_account="+ MainActivity.logged_in_db_id;
+                        "&user_account="+ MainActivity.logged_in_db_id
+                        +"&author="+MainActivity.logged_in_id
+                        +"&team="+ MainActivity.team_info;
                 param = param.replace("null", "");
                 Log.e("SENT DATA", param);
                 break;

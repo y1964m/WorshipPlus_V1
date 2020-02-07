@@ -15,18 +15,17 @@
         <CheckBox
             android:id="@+id/song_check"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.4"
-            android:paddingTop="6dp"
-            android:theme="@style/Base.Widget.AppCompat.CompoundButton.RadioButton" />
+            android:layout_height="25dp"
+            android:layout_gravity="center"
+            android:layout_weight="0.5" />
 
         <TextView
             android:id="@+id/textView_conti_date"
             android:layout_width="0dp"
             android:layout_height="25dp"
-            android:layout_weight="2.8"
+            android:layout_weight="2.7"
             android:gravity="center"
-            android:text="2019/00/00" />
+            android:text="2019/00/00/0000/0" />
 
 
         <Button

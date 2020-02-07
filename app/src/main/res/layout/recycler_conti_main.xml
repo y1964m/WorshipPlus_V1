@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="10dp"
     android:layout_marginRight="10dp"
     android:orientation="vertical">
 
@@ -18,8 +17,8 @@
             android:id="@+id/song_check_main"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
+            android:layout_weight="0.7"
+            android:gravity="right"
             android:text="#"
             android:textColor="@android:color/black"
             android:textSize="16sp" />
@@ -28,7 +27,7 @@
             android:id="@+id/song_title_main"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="3.8"
+            android:layout_weight="4.1"
             android:text="Title"
             android:textColor="@android:color/black"
             android:textSize="16sp" />
@@ -38,12 +37,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="center"
             android:inputType="textCapSentences"
             android:textColor="@android:color/black"
-            android:textSize="16sp"
-            android:gravity="center"/>
+            android:textSize="16sp" />
 
-      <!--  <ToggleButton
+        <!--  <ToggleButton
             android:id="@+id/toggleButton_song_detail_main"
             android:layout_width="0dp"
             android:layout_height="22dp"
@@ -62,7 +61,6 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="0dp"
         android:orientation="vertical"
-        android:visibility="visible">
-    </LinearLayout>
+        android:visibility="visible"></LinearLayout>
 
 </LinearLayout>

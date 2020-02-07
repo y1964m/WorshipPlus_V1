@@ -2,6 +2,8 @@ package com.hanarae.administrator.worshipplus;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -119,7 +121,7 @@ public class Latest_Conti_Adapter extends RecyclerView.Adapter<Latest_Conti_Adap
 
             song_chord.setText(data.getContent());
             //toggleButton.setChecked(false);
-            numbering.setText(""+getAdapterPosition());
+            numbering.setText(getAdapterPosition()+".  ");
 
             for (int i =0; i < data.getDateSize(); i++){
                 TempList tempList = new TempList(itemView.getContext(), width, height, imm,0, getAdapterPosition(),0);
@@ -128,7 +130,7 @@ public class Latest_Conti_Adapter extends RecyclerView.Adapter<Latest_Conti_Adap
                 if(data.getTitle().contains("(")||data.getTitle().contains(")")){
                     String title_sub=data.getTitle().substring(data.getTitle().indexOf("("),data.getTitle().indexOf(")")+1);
                     tempList.setDate(title_sub);
-                }else tempList.setDate("- - - - -");
+                }else tempList.setDate("");
                     //tempList.setDate(data.getDate(i));
 
                 tempList.setMusic(data.getMusic(i));

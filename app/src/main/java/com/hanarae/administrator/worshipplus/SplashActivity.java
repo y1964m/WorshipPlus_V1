@@ -20,11 +20,22 @@ public class SplashActivity extends AppCompatActivity {
 
         //인터넷 연결확인 작업
         ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        boolean isMobile=true;
+        boolean isWiFi=true;
+        boolean isWiMax=true;
 
-        boolean isMobile = manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnectedOrConnecting();
-        boolean isWiFi = manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnectedOrConnecting();
+        if(manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)!=null) {
+            isMobile = manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnectedOrConnecting();
+        }
+        if(manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)!=null) {
+            isWiFi = manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnectedOrConnecting();
+        }
+        if(manager.getNetworkInfo(ConnectivityManager.TYPE_WIMAX)!=null) {
+            isWiMax = manager.getNetworkInfo(ConnectivityManager.TYPE_WIMAX).isConnectedOrConnecting();
+        }
 
-        if (!isMobile && !isWiFi) {
+
+        if (!isMobile && !isWiFi && !isWiMax) {
             AlertDialog.Builder adb = new AlertDialog.Builder(this);
             adb.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                 @Override
