@@ -42,12 +42,15 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
 public class LoginActivity extends AppCompatActivity {
 
     static ArrayList team = new ArrayList();
     SharedPreferences sharedPreferences;
     static SharedPreferences.Editor editor;
+    CountDownLatch latch;
+    Button login, join;
 
 
     public static String sha256(String str) {
@@ -75,7 +78,6 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.login);     //다이얼로그에서 사용할 레이아웃입니다.
 
         final EditText id, pw, db_id;
-        final Button login, join;
         final LinearLayout background, login1, login_setting, login_setting_team;
         final InputMethodManager imm;
 
@@ -95,8 +97,6 @@ public class LoginActivity extends AppCompatActivity {
         login_setting_team = findViewById(R.id.login_setting_team);
 
         if(MainActivity.logged_in_id != null){
-            LoginDB loginDB = new LoginDB(2, db_id.getText().toString());
-            loginDB.execute();
 
             id.setText(MainActivity.logged_in_id);
 
@@ -122,6 +122,7 @@ public class LoginActivity extends AppCompatActivity {
                     imm.hideSoftInputFromWindow(v.getWindowToken(),0);
 
                 if(login.getText().equals("Login")){
+
                     FirebaseInstanceId.getInstance().getInstanceId()
                             .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
                                 @Override
@@ -150,7 +151,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     id.setText("");
                     login.setText("Login");
-                    join.setText("New");
+                    join.setText("NEW");
 
                     Toast.makeText(getApplicationContext(),"로그아웃 되었습니다", Toast.LENGTH_SHORT).show();
                 }
@@ -209,6 +210,16 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 else if(join.getText().equals("Team")){
 
+                    latch = new CountDownLatch(1);
+                    LoginDB loginDB = new LoginDB(2, db_id.getText().toString());
+                    loginDB.execute();
+                    try {
+                        latch.await();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+
                     for(int i = 0; i<team.size() ; i++){
                         PersonalSetting personalSetting = new PersonalSetting(getApplicationContext(), team.get(i).toString());
                         login_setting_team.addView(personalSetting);
@@ -224,12 +235,22 @@ public class LoginActivity extends AppCompatActivity {
                 else if(join.getText().equals("확인")){
 
                     StringBuffer temp= new StringBuffer();
+                    StringBuffer temp_search= new StringBuffer();
                     Map<String, ?> allEntries = sharedPreferences.getAll();
                     for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
                         if(entry.getKey().contains("_notify") && entry.getValue().toString().equals("1")){
                             temp.append(entry.getKey().substring(0,entry.getKey().indexOf("_"))+",");
                         }
+                        if(entry.getKey().contains("_search") && entry.getValue().toString().equals("1")){
+                            temp_search.append(entry.getKey().substring(0,entry.getKey().indexOf("_"))+",");
+                        }
                     }
+                    if(temp.substring(0).equals("")) temp.append("없음");
+                    if(temp_search.substring(0).equals("")) temp_search.append("없음");
+
+                    MainActivity.checked_search = temp_search.substring(0);
+                    editor.putString("search",MainActivity.checked_search);
+                    editor.apply();
 
                     LoginDB loginDB = new LoginDB(3, MainActivity.logged_in_db_id, temp.substring(0),MainActivity.logged_in_id);
                     loginDB.execute();
@@ -241,6 +262,8 @@ public class LoginActivity extends AppCompatActivity {
 
                     login.setVisibility(View.VISIBLE);
                     login_setting.setVisibility(View.GONE);
+
+                    team.clear();
 
                     Toast.makeText(getApplicationContext(),"업데이트 완료", Toast.LENGTH_SHORT).show();
                 }
@@ -257,7 +280,6 @@ public class LoginActivity extends AppCompatActivity {
         }else if(sharedPreferences.getString("write","team").equals("team"))
             Toast.makeText(getApplicationContext(),"팀을 선택해주세요", Toast.LENGTH_SHORT).show();
         else super.onBackPressed();
-
     }
 
     private class LoginDB extends AsyncTask {
@@ -301,7 +323,7 @@ public class LoginActivity extends AppCompatActivity {
             if(case_num ==0) option = "&login=1";
             else if(case_num ==1) option = "&join=1";
             else if (case_num ==2) option = "&team=1";
-            else if (case_num ==3) option = "&update_notify="+ content;
+            else if (case_num ==3) option = "&update_notify=" + content;
             else option = "";
 
             /* 인풋 파라메터값 생성 */
@@ -357,6 +379,8 @@ public class LoginActivity extends AppCompatActivity {
                         e.printStackTrace();
                         error_code = 7;
                     }
+
+                    latch.countDown();
                 }
 
                 if(data.equals("not matched")) error_code = 0; // 비밀번호 불일치
@@ -393,12 +417,18 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),"로그인 정보가 일치하지 않습니다", Toast.LENGTH_SHORT).show();
                     break;
                 case 1:
-                    setResult(Activity.RESULT_OK);
-                    MainActivity.editor.putString("db_id",db_id);
-                    MainActivity.editor.putString("id",id);
-                    MainActivity.editor.putString("pw",pw);
-                    MainActivity.editor.apply();
-                    finish();
+                    if(sharedPreferences.getString("write","team").equals("team")){
+                        Toast.makeText(getApplicationContext(),"팀을 선택해주세요", Toast.LENGTH_SHORT).show();
+                        join.setText("Team");
+                        return;
+                    }else {
+                        setResult(Activity.RESULT_OK);
+                        MainActivity.editor.putString("db_id",db_id);
+                        MainActivity.editor.putString("id",id);
+                        MainActivity.editor.putString("pw",pw);
+                        MainActivity.editor.apply();
+                        finish();
+                    }
                     break;
                 case 2:
                     Toast.makeText(getApplicationContext(),"이미 존재하는 아이디입니다", Toast.LENGTH_SHORT).show();

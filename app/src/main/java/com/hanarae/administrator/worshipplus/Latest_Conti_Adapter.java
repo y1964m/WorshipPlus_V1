@@ -3,6 +3,9 @@ package com.hanarae.administrator.worshipplus;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +18,8 @@ import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+
 public class Latest_Conti_Adapter extends RecyclerView.Adapter<Latest_Conti_Adapter.ItemViewHolder> {
 
     // adapter에 들어갈 list 입니다.
@@ -22,12 +27,14 @@ public class Latest_Conti_Adapter extends RecyclerView.Adapter<Latest_Conti_Adap
     public int case_num;
     InputMethodManager imm;
     int width, height;
+    Context context;
 
-    Latest_Conti_Adapter(int case_num, InputMethodManager imm, int width, int height){
+    Latest_Conti_Adapter(int case_num, InputMethodManager imm, int width, int height, Context context){
         this.case_num = case_num;
         this.imm = imm;
         this.width=width;
         this.height=height;
+        this.context=context;
         listData.clear();
         return;
     }
@@ -116,9 +123,9 @@ public class Latest_Conti_Adapter extends RecyclerView.Adapter<Latest_Conti_Adap
 
             container.removeAllViews();
 
-            if(data.getTitle().contains("(")) song_title.setText(data.getTitle().substring(0,data.getTitle().indexOf("(")));
-            else song_title.setText(data.getTitle());
-
+            /*if(data.getTitle().contains("(")) song_title.setText(data.getTitle().substring(0,data.getTitle().indexOf("(")));
+            else song_title.setText(data.getTitle());*/
+            song_title.setText(data.getTitle());
             song_chord.setText(data.getContent());
             //toggleButton.setChecked(false);
             numbering.setText(getAdapterPosition()+".  ");
@@ -127,11 +134,11 @@ public class Latest_Conti_Adapter extends RecyclerView.Adapter<Latest_Conti_Adap
                 TempList tempList = new TempList(itemView.getContext(), width, height, imm,0, getAdapterPosition(),0);
 
                 tempList.setExplanation(data.getExplanation(i));
-                if(data.getTitle().contains("(")||data.getTitle().contains(")")){
+              /*  if(data.getTitle().contains("(")||data.getTitle().contains(")")){
                     String title_sub=data.getTitle().substring(data.getTitle().indexOf("("),data.getTitle().indexOf(")")+1);
                     tempList.setDate(title_sub);
                 }else tempList.setDate("");
-                    //tempList.setDate(data.getDate(i));
+                    //tempList.setDate(data.getDate(i));*/
 
                 tempList.setMusic(data.getMusic(i));
                 tempList.setSheet(data.getTitle(),888, data.getSingle_Sheet_url());
@@ -139,11 +146,15 @@ public class Latest_Conti_Adapter extends RecyclerView.Adapter<Latest_Conti_Adap
             }
 
             song_date = itemView.findViewById(R.id.textView_conti_date);
+            song_date.setText("온라인 검색");
+            song_date.setClickable(true);
             song_date.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if(imm!=null)
                         imm.hideSoftInputFromWindow(v.getWindowToken(),0);
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/search?q="+data.getTitle()));
+                        context.startActivity(intent.addFlags(FLAG_ACTIVITY_NEW_TASK));
                 }
             });
 

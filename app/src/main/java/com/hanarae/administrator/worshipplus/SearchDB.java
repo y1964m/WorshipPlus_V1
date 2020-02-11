@@ -394,8 +394,10 @@ public class SearchDB extends AsyncTask<Void, Integer, Void> {
             String param = "title=" + MainActivity.args.getString("someContent") +
                     "&chord=" + MainActivity.args.getString("someChord") +
                     "&tag=" + MainActivity.args.getString("someTag") +
-                    "&user_account="+ MainActivity.logged_in_db_id;
+                    "&user_account="+ MainActivity.logged_in_db_id +
+                    "&team="+ MainActivity.checked_search;
 
+            Log.e("SENT DATA", param);
             try {
                 /* 서버연결 */
                /* URL url = new URL(
@@ -537,7 +539,9 @@ public class SearchDB extends AsyncTask<Void, Integer, Void> {
 
             /* 인풋 파라메터값 생성 */
             String param = "date=" + MainActivity.args.getString("someDate") +
-                    "&user_account="+ MainActivity.logged_in_db_id;
+                    "&user_account="+ MainActivity.logged_in_db_id +
+                    "&team="+ MainActivity.team_info +
+                    "&author=" + MainActivity.logged_in_id;
 
             try {
                 /* 서버연결 */
@@ -756,7 +760,7 @@ public class SearchDB extends AsyncTask<Void, Integer, Void> {
 
         if(error_code != 0) {
             if(error_code==3) Toast.makeText(context,"인터넷이 불안정합니다",Toast.LENGTH_SHORT).show();
-            else Toast.makeText(context,"error: " + error_code,Toast.LENGTH_SHORT).show();
+            //else Toast.makeText(context,"error: " + error_code,Toast.LENGTH_SHORT).show();
         }
         if(context==null) return;
 

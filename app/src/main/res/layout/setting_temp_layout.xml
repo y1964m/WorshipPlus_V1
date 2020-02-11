@@ -17,15 +17,18 @@
         android:id="@+id/checkbox_write"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:layout_weight="1" />
     <CheckBox
         android:id="@+id/checkbox_search"
         android:layout_width="0dp"
+        android:gravity="center"
         android:layout_height="wrap_content"
         android:layout_weight="1" />
     <CheckBox
         android:id="@+id/checkbox_notify"
         android:layout_width="0dp"
+        android:gravity="center"
         android:layout_height="wrap_content"
         android:layout_weight="1" />
 </LinearLayout>

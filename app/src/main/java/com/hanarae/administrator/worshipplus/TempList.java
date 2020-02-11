@@ -3,6 +3,7 @@ package com.hanarae.administrator.worshipplus;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -60,6 +61,7 @@ public class TempList extends LinearLayout {
         return;
 
     }
+
 
     public void setDate(String date){
 

@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
    static String logged_in_db_id;
    static String logged_in_id;
    static String team_info;
+   static String checked_search;
 
 
     @Override
@@ -117,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
             logged_in_db_id = sharedPreferences.getString("db_id","");
             logged_in_id = sharedPreferences.getString("id","");
             team_info = sharedPreferences.getString("write","");
+            checked_search = sharedPreferences.getString("search","");
         }
 
 
@@ -183,6 +185,7 @@ public class MainActivity extends AppCompatActivity {
         height = dm.heightPixels; //디바이스 화면 높이
 
         //최근 콘티 부분
+        if(autoText.size()>0) autoText.clear();
         getLatestConti(true);
 
         vpPager = findViewById(R.id.vpPager);
@@ -222,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
 
         latch = new CountDownLatch(1);
 
-        adapter_main = new Latest_Conti_Adapter(1, imm, width, height);
+        adapter_main = new Latest_Conti_Adapter(1, imm, width, height, getApplicationContext());
         recyclerView.setAdapter(adapter_main);
         if(isInitial) searchDB_main = new SearchDB(0, this, latch);
         //else searchDB_main = new SearchDB(1, this, latch);
@@ -260,7 +263,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(!isInitial) Toast.makeText(getApplicationContext(),"업데이트 완료",Toast.LENGTH_SHORT).show();
         else if(sharedPreferences.getString("id","")!=null || !sharedPreferences.getString("id","").equals("")){
-            Toast.makeText(getApplicationContext(),"환영합니다! "+ logged_in_id +"님",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),"환영합니다! "+ sharedPreferences.getString("id","Guest") +"님",Toast.LENGTH_SHORT).show();
         }
         swipeRefreshLayout.setRefreshing(false);
     }

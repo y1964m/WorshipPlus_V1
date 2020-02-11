@@ -125,6 +125,15 @@
                 android:layout_weight="1"
                 android:text="알림" />
         </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="14dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/line_divider" />
+
         <LinearLayout
             android:id="@+id/login_setting_team"
             android:layout_width="match_parent"
