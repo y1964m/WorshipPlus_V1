@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -59,6 +61,7 @@ public class Photo_Recycler_Adapter extends RecyclerView.Adapter<Photo_Recycler_
 
         private TextView photo_name;
         private Button button;
+        private CheckBox checkBox;
 
 
         ItemViewHolder(View itemView) {
@@ -67,6 +70,7 @@ public class Photo_Recycler_Adapter extends RecyclerView.Adapter<Photo_Recycler_
             //변수정의
             photo_name = itemView.findViewById(R.id.textview_photo_name);
             button = itemView.findViewById(R.id.button_photo_delete);
+            checkBox = itemView.findViewById(R.id.checkbox_photo);
 
         }
 
@@ -88,6 +92,24 @@ public class Photo_Recycler_Adapter extends RecyclerView.Adapter<Photo_Recycler_
             }
 
             else{//서버에 사진 있을때
+                if(PhotoSelect.temp_string!=null){//콘티 인풋 때 임시저장 체크 상태확인
+                    if(PhotoSelect.temp_string.contains(data.getSingle_Sheet_url())) checkBox.setChecked(true);
+                }else checkBox.setVisibility(View.INVISIBLE);
+
+                checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if(isChecked){
+                            PhotoSelect.temp_string += data.getSingle_Sheet_url() + ",";
+                        }
+                        else {
+                            PhotoSelect.temp_string = PhotoSelect.temp_string.replace(data.getSingle_Sheet_url() + ",","");
+                        }
+                    }
+                });
+
+
+
                 photo_name.setText(data.getTitle());
                 photo_name.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -134,6 +156,7 @@ public class Photo_Recycler_Adapter extends RecyclerView.Adapter<Photo_Recycler_
 
                                 inputDB.cancel(true);
 
+                                PhotoSelect.temp_string = PhotoSelect.temp_string.replace(listData.get(getAdapterPosition()).getSingle_Sheet_url() + ",","");
                                 listData.remove(position);
                                 notifyDataSetChanged();
 

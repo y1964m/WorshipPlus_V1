@@ -42,7 +42,7 @@ public class PhotoSelect extends AppCompatActivity {
     WebSettings webSettings;
     static Context context;
 
-    Photo_Recycler_Adapter adapter;
+    static Photo_Recycler_Adapter adapter;
     RecyclerView recyclerView;
 
     Button load,camera,save, cancel;
@@ -59,6 +59,7 @@ public class PhotoSelect extends AppCompatActivity {
     SearchDB searchDB_photo;
     static Data data_photo;
     static boolean isFile;
+    static String temp_string;
 
     public static void verifyStoragePermissions(Activity activity) {
 
@@ -84,6 +85,7 @@ public class PhotoSelect extends AppCompatActivity {
         position_main_search= intent.getIntExtra("position_main_search",0);
         url = intent.getStringExtra("url");
         isFile = false;
+        temp_string=null;
 
         verifyStoragePermissions(this);
 
@@ -106,6 +108,8 @@ public class PhotoSelect extends AppCompatActivity {
             load.setVisibility(View.GONE);
             save.setVisibility(View.GONE);
         }
+
+        if(position!=888 && position!=999) temp_string = ThirdFragment.adapter.listData.get(position).getSingle_sheet();
 
         context = this;
         data_photo = new Data();
@@ -150,7 +154,12 @@ public class PhotoSelect extends AppCompatActivity {
                 PhotoSelect.imageView.getLayoutParams().height = ((LinearLayout) PhotoSelect.imageView.getParent()).getLayoutParams().height;
                 PhotoSelect.imageView.setVisibility(View.VISIBLE);
             }else{
-                PhotoSelect.webView.loadUrl(url);
+
+                if(url.contains(",")){//저장된 악보가 2개일때
+                    PhotoSelect.webView.loadUrl(url.substring(0,url.indexOf(",")));
+                }//하나의 악보일때
+                else PhotoSelect.webView.loadUrl(url);
+
                 recyclerView.setVisibility(View.GONE);
                 PhotoSelect.imageView.setVisibility(View.GONE);
                 PhotoSelect.webView.getLayoutParams().height = ((LinearLayout) PhotoSelect.webView.getParent()).getLayoutParams().height;
@@ -174,13 +183,24 @@ public class PhotoSelect extends AppCompatActivity {
                 imageView.setImageURI(uri_temp);
 
             }else*/ if(ThirdFragment.adapter.listData.get(position).getSingle_sheet()!=null){// 웹주소가 들어있는지 확인
-                PhotoSelect.webView.loadUrl(ThirdFragment.adapter.listData.get(position).getSingle_sheet());
+
+                if(ThirdFragment.adapter.listData.get(position).getSingle_sheet().contains(",")){//저장된 악보가 2개일때
+                    PhotoSelect.webView.loadUrl(ThirdFragment.adapter.listData.get(position).getSingle_sheet().substring(0,ThirdFragment.adapter.listData.get(position).getSingle_sheet().indexOf(",")));
+                }//하나의 악보일때
+                else PhotoSelect.webView.loadUrl(ThirdFragment.adapter.listData.get(position).getSingle_sheet());
+
                 PhotoSelect.imageView.setVisibility(View.GONE);
                 PhotoSelect.webView.setVisibility(View.VISIBLE);
             }else {
-                PhotoSelect.webView.loadUrl(url);
+
+                if(url.contains(",")){//저장된 악보가 2개일때
+                    PhotoSelect.webView.loadUrl(url.substring(0,url.indexOf(",")));
+                }//하나의 악보일때
+                else PhotoSelect.webView.loadUrl(url);
+
                 PhotoSelect.imageView.setVisibility(View.GONE);
                 PhotoSelect.webView.setVisibility(View.VISIBLE);
+
             }
         }
 
@@ -218,10 +238,12 @@ public class PhotoSelect extends AppCompatActivity {
                 }
 
                 else{// 웹주소 받아서 그릇에만 저장
-                    ThirdFragment.adapter.listData.get(position).setSingle_Sheet_url(webView.getUrl());
-                    ThirdFragment.adapter.listData.get(position).setSingle_sheet(webView.getUrl());
+                    ThirdFragment.adapter.listData.get(position).setSingle_Sheet_url(temp_string);
+                    ThirdFragment.adapter.listData.get(position).setSingle_sheet(temp_string);
+                    //ThirdFragment.adapter.listData.get(position).setSingle_Sheet_url(webView.getUrl());
+                    //ThirdFragment.adapter.listData.get(position).setSingle_sheet(webView.getUrl());
                     //ThirdFragment.adapter.listData.get(position).setSingle_sheet_temp(null);
-                    Toast.makeText(getApplicationContext(),"업데이트 완료", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"업데이트 완료", Toast.LENGTH_LONG).show();
                     finish();
 
                     if(adapter.getItemCount()==0){
