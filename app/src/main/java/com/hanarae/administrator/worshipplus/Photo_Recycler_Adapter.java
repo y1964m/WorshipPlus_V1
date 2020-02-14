@@ -100,6 +100,7 @@ public class Photo_Recycler_Adapter extends RecyclerView.Adapter<Photo_Recycler_
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                         if(isChecked){
+                            if(!PhotoSelect.temp_string.contains(",")&&!PhotoSelect.temp_string.equals("")) PhotoSelect.temp_string+=",";
                             PhotoSelect.temp_string += data.getSingle_Sheet_url() + ",";
                         }
                         else {
@@ -115,10 +116,12 @@ public class Photo_Recycler_Adapter extends RecyclerView.Adapter<Photo_Recycler_
                     @Override
                     public void onClick(View v) {
 
-                        PhotoSelect.webView.loadUrl(data.getSingle_Sheet_url());
+                        //PhotoSelect.webView.loadUrl(data.getSingle_Sheet_url());
                         PhotoSelect.isFile = false;
                         PhotoSelect.imageView.setVisibility(View.GONE);
-                        PhotoSelect.webView.setVisibility(View.VISIBLE);
+                        PhotoSelect.viewPager.setCurrentItem(getAdapterPosition());
+                        PhotoSelect.viewPager.setVisibility(View.VISIBLE);
+                        //PhotoSelect.webView.setVisibility(View.VISIBLE);
                     }
                 });
 
@@ -156,12 +159,13 @@ public class Photo_Recycler_Adapter extends RecyclerView.Adapter<Photo_Recycler_
 
                                 inputDB.cancel(true);
 
-                                PhotoSelect.temp_string = PhotoSelect.temp_string.replace(listData.get(getAdapterPosition()).getSingle_Sheet_url() + ",","");
+                                if(PhotoSelect.temp_string!=null)
+                                    PhotoSelect.temp_string = PhotoSelect.temp_string.replace(listData.get(getAdapterPosition()).getSingle_Sheet_url() + ",","");
                                 listData.remove(position);
                                 notifyDataSetChanged();
 
-                                PhotoSelect.imageView.setVisibility(View.VISIBLE);
-                                PhotoSelect.webView.setVisibility(View.GONE);
+                                //PhotoSelect.imageView.setVisibility(View.VISIBLE);
+                                PhotoSelect.refreshViewPager();
                             }
                         });
 

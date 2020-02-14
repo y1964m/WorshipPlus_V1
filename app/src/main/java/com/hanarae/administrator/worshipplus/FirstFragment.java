@@ -6,6 +6,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import android.os.SystemClock;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -250,38 +252,27 @@ public class FirstFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                getArguments().putString("someDate", tvLabe2.getText().toString());
-                if(getArguments().get("someDate").toString().isEmpty()){
-                    Toast.makeText(getContext(), "날자를 선택해주세요", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+                //중복 클릭 방지 시간 설정 ( 해당 시간 이후에 다시 클릭 가능 )
+                final long MIN_CLICK_INTERVAL = 1000;
+                long mLastClickTime = 0;
+                long currentClickTime = SystemClock.uptimeMillis();
+                long elapsedTime = currentClickTime - mLastClickTime;
+                mLastClickTime = currentClickTime;
 
-                latch = new CountDownLatch(1);
+                // 중복클릭 아닌 경우
+                if (elapsedTime > MIN_CLICK_INTERVAL) {
 
-                //초기화작업
-                if(ThirdFragment.adapter != null) ThirdFragment.adapter.listData.clear();
+                    getArguments().putString("someDate", tvLabe2.getText().toString());
+                    if(getArguments().get("someDate").toString().isEmpty()){
+                        Toast.makeText(getContext(), "날자를 선택해주세요", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
-                MainActivity.tempConti.removeTitleArrayList();
-                MainActivity.tempConti.removeChordArrayList();
-                MainActivity.tempConti.removeDateArrayList();
-                MainActivity.tempConti.removeExplanationArrayList();
-                MainActivity.tempConti.removeMusicArrayList();
-                MainActivity.tempConti.removeSheetArrayList();
-                MainActivity.tempConti.removeCheck();
+                    latch = new CountDownLatch(1);
 
-                /*AsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR) 쓰레드 병령실행 때 */
+                    //초기화작업
+                    if(ThirdFragment.adapter != null) ThirdFragment.adapter.listData.clear();
 
-                searchDB_first = new SearchDB(3, getContext(), latch);
-                searchDB_first.execute();
-
-                try {
-                    latch.await();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                if (MainActivity.tempConti.getTitleArrayListSize() == 0){
-                    //초기화
                     MainActivity.tempConti.removeTitleArrayList();
                     MainActivity.tempConti.removeChordArrayList();
                     MainActivity.tempConti.removeDateArrayList();
@@ -290,28 +281,52 @@ public class FirstFragment extends Fragment {
                     MainActivity.tempConti.removeSheetArrayList();
                     MainActivity.tempConti.removeCheck();
 
-                    Toast.makeText(getContext(), "작성된 콘티가 없습니다", Toast.LENGTH_SHORT).show();
+                    /*AsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR) 쓰레드 병령실행 때 */
 
-                }else if(MainActivity.tempConti.getTitleArrayListSize() > 0 && MainActivity.tempConti.getBible() != null){
+                    searchDB_first = new SearchDB(3, getContext(), latch);
+                    searchDB_first.execute();
 
-                    Toast.makeText(getContext(), "콘티를 불러왔습니다", Toast.LENGTH_SHORT).show();
-                    SecondFragment.editText_bible.setText(MainActivity.tempConti.getBible().toString());
-                    SecondFragment.editText_title1.setText(MainActivity.tempConti.getSermon().toString());
-                    SecondFragment.editText_title2.setText(MainActivity.tempConti.getLeader().toString());
-                    MainActivity.vpPager.setCurrentItem(2);
+                    try {
+                        latch.await();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
 
-                }else{
-                    MainActivity.tempConti.removeTitleArrayList();
-                    MainActivity.tempConti.removeChordArrayList();
-                    MainActivity.tempConti.removeDateArrayList();
-                    MainActivity.tempConti.removeExplanationArrayList();
-                    MainActivity.tempConti.removeMusicArrayList();
-                    MainActivity.tempConti.removeSheetArrayList();
-                    MainActivity.tempConti.removeCheck();
-                    Toast.makeText(getContext(),"응답없음",Toast.LENGTH_SHORT).show();
+                    if (MainActivity.tempConti.getTitleArrayListSize() == 0){
+                        //초기화
+                        MainActivity.tempConti.removeTitleArrayList();
+                        MainActivity.tempConti.removeChordArrayList();
+                        MainActivity.tempConti.removeDateArrayList();
+                        MainActivity.tempConti.removeExplanationArrayList();
+                        MainActivity.tempConti.removeMusicArrayList();
+                        MainActivity.tempConti.removeSheetArrayList();
+                        MainActivity.tempConti.removeCheck();
+
+                        Toast.makeText(getContext(), "작성된 콘티가 없습니다", Toast.LENGTH_SHORT).show();
+
+                    }else if(MainActivity.tempConti.getTitleArrayListSize() > 0 && MainActivity.tempConti.getBible() != null){
+
+                        Toast.makeText(getContext(), "콘티를 불러왔습니다", Toast.LENGTH_SHORT).show();
+                        SecondFragment.editText_bible.setText(MainActivity.tempConti.getBible().toString());
+                        SecondFragment.editText_title1.setText(MainActivity.tempConti.getSermon().toString());
+                        SecondFragment.editText_title2.setText(MainActivity.tempConti.getLeader().toString());
+                        MainActivity.vpPager.setCurrentItem(2);
+
+                    }else{
+                        MainActivity.tempConti.removeTitleArrayList();
+                        MainActivity.tempConti.removeChordArrayList();
+                        MainActivity.tempConti.removeDateArrayList();
+                        MainActivity.tempConti.removeExplanationArrayList();
+                        MainActivity.tempConti.removeMusicArrayList();
+                        MainActivity.tempConti.removeSheetArrayList();
+                        MainActivity.tempConti.removeCheck();
+                        Toast.makeText(getContext(),"응답없음",Toast.LENGTH_SHORT).show();
+                    }
+
+                    searchDB_first.cancel(true);
+
                 }
 
-                searchDB_first.cancel(true);
             }
         });
 

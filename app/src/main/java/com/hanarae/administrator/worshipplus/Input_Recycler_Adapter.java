@@ -218,7 +218,7 @@ public class Input_Recycler_Adapter extends RecyclerView.Adapter<Input_Recycler_
                 public void onClick(View v) {
 
                     Intent photoSelect = new Intent(context,PhotoSelect.class);
-                    photoSelect.putExtra("song_name",data.getTitle().toString());
+                    photoSelect.putExtra("song_name",data.getTitle());
                     photoSelect.putExtra("position", getAdapterPosition());
                     photoSelect.putExtra("url", data.getSingle_sheet());
                     context.startActivity(photoSelect);

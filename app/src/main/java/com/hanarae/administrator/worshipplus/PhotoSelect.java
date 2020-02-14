@@ -12,13 +12,20 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.provider.MediaStore;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
@@ -32,14 +39,14 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.CountDownLatch;
 
 public class PhotoSelect extends AppCompatActivity {
 
     static ImageView imageView;
-    static WebView webView;
-    WebSettings webSettings;
+    static WebSettings webSettings;
     static Context context;
 
     static Photo_Recycler_Adapter adapter;
@@ -52,7 +59,8 @@ public class PhotoSelect extends AppCompatActivity {
     private String mImgOrient = null;
     private String mImgType = null;
     String serverAddress = "http://ssyp.synology.me:8812/worshipplus/";
-    int position, position_main_search;
+    static int position;
+    int position_main_search;
     String song_name, url;
     Uri uri;
     CountDownLatch latch;
@@ -60,6 +68,9 @@ public class PhotoSelect extends AppCompatActivity {
     static Data data_photo;
     static boolean isFile;
     static String temp_string;
+
+    static ViewPager viewPager;
+    static WebviewAdapter webviewAdapter;
 
     public static void verifyStoragePermissions(Activity activity) {
 
@@ -72,7 +83,74 @@ public class PhotoSelect extends AppCompatActivity {
         }
     }
 
+    public static void refreshViewPager(){
+        webviewAdapter = new WebviewAdapter(context);
+        viewPager.setAdapter(webviewAdapter);
+    }
 
+    public static class WebviewAdapter extends PagerAdapter {
+
+        private Context mContext = null ;
+        private String[] arr;
+        private ArrayList arrayList = new ArrayList();
+        private ArrayList arrayList2 = new ArrayList();
+
+        public WebviewAdapter(Context context, String url){
+            mContext=context;
+            arr = url.split(",");
+        }
+
+        public WebviewAdapter(Context context){
+            mContext=context;
+            for(int i=0; i < adapter.listData.size() ;i++){
+               arrayList.add(adapter.listData.get(i).sheet_url);
+               arrayList2.add(adapter.listData.get(i).getTitle());
+            }
+        }
+
+        @NonNull
+        @Override
+        public Object instantiateItem(@NonNull ViewGroup container, int position) {
+            View view = null ;
+
+            if (mContext != null) {
+                // LayoutInflater를 통해 "/res/layout/page.xml"을 뷰로 생성.
+                LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                view = inflater.inflate(R.layout.viewpager_webview, container, false);
+                WebView webView_pager = view.findViewById(R.id.webview);
+                webSettings = webView_pager.getSettings();
+                webSettings.setUseWideViewPort(true);
+                webSettings.setLoadWithOverviewMode(true);
+                webSettings.setBuiltInZoomControls(true);
+
+                if(PhotoSelect.position == 888) webView_pager.loadUrl(arr[position]);
+                else webView_pager.loadUrl(arrayList.get(position).toString());
+            }
+
+            // 뷰페이저에 추가.
+            container.addView(view);
+            return view ;
+        }
+
+        @Override
+        public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
+            // 뷰페이저에서 삭제.
+            container.removeView((View) object);
+        }
+
+        @Override
+        public int getCount() {
+            int size;
+            if(position == 888) size = arr.length;
+            else size = arrayList.size();
+            return size;
+        }
+
+        @Override
+        public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
+            return (view == object);
+        }
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -93,21 +171,36 @@ public class PhotoSelect extends AppCompatActivity {
         recyclerView = findViewById(R.id.recycler_view_photo);
 
         imageView = findViewById(R.id.imageview_sheet);
-        webView = findViewById(R.id.webview_sheet);
+        viewPager = findViewById(R.id.viewpager_webview);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if(PhotoSelect.position==888)Toast.makeText(getApplicationContext(),(position+1)+"/"+webviewAdapter.arr.length,Toast.LENGTH_SHORT).show();
+                else Toast.makeText(getApplicationContext(),webviewAdapter.arrayList2.get(position).toString(),Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+        /*webView = findViewById(R.id.webview_sheet);
         webSettings = webView.getSettings();
         webSettings.setUseWideViewPort(true);
         webSettings.setLoadWithOverviewMode(true);
-        webSettings.setBuiltInZoomControls(true);
+        webSettings.setBuiltInZoomControls(true);*/
 
         load = findViewById(R.id.button_photo_load);
         //camera = findViewById(R.id.button_photo_camera);
         save = findViewById(R.id.button_photo_save);
         cancel = findViewById(R.id.button_photo_cancel);
 
-        if(position==888){ // 메인화면 이번주 콘티에서 버튼 가리기
-            load.setVisibility(View.GONE);
-            save.setVisibility(View.GONE);
-        }
 
         if(position!=888 && position!=999) temp_string = ThirdFragment.adapter.listData.get(position).getSingle_sheet();
 
@@ -140,7 +233,6 @@ public class PhotoSelect extends AppCompatActivity {
                 data.setSingle_Sheet_url(data_photo.getSheet_url(i));
                 data.setTitle(data_photo.getTitleArrayListItem(i));
 
-
                 // 각 값이 들어간 data를 adapter에 추가합니다.
                 if(data.getTitle()!=null) adapter.addItem(data);
             }
@@ -148,64 +240,84 @@ public class PhotoSelect extends AppCompatActivity {
         }
 
 
-        if(position == 888 ){// 메인화면 콘티
+        if(position == 888 ){// 메인화면 콘티 or 기본정보 아닌 콘티
+
+            load.setVisibility(View.GONE);
+            save.setVisibility(View.GONE);
+
+            webviewAdapter = new WebviewAdapter(getApplicationContext(),url);
+            viewPager.setAdapter(webviewAdapter);
+
             if(url==null || url.equals("")){
-                PhotoSelect.webView.setVisibility(View.GONE);
+                viewPager.setVisibility(View.GONE);
                 PhotoSelect.imageView.getLayoutParams().height = ((LinearLayout) PhotoSelect.imageView.getParent()).getLayoutParams().height;
                 PhotoSelect.imageView.setVisibility(View.VISIBLE);
             }else{
 
-                if(url.contains(",")){//저장된 악보가 2개일때
+               /* if(url.contains(",")){//저장된 악보가 2개일때
                     PhotoSelect.webView.loadUrl(url.substring(0,url.indexOf(",")));
                 }//하나의 악보일때
-                else PhotoSelect.webView.loadUrl(url);
+                else PhotoSelect.webView.loadUrl(url);*/
 
                 recyclerView.setVisibility(View.GONE);
                 PhotoSelect.imageView.setVisibility(View.GONE);
-                PhotoSelect.webView.getLayoutParams().height = ((LinearLayout) PhotoSelect.webView.getParent()).getLayoutParams().height;
-                PhotoSelect.webView.setVisibility(View.VISIBLE);
+                viewPager.getLayoutParams().height = ((LinearLayout) viewPager.getParent()).getLayoutParams().height;
+                viewPager.setVisibility(View.VISIBLE);
+
             }
         }
         else if(position == 999){//  검색 클릭하고 기본정보 곡에 업뎃할때
             if(PraiseSearch.adapter.listData.get(position_main_search).getSheet(0)!=null){
                 if(adapter.getItemCount()!=0){
-                    PhotoSelect.webView.loadUrl(adapter.listData.get(0).getSingle_Sheet_url());
+                    //PhotoSelect.webView.loadUrl(adapter.listData.get(0).getSingle_Sheet_url());
                     PhotoSelect.imageView.setVisibility(View.GONE);
-                    PhotoSelect.webView.setVisibility(View.VISIBLE);
+                    //PhotoSelect.webView.setVisibility(View.VISIBLE);
                 }
+
+                webviewAdapter = new WebviewAdapter(getApplicationContext());
+                viewPager.setAdapter(webviewAdapter);
+
+                viewPager.setVisibility(View.VISIBLE);
                 save.setText("확인");
                 cancel.setVisibility(View.GONE);
             }
         }
         else {//일반 콘티 인풋때
+
+            webviewAdapter = new WebviewAdapter(getApplicationContext());
+            viewPager.setAdapter(webviewAdapter);
+
             /*if(ThirdFragment.adapter.listData.get(position).getSingle_sheet_temp()!=null){//사진이 미리 들어있는지 확인
                 Uri uri_temp=ThirdFragment.adapter.listData.get(position).getSingle_sheet_temp();
                 imageView.setImageURI(uri_temp);
 
             }else*/ if(ThirdFragment.adapter.listData.get(position).getSingle_sheet()!=null){// 웹주소가 들어있는지 확인
 
-                if(ThirdFragment.adapter.listData.get(position).getSingle_sheet().contains(",")){//저장된 악보가 2개일때
+                /*if(ThirdFragment.adapter.listData.get(position).getSingle_sheet().contains(",")){//저장된 악보가 2개일때
                     PhotoSelect.webView.loadUrl(ThirdFragment.adapter.listData.get(position).getSingle_sheet().substring(0,ThirdFragment.adapter.listData.get(position).getSingle_sheet().indexOf(",")));
                 }//하나의 악보일때
-                else PhotoSelect.webView.loadUrl(ThirdFragment.adapter.listData.get(position).getSingle_sheet());
+                else PhotoSelect.webView.loadUrl(ThirdFragment.adapter.listData.get(position).getSingle_sheet());*/
 
                 PhotoSelect.imageView.setVisibility(View.GONE);
-                PhotoSelect.webView.setVisibility(View.VISIBLE);
+                //PhotoSelect.webView.setVisibility(View.VISIBLE);
+                viewPager.setVisibility(View.VISIBLE);
             }else {
 
-                if(url.contains(",")){//저장된 악보가 2개일때
+            /*    if(url.contains(",")){//저장된 악보가 2개일때
                     PhotoSelect.webView.loadUrl(url.substring(0,url.indexOf(",")));
                 }//하나의 악보일때
-                else PhotoSelect.webView.loadUrl(url);
+                else PhotoSelect.webView.loadUrl(url);*/
 
                 PhotoSelect.imageView.setVisibility(View.GONE);
-                PhotoSelect.webView.setVisibility(View.VISIBLE);
+                //PhotoSelect.webView.setVisibility(View.VISIBLE);
+                viewPager.setVisibility(View.VISIBLE);
 
             }
         }
 
         if(data_photo.getTitleArrayListSize()==0 && position != 888){// 메인콘티나 정보 없을때는 환면 회색 표시
-            webView.setVisibility(View.GONE);
+            //webView.setVisibility(View.GONE);
+            viewPager.setVisibility(View.GONE);
             imageView.setVisibility(View.VISIBLE);
         }
 
@@ -534,9 +646,12 @@ public class PhotoSelect extends AppCompatActivity {
                     adapter.addItem(temp_data_photo);
                     adapter.notifyDataSetChanged();
 
-                    PhotoSelect.webView.loadUrl(serverAddress+"sheet_images/"+mImageTitle+"."+mImageType);
+                    refreshViewPager();
+
+                    //PhotoSelect.webView.loadUrl(serverAddress+"sheet_images/"+mImageTitle+"."+mImageType);
                     PhotoSelect.imageView.setVisibility(View.GONE);
-                    PhotoSelect.webView.setVisibility(View.VISIBLE);
+                    //PhotoSelect.webView.setVisibility(View.VISIBLE);
+                    viewPager.setVisibility(View.VISIBLE);
 
                     Toast.makeText(getApplicationContext(),"기본정보 업데이트 완료", Toast.LENGTH_SHORT).show();
                     //finish();
@@ -549,9 +664,12 @@ public class PhotoSelect extends AppCompatActivity {
                     adapter.addItem(temp_data_photo);
                     adapter.notifyDataSetChanged();
 
-                    PhotoSelect.webView.loadUrl(serverAddress+"sheet_images/"+mImageTitle+"."+mImageType);
+                    refreshViewPager();
+
+                    //PhotoSelect.webView.loadUrl(serverAddress+"sheet_images/"+mImageTitle+"."+mImageType);
                     PhotoSelect.imageView.setVisibility(View.GONE);
-                    PhotoSelect.webView.setVisibility(View.VISIBLE);
+                    //PhotoSelect.webView.setVisibility(View.VISIBLE);
+                    viewPager.setVisibility(View.VISIBLE);
 
                     //Toast.makeText(getApplicationContext(),"업데이트 성공", Toast.LENGTH_SHORT).show();
                     //finish();
