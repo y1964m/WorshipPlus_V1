@@ -172,6 +172,7 @@ public class PhotoSelect extends AppCompatActivity {
 
         imageView = findViewById(R.id.imageview_sheet);
         viewPager = findViewById(R.id.viewpager_webview);
+
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

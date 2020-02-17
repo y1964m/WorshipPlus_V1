@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
    int width, height;
    TextView date,bible, sermon, leader;
    static ViewPager vpPager;
-   Button button, button_id;
+   Button button, button_id, button_help;
    static  ArrayList autoText;
    RecyclerView recyclerView;
    BottomNavigationView bottomNavigationView;
@@ -154,6 +154,14 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent_login = new Intent(MainActivity.this, LoginActivity.class);
                 startActivityForResult(intent_login,1000);
+            }
+        });
+        button_help = findViewById(R.id.button_help);
+        button_help.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent_help = new Intent(MainActivity.this, Help.class);
+                startActivity(intent_help);
             }
         });
 
