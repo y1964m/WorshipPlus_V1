@@ -34,7 +34,7 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="ex) 년.월.일/시"
+        android:hint="ex) 년.월.일/팀"
         android:inputType="text"
         android:saveEnabled="false"
         android:layout_marginBottom="2dp"/>

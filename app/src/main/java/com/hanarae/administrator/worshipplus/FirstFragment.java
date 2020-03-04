@@ -111,7 +111,7 @@ public class FirstFragment extends Fragment {
                 if(dayOfMonth < 10) space2 = ".0";
                 else space2 =".";
 
-                final String date = (year + space1 + (month + 1) + space2 + dayOfMonth) + "/1400";
+                final String date = (year + space1 + (month + 1) + space2 + dayOfMonth) + "/" + MainActivity.team_info;
 
 
                 if(!MainActivity.tempConti.isEmpty()){//로드 한번이라도 했다면
