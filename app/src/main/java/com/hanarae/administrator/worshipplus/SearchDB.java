@@ -81,7 +81,7 @@ public class SearchDB extends AsyncTask<Void, Integer, Void> {
         if(case_number==0) {//맨처음 메인콘티 불러오기 + 자동검색단어 저장
 
             /* 인풋 파라메터값 생성 */
-            String param = "user_account="+ MainActivity.logged_in_db_id;
+            String param = "user_account="+ MainActivity.logged_in_db_id + "&team=" + MainActivity.team_info;
 
             try {
                 /* 서버연결 */
@@ -240,7 +240,7 @@ public class SearchDB extends AsyncTask<Void, Integer, Void> {
         if(case_number==1) {//메인콘티 불러오기
 
             /* 인풋 파라메터값 생성 */
-            String param = "user_account="+ MainActivity.logged_in_db_id;
+            String param = "user_account="+ MainActivity.logged_in_db_id + "&team=" + MainActivity.team_info;
 
             try {
                 /* 서버연결 */

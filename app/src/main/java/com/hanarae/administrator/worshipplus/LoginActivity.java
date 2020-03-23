@@ -77,15 +77,15 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);     //다이얼로그에서 사용할 레이아웃입니다.
 
-        final EditText id, pw, db_id;
+        final EditText id, pw, editText_db_id;
         final LinearLayout background, login1, login_setting, login_setting_team;
         final InputMethodManager imm;
 
         sharedPreferences = getApplicationContext().getSharedPreferences("login",0);
         editor = sharedPreferences.edit();
 
-        db_id= findViewById(R.id.editText_db_id);
-        db_id.setText(MainActivity.logged_in_db_id);
+        editText_db_id= findViewById(R.id.editText_db_id);
+        editText_db_id.setText(MainActivity.logged_in_db_id);
 
         id = findViewById(R.id.editText_id);
         pw = findViewById(R.id.editText_pw);
@@ -135,7 +135,8 @@ public class LoginActivity extends AppCompatActivity {
                                     // Get new Instance ID token
                                     String tokenID = task.getResult().getToken();
                                     Log.e("FirebaseMsgService", "Token: " + tokenID);
-                                    LoginDB loginDB = new LoginDB(0, db_id.getText().toString(),id.getText().toString(),sha256(pw.getText().toString()),tokenID);
+
+                                    LoginDB loginDB = new LoginDB(0, editText_db_id.getText().toString(),id.getText().toString(),sha256(pw.getText().toString()),tokenID);
                                     loginDB.execute();
                                 }
                             });
@@ -144,12 +145,15 @@ public class LoginActivity extends AppCompatActivity {
                     MainActivity.editor.putString("db_id",null);
                     MainActivity.editor.putString("id",null);
                     MainActivity.editor.putString("pw",null);
+                    MainActivity.editor.putString("write",null);
                     MainActivity.editor.apply();
+                    //MainActivity.editor.clear();
 
                     MainActivity.logged_in_id = null;
                     MainActivity.logged_in_db_id=null;
 
                     id.setText("");
+                    pw.setText("");
                     login.setText("Login");
                     join.setText("NEW");
 
@@ -167,8 +171,8 @@ public class LoginActivity extends AppCompatActivity {
                     imm.hideSoftInputFromWindow(v.getWindowToken(),0);
 
                 if(join.getText().equals("NEW")){
-                    if(db_id.getText().toString().equals("") || id.getText().toString().equals("") || pw.getText().toString().equals("")
-                            || db_id.getText()==null  || id.getText()==null || pw.getText()==null){
+                    if(editText_db_id.getText().toString().equals("") || id.getText().toString().equals("") || pw.getText().toString().equals("")
+                            || editText_db_id.getText()==null  || id.getText()==null || pw.getText()==null){
                         Toast.makeText(getApplicationContext(),"빈칸을 채워주세요", Toast.LENGTH_SHORT).show();
                     }
 
@@ -197,7 +201,7 @@ public class LoginActivity extends AppCompatActivity {
                                                 // Get new Instance ID token
                                                 String tokenID = task.getResult().getToken();
                                                 Log.e("FirebaseMsgService", "Token: " + tokenID);
-                                                LoginDB loginDB = new LoginDB(1, db_id.getText().toString(),id.getText().toString(),sha256(pw.getText().toString()),tokenID);
+                                                LoginDB loginDB = new LoginDB(1, editText_db_id.getText().toString(),id.getText().toString(),sha256(pw.getText().toString()),tokenID);
                                                 loginDB.execute();
                                             }
                                         });
@@ -211,7 +215,10 @@ public class LoginActivity extends AppCompatActivity {
                 else if(join.getText().equals("Team")){
 
                     latch = new CountDownLatch(1);
-                    LoginDB loginDB = new LoginDB(2, db_id.getText().toString());
+                    String temp_team;
+                    if(MainActivity.logged_in_db_id==null) temp_team = editText_db_id.getText().toString();
+                    else temp_team = MainActivity.logged_in_db_id;
+                    LoginDB loginDB = new LoginDB(2, temp_team);
                     loginDB.execute();
                     try {
                         latch.await();
@@ -296,7 +303,7 @@ public class LoginActivity extends AppCompatActivity {
             this.db_id = db_id;
             this.id = id;
             this.pw = pw;
-            this.tokenID = tokenID;        }
+            this.tokenID = tokenID; }
 
         LoginDB(int case_num, String db_id){
             this.case_num = case_num;
@@ -331,6 +338,7 @@ public class LoginActivity extends AppCompatActivity {
             if(case_num ==2) param = "db_id=" + db_id + option;
             else if(case_num ==3) param = "db_id=" + db_id + "&id=" + id + option;
             else param = "db_id=" + db_id +"&id=" + id + "&pw=" + pw + "&tokenID=" + tokenID + option;
+            Log.e("sent DATA", param);
 
             try {
                 /* 서버연결 */
@@ -417,18 +425,22 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),"로그인 정보가 일치하지 않습니다", Toast.LENGTH_SHORT).show();
                     break;
                 case 1:
+                    setResult(Activity.RESULT_OK);
+                    MainActivity.editor.putString("db_id",db_id);
+                    MainActivity.editor.putString("id",id);
+                    MainActivity.editor.putString("pw",pw);
+                    MainActivity.editor.apply();
+                    MainActivity.logged_in_db_id = db_id;
+                    MainActivity.logged_in_id = id;
+
                     if(sharedPreferences.getString("write","team").equals("team")){
+                        //if(!db_id.equals(MainActivity.logged_in_db_id)) MainActivity.editor.clear();
                         Toast.makeText(getApplicationContext(),"팀을 선택해주세요", Toast.LENGTH_SHORT).show();
                         join.setText("Team");
                         return;
-                    }else {
-                        setResult(Activity.RESULT_OK);
-                        MainActivity.editor.putString("db_id",db_id);
-                        MainActivity.editor.putString("id",id);
-                        MainActivity.editor.putString("pw",pw);
-                        MainActivity.editor.apply();
-                        finish();
                     }
+
+                    finish();
                     break;
                 case 2:
                     Toast.makeText(getApplicationContext(),"이미 존재하는 아이디입니다", Toast.LENGTH_SHORT).show();

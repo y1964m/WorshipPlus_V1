@@ -31,6 +31,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:inputType="text"
+                android:hint="관리자 문의 또는 guest 입력"
                 android:imeOptions="actionNext"
                 android:ems="10" />
 
@@ -111,7 +112,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="작성" />
+                android:text="소속" />
 
             <TextView
                 android:layout_width="0dp"
