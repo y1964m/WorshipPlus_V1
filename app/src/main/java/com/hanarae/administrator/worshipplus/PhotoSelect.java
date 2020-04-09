@@ -475,12 +475,13 @@ public class PhotoSelect extends AppCompatActivity {
 
         }
 
-    void imageUpload(final String filename, String song_name) {
+    int imageUpload(final String filename, String song_name) {
         String urlString = serverAddress + "sheet_upload.php";
 
         String lineEnd = "\r\n";
         String twoHyphens = "--";
         String boundary = "******";
+        int result = 0;
 
         try {
 
@@ -509,6 +510,7 @@ public class PhotoSelect extends AppCompatActivity {
             dos.writeBytes(MainActivity.logged_in_db_id +lineEnd);
             dos.writeBytes( twoHyphens + boundary + lineEnd);
             dos.writeBytes("Content-Disposition: form-data; name=\"uploadedfile\";filename=\"" + URLEncoder.encode(filename,"utf-8") + "\"" + lineEnd);
+            // + System.currentTimeMillis(); 파일이름에 더해서 중복 방지하기
             dos.writeBytes("Content-Type: application/octet-stream\r\n\r\n");
 
             int bytesAvailable = mFileInputStream.available();
@@ -552,11 +554,14 @@ public class PhotoSelect extends AppCompatActivity {
             Log.e("result", ":" + s);
             dos.close();
 
+            if(s.contains("file already exists.")) result = 1;
 
         } catch (Exception e) {
             Log.d("Test", "exception " + e.getMessage());
+            result = 2;
             // TODO: handle exception
         }
+        return result;
     }
 
     public class HttpRequestAsyncTask extends AsyncTask<String, Integer, Integer> {
@@ -592,9 +597,10 @@ public class PhotoSelect extends AppCompatActivity {
             params.put("IMG_TITLE", mImageTitle);
             params.put("IMG_ORIENTATION", mImageOrientation);
 
-            imageUpload(mImgPath,song_name);
+            //imageUpload(mImgPath,song_name);
+            int result = imageUpload(mImgPath,song_name);
 
-            int result = 0;//uploadImageInfo(params);
+            //int result = 0;//uploadImageInfo(params);
 
             return result;
 
@@ -616,6 +622,11 @@ public class PhotoSelect extends AppCompatActivity {
             }
 
             if (aResult == null) {  return; }
+
+            if (aResult.intValue() == 1){
+                Toast.makeText(getApplicationContext(),"동일한 이름의 파일이 존재합니다.", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             if (aResult.intValue() == 0) {
                 if(position==999){ // 검색 클릭하고 기본정보 곡에 업뎃할때
@@ -677,7 +688,7 @@ public class PhotoSelect extends AppCompatActivity {
                 }
             }
 
-       else {
+            else {
                Toast.makeText(getApplicationContext(),"업데이트 실패", Toast.LENGTH_SHORT).show();
                finish();
             }
