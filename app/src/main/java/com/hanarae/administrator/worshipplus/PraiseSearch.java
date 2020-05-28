@@ -129,7 +129,7 @@ public class PraiseSearch extends AppCompatActivity {
                         ArrayList tempArray = new ArrayList();
                         tempArray.add("");
 
-                        if(MainActivity.tempData.DateArrayList.get(i).get(0).equals("기본정보")){
+                        if(MainActivity.tempData.DateArrayList.get(i).get(0).equals("//기본정보")){
                             MainActivity.tempConti.addExplanation(""); // 세부콘티
                             MainActivity.tempConti.addMusic(""); // 링크주소
                             MainActivity.tempConti.addSheet(""); // 악보주소

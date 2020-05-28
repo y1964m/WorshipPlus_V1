@@ -134,7 +134,14 @@ public class Data  {
     public void setCheck(int check, int position, int second_position) {
         Check.set(position, check);
         ArrayList temp = new ArrayList<>();
-        temp.add(ExplanationArrayList.get(position).get(second_position));
+        //체크한게 기본정보일때 태그가 복사되면 이상하기에 그냥 빈칸으로 복사하기
+        if(DateArrayList.get(position).get(second_position).equals("기본정보")){
+            temp.add("");
+        }
+        else {
+            temp.add(ExplanationArrayList.get(position).get(second_position));
+        }
+
         temp.add(MusicArrayList.get(position).get(second_position));
         temp.add(SheetArrayList.get(position).get(second_position));
         Second_Check.set(position, temp);
