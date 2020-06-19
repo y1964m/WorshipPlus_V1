@@ -140,7 +140,7 @@ public class Latest_Conti_Adapter extends RecyclerView.Adapter<Latest_Conti_Adap
                 }else tempList.setDate("");
                     //tempList.setDate(data.getDate(i));*/
 
-                tempList.setMusic(data.getMusic(i));
+                tempList.setMusic(data.getMusic(i),data.getDate(i));
                 tempList.setSheet(data.getTitle(),888, data.getSingle_Sheet_url());
                 container.addView(tempList);
             }

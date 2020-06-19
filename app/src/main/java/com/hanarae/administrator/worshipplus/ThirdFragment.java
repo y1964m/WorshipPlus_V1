@@ -221,6 +221,7 @@ public class ThirdFragment extends Fragment {
                     case 1: // 확인 후 최종 저장 단계
                         String db_data = "";
                         String temp_ex = "없음";
+                        String temp_link_ssyp="";
                         for(int i =0; i < adapter.getItemCount(); i++){
 
                             if(adapter.listData.get(i).getSingle_explanation()!=null)
@@ -228,11 +229,17 @@ public class ThirdFragment extends Fragment {
                                         .replace("\"","\\\'").replace("\'","\\\'").replace("\\\"","\\\'");
                             else temp_ex = "없음";
 
+                            //성실교회 실황링크 자동삽입
+                            /*if(MainActivity.logged_in_db_id.equals("ssyp")) temp_link_ssyp =
+                                    "\n\n실황링크\nhttp://ssyp.synology.me:8812/worshipplus/record/" +
+                                            (MainActivity.args.getString("someDate").substring(0,10)).replace(".","")
+                                            + ".mp3";*/
+
                             db_data += "&id_date[]=" + MainActivity.args.getString("someDate") + "/"+i
                                     + "&title[]=" + adapter.listData.get(i).getTitle().trim()
                                     + "&chord[]=" + adapter.listData.get(i).getContent().replace(" ","")
                                     + "&ex[]=" + temp_ex
-                                + "&music[]=" + adapter.listData.get(i).getSingle_music()
+                                + "&music[]=" + adapter.listData.get(i).getSingle_music() //+ temp_link_ssyp
                                 + "&sheet[]=" + adapter.listData.get(i).getSingle_sheet()
                                 + publicOn + pushOn;
                         }

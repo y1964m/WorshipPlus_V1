@@ -154,7 +154,7 @@ public class Search_Recycler_Adapter extends RecyclerView.Adapter<Search_Recycle
                     else {
                         tempList.setDate(data.getDate(i));
                         tempList.setExplanation(data.getExplanation(i));
-                        tempList.setMusic(data.getMusic(i));
+                        tempList.setMusic(data.getMusic(i),data.getDate(i));
                         tempList.setSheet(data.getTitle(),888, data.getSheet(i));//메인콘티와 비슷하게 레이아웃
                     }
                     tempList.setDate(data.getDate(i));

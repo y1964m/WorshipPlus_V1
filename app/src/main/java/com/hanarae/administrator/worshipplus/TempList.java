@@ -199,7 +199,7 @@ public class TempList extends LinearLayout {
 
     }
 
-    public void setMusic(String ex){
+    public void setMusic(String ex, final String date){
 
         final String music = ex;
         button_music = findViewById(R.id.button_music);
@@ -217,6 +217,26 @@ public class TempList extends LinearLayout {
 
             }
         });
+
+        //길게 링크버튼 누르면 성실교회 실황으로 연결
+        if(MainActivity.logged_in_db_id.equals("ssyp")){
+            button_music.setOnLongClickListener(new OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+
+                    cd = new CustomDialog(5, getContext(), position, imm, "실황링크\nhttp://ssyp.synology.me:8812/worshipplus/record/" +
+                            (date.substring(0,10)).replace(".","")
+                            + ".mp3");
+                    WindowManager.LayoutParams wm = cd.getWindow().getAttributes();  //다이얼로그의 높이 너비 설정하기위해
+                    wm.copyFrom(cd.getWindow().getAttributes());  //여기서 설정한값을 그대로 다이얼로그에 넣겠다는의미
+                    wm.width = width ;  //화면 너비의 절반
+                    wm.height = height / 2;  //화면 높이의 절반
+                    cd.show();
+
+                    return false;
+                }
+            });
+        }
 
     }
 
