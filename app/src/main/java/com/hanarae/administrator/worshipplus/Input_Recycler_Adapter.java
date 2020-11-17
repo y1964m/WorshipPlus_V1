@@ -237,12 +237,28 @@ public class Input_Recycler_Adapter extends RecyclerView.Adapter<Input_Recycler_
             button_music.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    cd = new CustomDialog(2,context, getAdapterPosition(),imm,data.getSingle_music());
+                    cd = new CustomDialog(2,context, getAdapterPosition(),imm, data.getSingle_music());
                     WindowManager.LayoutParams wm = cd.getWindow().getAttributes();  //다이얼로그의 높이 너비 설정하기위해
                     wm.copyFrom(cd.getWindow().getAttributes());  //여기서 설정한값을 그대로 다이얼로그에 넣겠다는의미
                     wm.width = width ;  //화면 너비의 절반
                     wm.height = height / 2;  //화면 높이의 절반
                     cd.show();
+                }
+            });
+
+            button_music.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) { // 길게눌러 유투브 링크로 이동
+
+                    cd = new CustomDialog(5, context, getAdapterPosition(), imm,
+                            "Youtube\nhttps://www.youtube.com/results?search_query=" + data.getTitle().replace(" ",""));
+                    WindowManager.LayoutParams wm = cd.getWindow().getAttributes();  //다이얼로그의 높이 너비 설정하기위해
+                    wm.copyFrom(cd.getWindow().getAttributes());  //여기서 설정한값을 그대로 다이얼로그에 넣겠다는의미
+                    wm.width = width ;  //화면 너비의 절반
+                    wm.height = height / 2;  //화면 높이의 절반
+                    cd.show();
+
+                    return false;
                 }
             });
 
