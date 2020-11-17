@@ -17,7 +17,9 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -51,6 +53,7 @@ public class LoginActivity extends AppCompatActivity {
     static SharedPreferences.Editor editor;
     CountDownLatch latch;
     Button login, join;
+    ImageButton back;
 
 
     public static String sha256(String str) {
@@ -91,6 +94,17 @@ public class LoginActivity extends AppCompatActivity {
         pw = findViewById(R.id.editText_pw);
         login = findViewById(R.id.button_login);
         join = findViewById(R.id.button_join);
+        back = findViewById(R.id.join_button_back);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(MainActivity.logged_in_db_id ==null || MainActivity.logged_in_db_id.equals("")){
+                    Toast.makeText(getApplicationContext(),"로그아웃 상태입니다", Toast.LENGTH_SHORT).show();
+                }else if(sharedPreferences.getString("write","team").equals("team"))
+                    Toast.makeText(getApplicationContext(),"팀을 선택해주세요", Toast.LENGTH_SHORT).show();
+                else onBackPressed();
+            }
+        });
 
         login1 = findViewById(R.id.login_1);
         login_setting = findViewById(R.id.login_setting);
@@ -237,6 +251,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     join.setText("확인");
                     login.setVisibility(View.GONE);
+                    back.setVisibility(View.GONE);
 
                 }
                 else if(join.getText().equals("확인")){
@@ -269,6 +284,8 @@ public class LoginActivity extends AppCompatActivity {
 
                     login.setVisibility(View.VISIBLE);
                     login_setting.setVisibility(View.GONE);
+
+                    back.setVisibility(View.VISIBLE);
 
                     team.clear();
 

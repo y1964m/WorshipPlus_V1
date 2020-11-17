@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:weightSum="10"
     android:gravity="center">
 
     <LinearLayout
@@ -87,9 +88,11 @@
     </LinearLayout>
 
     <LinearLayout
+        android:layout_weight="7"
+        android:paddingTop="20dp"
         android:id="@+id/login_setting"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone">
@@ -135,20 +138,25 @@
             android:layout_marginBottom="10dp"
             android:background="@drawable/line_divider" />
 
-        <LinearLayout
-            android:id="@+id/login_setting_team"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"/>
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:id="@+id/login_setting_team"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+        </ScrollView>
 
 
     </LinearLayout>
 
         <LinearLayout
+            android:layout_weight="0.8"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center"
+            android:gravity="center_horizontal"
             android:layout_marginTop="20dp">
 
             <Button
@@ -167,5 +175,15 @@
                 android:background="@drawable/rounded_button" />
 
         </LinearLayout>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:clickable="true"
+        android:id="@+id/join_button_back"
+        android:src="@drawable/ic_home_black_24dp"
+        android:background="@color/cardview_light_background"
+        />
 
 </LinearLayout>
