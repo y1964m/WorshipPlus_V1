@@ -19,7 +19,9 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.concurrent.CountDownLatch;
 
 public class SearchDB extends AsyncTask<Void, Integer, Void> {
@@ -737,6 +739,134 @@ public class SearchDB extends AsyncTask<Void, Integer, Void> {
                     error_code = 1;
                 }
 
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+                latch_DB.countDown();
+                error_code = 2;
+            } catch (IOException e) {
+                e.printStackTrace();
+                latch_DB.countDown();
+                error_code = 3;
+            }
+        }
+
+
+        if(case_number==5){ // 콘티 리스트로 불러오기
+
+            long now = System.currentTimeMillis();
+            Date mDate = new Date(now);
+            SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy.MM.dd");
+            String getTime = simpleDate.format(mDate);
+
+            /* 인풋 파라메터값 생성 */
+            String param = "date=" + getTime +
+                    "&user_account="+ MainActivity.logged_in_db_id +
+                    "&team="+ MainActivity.team_info +
+                    "&author=" + MainActivity.logged_in_id;
+
+            Log.e("SEND DATA", param);
+
+            try {
+                /* 서버연결 */
+               /* URL url = new URL(
+                        "http://y1964m.dothome.co.kr/worshipplus/load_conti.php");*/
+                URL url = new URL(
+                        server_address+"worshipplus/load_list.php");
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                conn.setRequestMethod("POST");
+                conn.setDoInput(true);
+                conn.connect();
+
+                /* 안드로이드 -> 서버 파라메터값 전달 */
+                OutputStream outs = conn.getOutputStream();
+                outs.write(param.getBytes("UTF-8"));
+                outs.flush();
+                outs.close();
+
+                /* 서버 -> 안드로이드 파라메터값 전달 */
+                InputStream is = null;
+                BufferedReader in = null;
+                String data = "";
+
+                is = conn.getInputStream();
+                in = new BufferedReader(new InputStreamReader(is), 8 * 1024);
+                String line = null;
+                StringBuffer buff = new StringBuffer();
+
+                while ((line = in.readLine()) != null) {
+                    buff.append(line + "\n");
+                }
+                data = buff.toString().trim();
+
+                /* 서버에서 응답 */
+                Log.e("RECV DATA", data);
+
+                //서버에서 정보 가져오기
+                try {
+                    JSONArray jsonArray = new JSONArray(data);
+
+                    ArrayList tempDate = new ArrayList();
+                    ArrayList tempExplanation = new ArrayList();
+
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                        if(i == jsonArray.length()-1){
+                            ContiListActivity.tempList.addTitleArrayListItem(jsonObject.getString("id_date"));
+                            //ContiListActivity.tempList.setChordArrayList(jsonObject.getString("chord"));
+
+                            tempDate.add(jsonObject.getString("title")); //콘티 내 곡들
+                            tempExplanation.add(jsonObject.getString("chord")); // 콘티 내 코드이다
+
+                            ContiListActivity.tempList.setDateArrayList(tempDate);
+                            ContiListActivity.tempList.setExplanationArrayList(tempExplanation);
+
+                            tempDate.clear();
+                            tempExplanation.clear();
+
+                            break;
+
+                        }else {
+                            JSONObject next_jsonObject = jsonArray.getJSONObject(i + 1);
+
+                            if (!(
+                                    (jsonObject.getString("id_date").substring(0,10))
+                                            .equalsIgnoreCase
+                                                    (next_jsonObject.getString("id_date").substring(0,10))
+
+                            )) {
+                                ContiListActivity.tempList.addTitleArrayListItem(jsonObject.getString("id_date")); // 날짜다
+
+                                tempDate.add(jsonObject.getString("title")); //콘티 내 곡들
+                                tempExplanation.add(jsonObject.getString("chord")); // 콘티 내 코드이다
+
+                                ContiListActivity.tempList.setDateArrayList(tempDate);
+                                ContiListActivity.tempList.setExplanationArrayList(tempExplanation);
+
+                                tempDate.clear();
+                                tempExplanation.clear();
+
+
+                            } else {
+
+                                tempDate.add(jsonObject.getString("title")); //콘티 내 곡들
+                                tempExplanation.add(jsonObject.getString("chord")); // 콘티 내 코드이다
+
+                            }
+                        }
+
+                    }
+
+                    mWakeLock.release();
+                    latch_DB.countDown();
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    latch_DB.countDown();
+                    error_code = 1;
+                }
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();

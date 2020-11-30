@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
    int width, height;
    TextView date,bible, sermon, leader;
    static ViewPager vpPager;
-   Button button, button_id, button_help;
+   Button button, button_id, button_help, button_list;
    static  ArrayList autoText;
    RecyclerView recyclerView;
    BottomNavigationView bottomNavigationView;
@@ -148,6 +148,16 @@ public class MainActivity extends AppCompatActivity {
         sermon = findViewById(R.id.textview_conti_info_sermon_main);
         leader = findViewById(R.id.textview_conti_info_leader_main);
         button = findViewById(R.id.button_copy_all);
+
+        button_list = findViewById(R.id.button_list);
+        button_list.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent_list = new Intent(MainActivity.this, ContiListActivity.class);
+                startActivityForResult(intent_list,1000);
+            }
+        });
+
         button_id = findViewById(R.id.button_id_change);
         button_id.setOnClickListener(new View.OnClickListener() {
             @Override

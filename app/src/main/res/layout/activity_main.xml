@@ -65,12 +65,21 @@
                         android:background="@drawable/baseline_account_circle_black_18" />
 
                     <Button
+                        android:id="@+id/button_list"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="10dp"
+                        android:background="@android:drawable/ic_menu_more" />
+
+                    <Button
                         android:id="@+id/button_help"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_gravity="center"
                         android:layout_marginRight="10dp"
                         android:background="@android:drawable/ic_menu_help" />
+
 
                 </LinearLayout>
 

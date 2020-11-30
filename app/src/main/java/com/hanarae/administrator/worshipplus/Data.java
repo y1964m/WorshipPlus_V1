@@ -9,6 +9,7 @@ public class Data  {
     private String title;
     private String content;
     private String bible_date, bible, sermon, leader;
+    private String list_date, list_team, list_content;
 
 
     String single_explanation, single_music, single_sheet;
@@ -38,6 +39,31 @@ public class Data  {
     ArrayList<ArrayList> ExplanationArrayList = new ArrayList<ArrayList>();
     ArrayList<ArrayList> MusicArrayList = new ArrayList<ArrayList>();
     ArrayList<ArrayList> SheetArrayList = new ArrayList<ArrayList>();
+
+
+    public void setListDate(String list_date){
+        this.list_date=list_date.substring(0, 9);
+        this.list_team=list_date.substring(9);
+    }
+    public String getListDate(){
+        return list_date;
+    }
+
+    public String getListTeam(){
+        return list_team;
+    }
+
+    public void setListContent(ArrayList list_title, ArrayList list_chord){
+        String list_temp = "";
+        for (int i = 0 ; i < list_title.size(); i++){
+            list_temp += list_title.get(i) + "   " + list_chord.get(i) + "\n";
+        }
+        this.list_content=list_temp;
+    }
+    public String getListContent(){
+        return list_content;
+    }
+
 
 
     public boolean isEmpty(){

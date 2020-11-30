@@ -232,6 +232,22 @@ public class Input_Recycler_Adapter extends RecyclerView.Adapter<Input_Recycler_
                 }
             });
 
+            button_sheet.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) { // 길게 눌러 구글 악보 이미지 검색
+
+                    cd = new CustomDialog(5, context, getAdapterPosition(), imm,
+                            "Web Search\nhttps://www.google.com/search?q=" + data.getTitle().replace(" ","") + "&tbm=isch");
+                    WindowManager.LayoutParams wm = cd.getWindow().getAttributes();  //다이얼로그의 높이 너비 설정하기위해
+                    wm.copyFrom(cd.getWindow().getAttributes());  //여기서 설정한값을 그대로 다이얼로그에 넣겠다는의미
+                    wm.width = width ;  //화면 너비의 절반
+                    wm.height = height / 2;  //화면 높이의 절반
+                    cd.show();
+
+                    return false;
+                }
+            });
+
 
             button_music = itemView.findViewById(R.id.button_music_input);
             button_music.setOnClickListener(new View.OnClickListener() {
