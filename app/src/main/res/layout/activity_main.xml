@@ -37,6 +37,7 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:id="@+id/button_copy_all"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_marginTop="10dp"
@@ -44,17 +45,18 @@
                         android:gravity="center_vertical"
                         android:paddingLeft="25dp"
                         android:text="이번주 콘티"
+                        android:longClickable="true"
                         android:textColor="@android:color/background_dark"
                         android:textSize="20sp" />
 
                     <Button
-                        android:id="@+id/button_copy_all"
+                        android:id="@+id/button_list"
                         android:layout_width="wrap_content"
                         android:layout_height="30dp"
                         android:layout_gravity="center"
                         android:layout_margin="10dp"
                         android:background="@drawable/rounded_button"
-                        android:text="전체복사" />
+                        android:text="최근콘티" />
 
                     <Button
                         android:id="@+id/button_id_change"
@@ -64,13 +66,6 @@
                         android:layout_marginRight="10dp"
                         android:background="@drawable/baseline_account_circle_black_18" />
 
-                    <Button
-                        android:id="@+id/button_list"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_gravity="center"
-                        android:layout_marginRight="10dp"
-                        android:background="@android:drawable/ic_menu_more" />
 
                     <Button
                         android:id="@+id/button_help"

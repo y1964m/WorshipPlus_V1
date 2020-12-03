@@ -754,14 +754,14 @@ public class SearchDB extends AsyncTask<Void, Integer, Void> {
 
         if(case_number==5){ // 콘티 리스트로 불러오기
 
-            long now = System.currentTimeMillis();
+            /*long now = System.currentTimeMillis();
             Date mDate = new Date(now);
-            SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy.MM.dd");
-            String getTime = simpleDate.format(mDate);
+            SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy.MM");
+            String getTime = simpleDate.format(mDate);*/
 
             /* 인풋 파라메터값 생성 */
-            String param = "date=" + getTime +
-                    "&user_account="+ MainActivity.logged_in_db_id +
+            String param = //"date=" + getTime + // php에서 시간 쓸거임
+                    "user_account="+ MainActivity.logged_in_db_id +
                     "&team="+ MainActivity.team_info +
                     "&author=" + MainActivity.logged_in_id;
 
@@ -794,6 +794,7 @@ public class SearchDB extends AsyncTask<Void, Integer, Void> {
                 in = new BufferedReader(new InputStreamReader(is), 8 * 1024);
                 String line = null;
                 StringBuffer buff = new StringBuffer();
+
 
                 while ((line = in.readLine()) != null) {
                     buff.append(line + "\n");
@@ -847,6 +848,7 @@ public class SearchDB extends AsyncTask<Void, Integer, Void> {
 
                                 tempDate.clear();
                                 tempExplanation.clear();
+
 
 
                             } else {

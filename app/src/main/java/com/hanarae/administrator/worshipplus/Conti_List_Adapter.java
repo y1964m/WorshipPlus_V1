@@ -63,30 +63,6 @@ public class Conti_List_Adapter extends RecyclerView.Adapter<Conti_List_Adapter.
             conti_list_team.setText(data.getListTeam());
             conti_list_content.setText(data.getListContent());
 
-            for (int i =0; i < data.getDateSize(); i++){
-
-
-
-
-
-
-
-             /*   TempList tempList = new TempList(itemView.getContext(), width, height, imm,1, getAdapterPosition(), i);
-                if(data.getDate(i).equals("기본정보")){
-                    tempList.setDate(data.getDate(i),data.getTitle());
-                    tempList.setExplanation(data.getExplanation(i),6);
-                    tempList.setMusic(data.getMusic(i),7);
-                    tempList.setSheet(data.getTitle(),999,data.getSheet(i));// 악보검색할때 곡제목 전달
-                }
-                else {
-                    tempList.setDate(data.getDate(i));
-                    tempList.setExplanation(data.getExplanation(i));
-                    tempList.setMusic(data.getMusic(i),data.getDate(i));
-                    tempList.setSheet(data.getTitle(),888, data.getSheet(i));//메인콘티와 비슷하게 레이아웃
-                }
-                tempList.setDate(data.getDate(i));
-                container.addView(tempList);*/
-            }
 
         }
     }

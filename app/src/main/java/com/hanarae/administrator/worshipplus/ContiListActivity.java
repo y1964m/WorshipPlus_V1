@@ -3,6 +3,7 @@ package com.hanarae.administrator.worshipplus;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.util.concurrent.CountDownLatch;
@@ -18,6 +19,15 @@ public class ContiListActivity extends AppCompatActivity {
     CountDownLatch latch;
     SearchDB searchDB_list;
     static Data tempList;
+    Conti_List_Adapter adapter;
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        adapter.listData.clear();
+        finishAndRemoveTask();
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -31,7 +41,7 @@ public class ContiListActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        Conti_List_Adapter adapter = new Conti_List_Adapter();
+        adapter = new Conti_List_Adapter();
         recyclerView.setAdapter(adapter);
         latch = new CountDownLatch(1);
 
@@ -55,7 +65,7 @@ public class ContiListActivity extends AppCompatActivity {
             data.setListContent(tempList.getDateArrayListItem(i),tempList.getExplanationArrayListItem(i));
 
             // 각 값이 들어간 data를 adapter에 추가합니다.
-            if(data.getTitle()!=null) adapter.addItem(data);
+            if(data.getListDate()!=null) adapter.addItem(data);
         }
 
         adapter.notifyDataSetChanged();

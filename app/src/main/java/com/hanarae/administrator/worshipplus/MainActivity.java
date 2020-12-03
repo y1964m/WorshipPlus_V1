@@ -43,9 +43,9 @@ public class MainActivity extends AppCompatActivity {
    CountDownLatch latch;
    InputMethodManager imm;
    int width, height;
-   TextView date,bible, sermon, leader;
+   TextView date,bible, sermon, leader, button_copy_all;
    static ViewPager vpPager;
-   Button button, button_id, button_help, button_list;
+   Button button_id, button_help, button_list;
    static  ArrayList autoText;
    RecyclerView recyclerView;
    BottomNavigationView bottomNavigationView;
@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
         bible = findViewById(R.id.textview_conti_info_bible_main);
         sermon = findViewById(R.id.textview_conti_info_sermon_main);
         leader = findViewById(R.id.textview_conti_info_leader_main);
-        button = findViewById(R.id.button_copy_all);
+        button_copy_all = findViewById(R.id.button_copy_all); // 이번주 콘티
 
         button_list = findViewById(R.id.button_list);
         button_list.setOnClickListener(new View.OnClickListener() {
@@ -175,21 +175,26 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        button.setOnClickListener(new View.OnClickListener() {
+
+        // 이번주 콘티
+        button_copy_all.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View v) {
+            public boolean onLongClick(View view) {
                 String temp_string = "";
                 for (int i = 0; i < MainActivity.tempLatestConti.getTitleArrayListSize(); i++) {
                     // 각 List의 값들을 data 객체에 set 해줍니다.
                     temp_string += i + ". " + adapter_main.listData.get(i).getTitle() + " - " + adapter_main.listData.get(i).getContent() + "\n"
-                                + adapter_main.listData.get(i).getExplanation(0) + " \n\n";
+                            + adapter_main.listData.get(i).getExplanation(0) + " \n\n";
                 }
 
                 ClipboardManager clipboard = (ClipboardManager) getApplicationContext().getSystemService(CLIPBOARD_SERVICE);
                 clipboard.setText(temp_string);
                 Toast.makeText(getApplicationContext(),"클립보드에 복사완료",Toast.LENGTH_SHORT).show();
+                return false;
             }
         });
+
+
 
         linearLayout_viewpager = findViewById(R.id.linear_layout_viewpager);
 

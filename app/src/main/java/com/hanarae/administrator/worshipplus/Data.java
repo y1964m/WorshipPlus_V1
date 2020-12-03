@@ -42,8 +42,8 @@ public class Data  {
 
 
     public void setListDate(String list_date){
-        this.list_date=list_date.substring(0, 9);
-        this.list_team=list_date.substring(9);
+        this.list_date=list_date.substring(0,10);
+        this.list_team=list_date.substring(11,list_date.lastIndexOf("/"));
     }
     public String getListDate(){
         return list_date;
@@ -56,7 +56,7 @@ public class Data  {
     public void setListContent(ArrayList list_title, ArrayList list_chord){
         String list_temp = "";
         for (int i = 0 ; i < list_title.size(); i++){
-            list_temp += list_title.get(i) + "   " + list_chord.get(i) + "\n";
+            list_temp += list_title.get(i) + "  " + list_chord.get(i) + "\n";
         }
         this.list_content=list_temp;
     }

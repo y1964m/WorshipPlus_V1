@@ -2,11 +2,11 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/linear_layout_second"
-    android:gravity="center"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:weightSum="10"
+    android:paddingTop="20dp"
     android:paddingBottom="@dimen/activity_horizontal_margin">
 
 
