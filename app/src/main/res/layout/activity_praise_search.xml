@@ -41,7 +41,7 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="0dp"
-                    android:layout_weight="8"
+                    android:layout_weight="7.9"
                     android:layout_height="wrap_content"
                     app:endIconMode="clear_text"
                     android:hint="제목">
@@ -52,8 +52,6 @@
                         android:completionThreshold="2"
                         android:imeOptions="actionSearch"
                         android:background="@drawable/rounded_edit_text"
-                        android:paddingBottom="5dp"
-                        android:paddingTop="5dp"
                         android:paddingStart="5dp"
                         android:paddingEnd="5dp"
                         android:inputType="text" />
@@ -80,8 +78,7 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="0dp"
                     android:layout_weight="2"
-                    android:layout_height="wrap_content"
-                    app:endIconMode="clear_text"
+                    android:layout_height="match_parent"
                     android:hint="코드">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editText_search_chord"
@@ -90,8 +87,6 @@
                         android:layout_height="match_parent"
                         android:background="@drawable/rounded_edit_text"
                         android:layout_marginLeft="5dp"
-                        android:paddingBottom="5dp"
-                        android:paddingTop="5dp"
                         android:paddingStart="5dp"
                         android:paddingEnd="5dp"
                         android:imeOptions="actionSearch"
@@ -138,8 +133,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@drawable/rounded_edit_text"
-                        android:paddingBottom="5dp"
-                        android:paddingTop="5dp"
                         android:paddingStart="5dp"
                         android:paddingEnd="5dp"
                         android:imeOptions="actionSearch"
@@ -179,8 +172,8 @@
         android:id="@+id/recycler_view_search_result"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="7.8"
-        android:paddingBottom="0dp" />
+        android:layout_weight="7.5"
+        android:paddingTop="5dp" />
 
     <Button
         android:id="@+id/button_save"

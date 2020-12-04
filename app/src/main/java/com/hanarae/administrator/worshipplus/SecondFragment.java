@@ -66,6 +66,9 @@ public class SecondFragment extends Fragment {
                 editText_bible.setText("-");
                 editText_title1.setText("-");
                 editText_title2.setText("-");
+                getArguments().putString("someBible", editText_bible.getText().toString());
+                getArguments().putString("someTitle1", editText_title1.getText().toString());
+                getArguments().putString("someTitle2", editText_title2.getText().toString());
                 MainActivity.vpPager.setCurrentItem(2);
             }
         });

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/background_login"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,29 +13,31 @@
         android:id="@+id/login_1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:gravity="center">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center"
-            android:paddingRight="20dp">
+            android:gravity="center">
 
-            <TextView
-                android:layout_width="35dp"
-                android:layout_height="wrap_content"
-                android:text="그룹"
-                android:gravity="center" />
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:boxStrokeColor="@color/colorAccent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="그룹코드"
+                app:endIconMode="clear_text">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editText_db_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:imeOptions="actionNext"
+                    android:ems="10"   />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <EditText
-                android:id="@+id/editText_db_id"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:hint="관리자 문의 또는 guest 입력"
-                android:imeOptions="actionNext"
-                android:ems="10" />
 
         </LinearLayout>
 
@@ -42,22 +45,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center"
-            android:paddingRight="20dp">
+            android:gravity="center">
 
-            <TextView
-                android:layout_width="35dp"
-                android:layout_height="wrap_content"
-                android:text="I D"
-                android:gravity="center" />
-
-            <EditText
-                android:id="@+id/editText_id"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:imeOptions="actionNext"
-                android:ems="10" />
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:boxStrokeColor="@color/colorAccent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:endIconMode="clear_text"
+                android:hint="ID">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editText_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:imeOptions="actionNext"
+                    android:ems="10"  />
+            </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
 
@@ -67,22 +71,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center"
-            android:paddingRight="20dp">
+            android:gravity="center">
 
-            <TextView
-                android:layout_width="35dp"
-                android:layout_height="wrap_content"
-                android:text="PW"
-                android:gravity="center" />
-
-            <EditText
-                android:id="@+id/editText_pw"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:imeOptions="actionDone"
-                android:ems="10"
-                android:inputType="textPassword" />
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:boxStrokeColor="@color/colorAccent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:endIconMode="clear_text"
+                android:hint="PW">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editText_pw"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionDone"
+                    android:ems="10"
+                    android:inputType="textPassword" />
+            </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
     </LinearLayout>
@@ -182,7 +187,7 @@
         android:layout_marginTop="20dp"
         android:clickable="true"
         android:id="@+id/join_button_back"
-        android:src="@drawable/ic_home_black_24dp"
+        android:src="@android:drawable/ic_menu_sort_by_size"
         android:background="@color/cardview_light_background"
         />
 
