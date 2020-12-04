@@ -28,7 +28,7 @@ public class Help extends AppCompatActivity {
         viewPager = findViewById(R.id.viewpager_help);
         final HelpAdapter helpAdapter = new HelpAdapter(getApplicationContext());
         viewPager.setAdapter(helpAdapter);
-        Toast.makeText(getApplicationContext(),1+"/"+helpAdapter.getCount(),Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(),"옆으로 넘기기",Toast.LENGTH_SHORT).show();
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -38,7 +38,7 @@ public class Help extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                Toast.makeText(getApplicationContext(),position+1+"/"+helpAdapter.getCount(),Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(),position+1+"/"+helpAdapter.getCount(),Toast.LENGTH_SHORT).show();
             }
 
             @Override

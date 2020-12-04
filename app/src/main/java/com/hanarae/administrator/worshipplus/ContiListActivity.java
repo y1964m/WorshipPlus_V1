@@ -58,7 +58,7 @@ public class ContiListActivity extends AppCompatActivity {
         searchDB_list.cancel(true);
 
 
-        for (int i = 0; i < tempList.getTitleArrayListSize(); i++) {
+        for (int i = tempList.getTitleArrayListSize()-1; i > 0; i--) {
             // 각 List의 값들을 data 객체에 set 해줍니다.
             Data data = new Data();
             data.setListDate(tempList.getTitleArrayListItem(i)); // 이때 날짜와 팀 한꺼번에 넣음

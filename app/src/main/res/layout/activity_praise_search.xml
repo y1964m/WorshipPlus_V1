@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,81 +15,164 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1.6"
-        android:orientation="vertical">
+        android:layout_weight="2"
+        android:gravity="center"
+        android:weightSum="10"
+        android:orientation="horizontal">
+
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="9"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="10">
+            android:orientation="vertical"
+            android:gravity="center">
 
-            <TextView
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:gravity="center"
-                android:text="제목" />
-
-            <AutoCompleteTextView
-                android:id="@+id/editText_search_content"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:layout_marginRight="8dp"
-                android:layout_weight="5.4"
-                android:completionThreshold="2"
-                android:imeOptions="actionSearch"
-                android:inputType="text" />
+                android:layout_marginLeft="8dp"
+                android:layout_marginBottom="0dp"
+                android:orientation="horizontal"
+                android:paddingBottom="0dp"
+                android:weightSum="10">
 
-            <Button
-                android:id="@+id/button_song_search"
-                android:layout_width="0dp"
-                android:layout_height="25dp"
-                android:layout_weight="2"
-                android:text="검색"
-                android:background="@drawable/rounded_toggle_button"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="8"
+                    android:layout_height="wrap_content"
+                    app:endIconMode="clear_text"
+                    android:hint="제목">
+                    <AutoCompleteTextView
+                        android:id="@+id/editText_search_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:completionThreshold="2"
+                        android:imeOptions="actionSearch"
+                        android:background="@drawable/rounded_edit_text"
+                        android:paddingBottom="5dp"
+                        android:paddingTop="5dp"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
+                        android:inputType="text" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+          <!--      <AutoCompleteTextView
+                    android:id="@+id/editText_search_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="8"
+                    android:layout_height="wrap_content"
+                    android:completionThreshold="2"
+                    android:imeOptions="actionSearch"
+                    android:background="@drawable/rounded_edit_text"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:hint="제목"
+                    android:inputType="text" />-->
+
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="wrap_content"
+                    app:endIconMode="clear_text"
+                    android:hint="코드">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editText_search_chord"
+                        android:gravity="center"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/rounded_edit_text"
+                        android:layout_marginLeft="5dp"
+                        android:paddingBottom="5dp"
+                        android:paddingTop="5dp"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
+                        android:imeOptions="actionSearch"
+                        android:inputType="textCapCharacters"  />
+                </com.google.android.material.textfield.TextInputLayout>
+
+          <!--      <EditText
+                    android:id="@+id/editText_search_chord"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:background="@drawable/rounded_edit_text"
+                    android:layout_marginLeft="5dp"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:hint="코드"
+                    android:imeOptions="actionSearch"
+                    android:inputType="textCapCharacters" />-->
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginBottom="0dp"
+                android:orientation="horizontal"
+                android:paddingBottom="0dp"
+                android:weightSum="10">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="8"
+                    android:layout_height="wrap_content"
+                    app:endIconMode="clear_text"
+                    android:hint="태그">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editText_search_tag"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/rounded_edit_text"
+                        android:paddingBottom="5dp"
+                        android:paddingTop="5dp"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
+                        android:imeOptions="actionSearch"
+                        android:inputType="text" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+              <!--  <EditText
+                    android:id="@+id/editText_search_tag"
+                    android:layout_width="0dp"
+                    android:layout_weight="8"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rounded_edit_text"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:imeOptions="actionSearch"
+                    android:hint="태그"
+                    android:inputType="text" />-->
+
+                <Button
+                    android:id="@+id/button_song_search"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="5dp"
+                    android:text="검색"
+                    android:background="@drawable/rounded_toggle_button"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="0dp"
-            android:orientation="horizontal"
-            android:paddingBottom="0dp"
-            android:weightSum="10">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:gravity="center"
-                android:text="코드" />
-
-            <EditText
-                android:id="@+id/editText_search_chord"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1.5"
-                android:gravity="center"
-                android:imeOptions="actionSearch"
-                android:inputType="textCapCharacters" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1.5"
-                android:gravity="center"
-                android:text="주제" />
-
-            <EditText
-                android:id="@+id/editText_search_tag"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="4.3"
-                android:imeOptions="actionSearch"
-                android:inputType="text" />
-
-        </LinearLayout>
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

@@ -22,13 +22,13 @@
         </CalendarView>
     </LinearLayout>
 
-
-    <TextView
+<!--    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="예배일자"
-        android:textStyle="bold" />
+        android:textStyle="bold" />-->
+
 
     <EditText
         android:id="@+id/textView2"
@@ -45,5 +45,7 @@
         android:layout_height="34dp"
         android:text="불러오기"
         android:background="@drawable/rounded_button"/>
+
+
 
 </LinearLayout>

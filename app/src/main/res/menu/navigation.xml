@@ -8,7 +8,7 @@
 
     <item
         android:id="@+id/navigation_dashboard"
-        android:icon="@android:drawable/ic_menu_set_as"
+        android:icon="@android:drawable/ic_menu_edit"
         android:title="작성/수정" />
 
     <item

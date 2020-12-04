@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
@@ -20,6 +21,7 @@ public class SecondFragment extends Fragment {
     static EditText editText_title2;
     LinearLayout linearLayout;
     InputMethodManager imm;
+    Button button_skip_info;
 
     // newInstance constructor for creating fragment with arguments
     public static SecondFragment newInstance(int page, String title) {
@@ -56,6 +58,17 @@ public class SecondFragment extends Fragment {
         editText_bible= view.findViewById(R.id.editText_bible);
         editText_title1= view.findViewById(R.id.editText_title1);
         editText_title2= view.findViewById(R.id.editText_title2);
+        button_skip_info = view.findViewById(R.id.button_skip_info);
+
+        button_skip_info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                editText_bible.setText("-");
+                editText_title1.setText("-");
+                editText_title2.setText("-");
+                MainActivity.vpPager.setCurrentItem(2);
+            }
+        });
 
         imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         linearLayout = view.findViewById(R.id.linear_layout_second);

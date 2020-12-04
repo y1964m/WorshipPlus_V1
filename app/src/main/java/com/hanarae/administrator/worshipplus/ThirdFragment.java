@@ -301,7 +301,7 @@ public class ThirdFragment extends Fragment {
                         }
 
                         else {
-                            conti_bible.setText("@"+MainActivity.args.getString("someDate")+"\n" + MainActivity.args.getString("someBible"));
+                            conti_bible.setText(MainActivity.args.getString("someDate")+"\n" + MainActivity.args.getString("someBible"));
                             conti_leader.setText("\""+ MainActivity.args.getString("someTitle1") + "\""+ " \n찬양인도: " +MainActivity.args.getString("someTitle2"));
                             adapter.notifyDataSetChanged();
                             conti_info.setVisibility(View.VISIBLE);

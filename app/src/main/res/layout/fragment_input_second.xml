@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:weightSum="10"
-    android:paddingTop="20dp"
+    android:paddingTop="5dp"
     android:paddingBottom="@dimen/activity_horizontal_margin">
 
 
@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
         android:gravity="center"
-        android:text="설교정보"
+        android:text="기본정보"
         android:textStyle="bold" />
 
     <LinearLayout
@@ -30,15 +30,15 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.8"
-            android:text="성경본문" />
+            android:text="    성경본문" />
 
         <EditText
             android:id="@+id/editText_bible"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2.5"
+            android:layout_weight="2.4"
             android:inputType="text"
-            android:hint="ex)마태복음 10장 12절" />
+            android:hint=" ex)요 3:16" />
     </LinearLayout>
 
     <LinearLayout
@@ -53,15 +53,15 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.8"
-            android:text="말씀제목" />
+            android:text="    말씀제목" />
 
         <EditText
             android:id="@+id/editText_title1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2.5"
+            android:layout_weight="2.4"
             android:inputType="text"
-            android:hint="ex)예수님의 사랑" />
+            android:hint=" ex)복음" />
     </LinearLayout>
 
     <LinearLayout
@@ -76,16 +76,24 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.8"
-            android:text="찬양인도" />
+            android:text="    찬양인도" />
 
         <EditText
             android:id="@+id/editText_title2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2.5"
+            android:layout_weight="2.4"
             android:inputType="text"
-            android:hint="ex)인도자" />
+            android:hint=" ex)인도자" />
     </LinearLayout>
 
+    <Button
+        android:id="@+id/button_skip_info"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:layout_height="34dp"
+        android:text="SKIP"
+        android:background="@drawable/rounded_button"/>
 
 </LinearLayout>
