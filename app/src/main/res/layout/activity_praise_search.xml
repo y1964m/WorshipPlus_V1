@@ -18,22 +18,13 @@
         android:layout_weight="2"
         android:gravity="center"
         android:weightSum="10"
-        android:orientation="horizontal">
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="9"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center">
+        android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginLeft="8dp"
-                android:layout_marginBottom="0dp"
                 android:orientation="horizontal"
                 android:paddingBottom="0dp"
                 android:weightSum="10">
@@ -41,19 +32,20 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="0dp"
-                    android:layout_weight="7.9"
-                    android:layout_height="wrap_content"
+                    android:layout_weight="8.5"
+                    android:layout_height="match_parent"
                     app:endIconMode="clear_text"
-                    android:hint="제목">
+                    android:layout_marginEnd="8dp"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    app:boxStrokeColor="@color/colorAccent">
                     <AutoCompleteTextView
                         android:id="@+id/editText_search_content"
+                        android:paddingStart="12dp"
+                        android:hint="제목"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:completionThreshold="2"
                         android:imeOptions="actionSearch"
-                        android:background="@drawable/rounded_edit_text"
-                        android:paddingStart="5dp"
-                        android:paddingEnd="5dp"
                         android:inputType="text" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -77,20 +69,17 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="0dp"
-                    android:layout_weight="2"
+                    android:layout_weight="1.5"
                     android:layout_height="match_parent"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    app:boxStrokeColor="@color/colorAccent"
                     android:hint="코드">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editText_search_chord"
-                        android:gravity="center"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/rounded_edit_text"
-                        android:layout_marginLeft="5dp"
-                        android:paddingStart="5dp"
-                        android:paddingEnd="5dp"
                         android:imeOptions="actionSearch"
-                        android:inputType="textCapCharacters"  />
+                        android:inputType="textCapCharacters" />
                 </com.google.android.material.textfield.TextInputLayout>
 
           <!--      <EditText
@@ -124,17 +113,16 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="0dp"
-                    android:layout_weight="8"
+                    android:layout_weight="8.5"
                     android:layout_height="wrap_content"
                     app:endIconMode="clear_text"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    app:boxStrokeColor="@color/colorAccent"
                     android:hint="태그">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editText_search_tag"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/rounded_edit_text"
-                        android:paddingStart="5dp"
-                        android:paddingEnd="5dp"
                         android:imeOptions="actionSearch"
                         android:inputType="text" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -156,15 +144,21 @@
                 <Button
                     android:id="@+id/button_song_search"
                     android:layout_width="0dp"
-                    android:layout_weight="2"
-                    android:layout_height="40dp"
-                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1.5"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="10dp"
                     android:text="검색"
                     android:background="@drawable/rounded_toggle_button"/>
 
             </LinearLayout>
 
-        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="14dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/line_divider" />
 
     </LinearLayout>
 
@@ -172,13 +166,12 @@
         android:id="@+id/recycler_view_search_result"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="7.5"
-        android:paddingTop="5dp" />
+        android:layout_weight="7.46" />
 
     <Button
         android:id="@+id/button_save"
         android:layout_width="wrap_content"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="10dp"
         android:layout_height="0dp"
         android:layout_weight="0.5"
         android:layout_gravity="center"
