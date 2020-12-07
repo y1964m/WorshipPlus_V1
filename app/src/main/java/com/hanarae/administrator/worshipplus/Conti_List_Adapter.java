@@ -1,5 +1,8 @@
 package com.hanarae.administrator.worshipplus;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class Conti_List_Adapter extends RecyclerView.Adapter<Conti_List_Adapter.ItemViewHolder> {
 
     ArrayList<Data> listData = new ArrayList<>();
+    Activity activity;
 
     @NonNull
     @Override
@@ -34,9 +38,10 @@ public class Conti_List_Adapter extends RecyclerView.Adapter<Conti_List_Adapter.
         return listData.size();
     }
 
-    void addItem(Data data) {
+    void addItem(Data data, Activity activity) {
         // 외부에서 item을 추가시킬 함수입니다.
         listData.add(data);
+        this.activity = activity;
     }
 
     // RecyclerView의 핵심인 ViewHolder 입니다.
@@ -60,9 +65,18 @@ public class Conti_List_Adapter extends RecyclerView.Adapter<Conti_List_Adapter.
         void onBind(final Data data) {
 
             conti_list_date.setText(data.getListDate());
+            conti_list_date.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    Intent intent = new Intent();
+                    intent.putExtra("dateToLoad",data.getListDate()+"/"+data.getListTeam());
+                    activity.setResult(Activity.RESULT_OK,intent);
+                    activity.finish();
+                    return false;
+                }
+            });
             conti_list_team.setText(data.getListTeam());
             conti_list_content.setText(data.getListContent());
-
 
         }
     }

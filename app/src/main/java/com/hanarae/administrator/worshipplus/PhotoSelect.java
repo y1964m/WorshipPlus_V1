@@ -1,12 +1,14 @@
 package com.hanarae.administrator.worshipplus;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -325,6 +327,27 @@ public class PhotoSelect extends AppCompatActivity {
         load.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                boolean isMobile=true;
+                boolean isWiFi=true;
+                boolean isWiMax=true;
+
+                //인터넷 연결확인 작업
+                if(MainActivity.manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)!=null) {
+                    isMobile = MainActivity.manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnectedOrConnecting();
+                }
+                if(MainActivity.manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)!=null) {
+                    isWiFi = MainActivity.manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnectedOrConnecting();
+                }
+                if(MainActivity.manager.getNetworkInfo(ConnectivityManager.TYPE_WIMAX)!=null) {
+                    isWiMax = MainActivity.manager.getNetworkInfo(ConnectivityManager.TYPE_WIMAX).isConnectedOrConnecting();
+                }
+
+                if (!isMobile && !isWiFi) {
+                    Toast.makeText(getApplicationContext(), "인터넷 연결을 확인해주세요", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 Intent photoSelect = new Intent(Intent.ACTION_PICK);
                 photoSelect.setType(MediaStore.Images.Media.CONTENT_TYPE);
                 photoSelect.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -378,6 +401,7 @@ public class PhotoSelect extends AppCompatActivity {
 
     }
 
+    @SuppressLint("MissingSuperCall")
     @Override
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

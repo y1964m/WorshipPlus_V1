@@ -25,6 +25,7 @@
             android:paddingStart="14dp"
             android:text="Date"
             android:textColor="@android:color/black"
+            android:longClickable="true"
             android:textSize="16sp" />
 
         <TextView

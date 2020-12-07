@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -44,6 +45,9 @@ public class PraiseSearch extends AppCompatActivity {
     static int double_check=0;
     static boolean song_search = false;
     ProgressDialog progressDialog;
+    boolean isMobile=true;
+    boolean isWiFi=true;
+    boolean isWiMax=true;
 
     @Override
     protected void onResume() {
@@ -277,11 +281,29 @@ public class PraiseSearch extends AppCompatActivity {
 
     public void songSearch(){
 
+        //인터넷 연결확인 작업
+        if(MainActivity.manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)!=null) {
+            isMobile = MainActivity.manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnectedOrConnecting();
+        }
+        if(MainActivity.manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)!=null) {
+            isWiFi = MainActivity.manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnectedOrConnecting();
+        }
+        if(MainActivity.manager.getNetworkInfo(ConnectivityManager.TYPE_WIMAX)!=null) {
+            isWiMax = MainActivity.manager.getNetworkInfo(ConnectivityManager.TYPE_WIMAX).isConnectedOrConnecting();
+        }
+
+        if (!isMobile && !isWiFi) {
+            Toast.makeText(getApplicationContext(), "인터넷 연결을 확인해주세요", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         imm.hideSoftInputFromWindow(editText_search_content.getWindowToken(), 0);
         button_save.setVisibility(View.GONE);
 
         //검색어 입력했는지 확인절차
-        if(editText_search_content.getText().toString().isEmpty() && editText_search_chord.getText().toString().isEmpty() && editText_search_tag.getText().toString().isEmpty()) all_good = false;
+        if(editText_search_content.getText().toString().isEmpty()
+                && editText_search_chord.getText().toString().isEmpty()
+                && editText_search_tag.getText().toString().isEmpty()) all_good = false;
         else all_good = true;
 
         if (all_good) {

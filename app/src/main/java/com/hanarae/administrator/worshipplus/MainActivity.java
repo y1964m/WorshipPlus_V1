@@ -6,6 +6,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -64,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
    static String team_info;
    static String checked_search;
 
+    static ConnectivityManager manager;
 
     @Override
     public void onBackPressed() {
@@ -97,6 +99,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //인터넷 연결확인 작업
+        manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
     /*    StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
                 .detectDiskReads()
@@ -137,11 +142,43 @@ public class MainActivity extends AppCompatActivity {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+
+                boolean isMobile=true;
+                boolean isWiFi=true;
+                boolean isWiMax=true;
+
+                //인터넷 연결확인 작업
+                if(MainActivity.manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)!=null) {
+                    isMobile = MainActivity.manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnectedOrConnecting();
+                }
+                if(MainActivity.manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)!=null) {
+                    isWiFi = MainActivity.manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnectedOrConnecting();
+                }
+                if(MainActivity.manager.getNetworkInfo(ConnectivityManager.TYPE_WIMAX)!=null) {
+                    isWiMax = MainActivity.manager.getNetworkInfo(ConnectivityManager.TYPE_WIMAX).isConnectedOrConnecting();
+                }
+
+                if (!isMobile && !isWiFi) {
+                    Toast.makeText(getApplicationContext(), "인터넷 연결을 확인해주세요", Toast.LENGTH_SHORT).show();
+                    swipeRefreshLayout.setRefreshing(false);
+                    return;
+                }
+
                 //swipeRefreshLayout.setRefreshing(true);
                 getLatestConti(false);
             }
         });
 
+        vpPager = findViewById(R.id.vpPager);
+        adapterViewPager = new MyPagerAdapter(getSupportFragmentManager());
+        vpPager.setAdapter(adapterViewPager);
+        vpPager.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(imm!=null)
+                    imm.hideSoftInputFromWindow(v.getWindowToken(),0);
+            }
+        });
 
         date = findViewById(R.id.textview_conti_info_date);
         bible = findViewById(R.id.textview_conti_info_bible_main);
@@ -154,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent_list = new Intent(MainActivity.this, ContiListActivity.class);
-                startActivity(intent_list);
+                startActivityForResult(intent_list,2000);
             }
         });
 
@@ -210,17 +247,6 @@ public class MainActivity extends AppCompatActivity {
         //최근 콘티 부분
         if(autoText.size()>0) autoText.clear();
         getLatestConti(true);
-
-        vpPager = findViewById(R.id.vpPager);
-        adapterViewPager = new MyPagerAdapter(getSupportFragmentManager());
-        vpPager.setAdapter(adapterViewPager);
-        vpPager.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(imm!=null)
-                    imm.hideSoftInputFromWindow(v.getWindowToken(),0);
-            }
-        });
 
         CircleIndicator indicator = findViewById(R.id.indicator);
         indicator.setViewPager(vpPager);
@@ -391,6 +417,14 @@ public class MainActivity extends AppCompatActivity {
                 logged_in_id = sharedPreferences.getString("id","");
             }
         }
+        if(requestCode==2000){//list 버튼 눌렀을 시
+            if(resultCode== Activity.RESULT_OK){
+                bottomNavigationView.setSelectedItemId(R.id.navigation_dashboard);
+                vpPager.setCurrentItem(0);
+                FirstFragment.tvLabe2.setText(data.getStringExtra("dateToLoad"));
+            }
+        }
+
     }
 
     public class MyPagerAdapter extends FragmentPagerAdapter {

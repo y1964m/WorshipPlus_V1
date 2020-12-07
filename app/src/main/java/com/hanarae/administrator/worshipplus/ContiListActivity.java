@@ -1,5 +1,6 @@
 package com.hanarae.administrator.worshipplus;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -65,11 +66,10 @@ public class ContiListActivity extends AppCompatActivity {
             data.setListContent(tempList.getDateArrayListItem(i),tempList.getExplanationArrayListItem(i));
 
             // 각 값이 들어간 data를 adapter에 추가합니다.
-            if(data.getListDate()!=null) adapter.addItem(data);
+            if(data.getListDate()!=null) adapter.addItem(data,this);
         }
 
         adapter.notifyDataSetChanged();
-
 
     }
 

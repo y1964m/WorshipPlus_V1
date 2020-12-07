@@ -146,7 +146,7 @@
             android:layout_height="0dp"
             android:layout_weight="9.2"
             android:orientation="vertical"
-            android:visibility="gone"
+            android:visibility="invisible"
             android:weightSum="9.2">
 
             <me.relex.circleindicator.CircleIndicator

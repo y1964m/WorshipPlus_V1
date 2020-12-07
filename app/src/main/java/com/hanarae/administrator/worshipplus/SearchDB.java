@@ -896,8 +896,6 @@ public class SearchDB extends AsyncTask<Void, Integer, Void> {
         }
         if(context==null) return;
 
-
-
     }
 
 }

@@ -35,7 +35,7 @@ public class SplashActivity extends AppCompatActivity {
         }
 
 
-        if (!isMobile && !isWiFi && !isWiMax) {
+        if (!isMobile && !isWiFi) {
             AlertDialog.Builder adb = new AlertDialog.Builder(this);
             adb.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                 @Override

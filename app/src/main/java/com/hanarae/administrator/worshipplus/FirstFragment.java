@@ -2,6 +2,7 @@ package com.hanarae.administrator.worshipplus;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -35,7 +36,7 @@ public class FirstFragment extends Fragment {
     CalendarView calendarView;
     CountDownLatch latch;
     SearchDB searchDB_first;
-    EditText tvLabe2;
+    static EditText tvLabe2;
 
     // newInstance constructor for creating fragment with arguments
     public static FirstFragment newInstance(int page, String title) {
@@ -45,6 +46,28 @@ public class FirstFragment extends Fragment {
         args.putString("someTitle", title);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public abstract class OnSingleClickListener implements View.OnClickListener {
+        // 중복 클릭 방지 시간 설정
+        private static final long MIN_CLICK_INTERVAL=1000;
+        private long mLastClickTime;
+        public abstract void onSingleClick(View v);
+
+        @Override
+        public final void onClick(View v) {
+
+            long currentClickTime=SystemClock.uptimeMillis();
+            long elapsedTime=currentClickTime-mLastClickTime;
+            mLastClickTime=currentClickTime;
+
+            // 중복 클릭인 경우
+            if(elapsedTime<=MIN_CLICK_INTERVAL){
+                return;
+            }
+            // 중복 클릭아 아니라면 추상함수 호출
+            onSingleClick(v);
+        }
     }
 
     @Override
@@ -73,6 +96,94 @@ public class FirstFragment extends Fragment {
         tvLabe2 = view.findViewById(R.id.textView2);
         textInputLayout = view.findViewById(R.id.text_input_layout);
         textInputLayout.setError(null);
+        textInputLayout.setEndIconDrawable(R.drawable.round_search_black_18dp);
+        textInputLayout.setEndIconOnClickListener(new OnSingleClickListener() {
+
+            @Override
+            public void onSingleClick(View v) {//중복 클릭 방지 시간 설정 ( 해당 시간 이후에 다시 클릭 가능
+
+                boolean isMobile=true;
+                boolean isWiFi=true;
+                boolean isWiMax=true;
+
+
+                //인터넷 연결확인 작업
+                if(MainActivity.manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)!=null) {
+                    isMobile = MainActivity.manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnectedOrConnecting();
+                }
+                if(MainActivity.manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)!=null) {
+                    isWiFi = MainActivity.manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnectedOrConnecting();
+                }
+
+                if (!isMobile && !isWiFi) {
+                    Toast.makeText(getContext(), "인터넷 연결을 확인해주세요", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                    getArguments().putString("someDate", tvLabe2.getText().toString());
+                    if(getArguments().get("someDate").toString().isEmpty()){
+                        Toast.makeText(getContext(), "날자를 선택해주세요", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    latch = new CountDownLatch(1);
+
+                    //초기화작업
+                    if(ThirdFragment.adapter != null) ThirdFragment.adapter.listData.clear();
+
+                    MainActivity.tempConti.removeTitleArrayList();
+                    MainActivity.tempConti.removeChordArrayList();
+                    MainActivity.tempConti.removeDateArrayList();
+                    MainActivity.tempConti.removeExplanationArrayList();
+                    MainActivity.tempConti.removeMusicArrayList();
+                    MainActivity.tempConti.removeSheetArrayList();
+                    MainActivity.tempConti.removeCheck();
+
+                    /*AsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR) 쓰레드 병령실행 때 */
+
+                    searchDB_first = new SearchDB(3, getContext(), latch);
+                    searchDB_first.execute();
+
+                    try {
+                        latch.await();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    if (MainActivity.tempConti.getTitleArrayListSize() == 0){
+                        //초기화
+                        MainActivity.tempConti.removeTitleArrayList();
+                        MainActivity.tempConti.removeChordArrayList();
+                        MainActivity.tempConti.removeDateArrayList();
+                        MainActivity.tempConti.removeExplanationArrayList();
+                        MainActivity.tempConti.removeMusicArrayList();
+                        MainActivity.tempConti.removeSheetArrayList();
+                        MainActivity.tempConti.removeCheck();
+
+                        Toast.makeText(getContext(), "작성된 콘티가 없습니다", Toast.LENGTH_SHORT).show();
+
+                    }else if(MainActivity.tempConti.getTitleArrayListSize() > 0 && MainActivity.tempConti.getBible() != null){
+
+                        Toast.makeText(getContext(), "콘티를 불러왔습니다", Toast.LENGTH_SHORT).show();
+                        SecondFragment.editText_bible.setText(MainActivity.tempConti.getBible().toString());
+                        SecondFragment.editText_title1.setText(MainActivity.tempConti.getSermon().toString());
+                        SecondFragment.editText_title2.setText(MainActivity.tempConti.getLeader().toString());
+                        MainActivity.vpPager.setCurrentItem(2);
+
+                    }else{
+                        MainActivity.tempConti.removeTitleArrayList();
+                        MainActivity.tempConti.removeChordArrayList();
+                        MainActivity.tempConti.removeDateArrayList();
+                        MainActivity.tempConti.removeExplanationArrayList();
+                        MainActivity.tempConti.removeMusicArrayList();
+                        MainActivity.tempConti.removeSheetArrayList();
+                        MainActivity.tempConti.removeCheck();
+                        Toast.makeText(getContext(),"응답없음",Toast.LENGTH_SHORT).show();
+                    }
+
+                    searchDB_first.cancel(true);
+            }
+        });
 
         TextWatcher watcher = new TextWatcher() {
             @Override
@@ -87,9 +198,8 @@ public class FirstFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(s.length()>9 && !s.toString().contains(".")) {
-                    //Toast.makeText(getContext(), "년.월.일/팀 형식에 맞춰주세요", Toast.LENGTH_SHORT).show();
-                    textInputLayout.setError("ex)2000.01.01/찬양팀");
+                if((s.length()>4 && !s.toString().contains(".")) || (s.length()>10 && !s.toString().contains("/")) || (s.length()>7 && (s.charAt(7))!='.')) {
+                    textInputLayout.setError("ex)2000.01.01/팀명");
                 }
                 else  {
                     textInputLayout.setError(null);
@@ -261,91 +371,6 @@ public class FirstFragment extends Fragment {
                     imm.hideSoftInputFromWindow(first.getWindowToken(),0);
             }
         });
-
-
-        Button button = view.findViewById(R.id.button_conti_change);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                //중복 클릭 방지 시간 설정 ( 해당 시간 이후에 다시 클릭 가능 )
-                final long MIN_CLICK_INTERVAL = 1000;
-                long mLastClickTime = 0;
-                long currentClickTime = SystemClock.uptimeMillis();
-                long elapsedTime = currentClickTime - mLastClickTime;
-                mLastClickTime = currentClickTime;
-
-                // 중복클릭 아닌 경우
-                if (elapsedTime > MIN_CLICK_INTERVAL) {
-
-                    getArguments().putString("someDate", tvLabe2.getText().toString());
-                    if(getArguments().get("someDate").toString().isEmpty()){
-                        Toast.makeText(getContext(), "날자를 선택해주세요", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    latch = new CountDownLatch(1);
-
-                    //초기화작업
-                    if(ThirdFragment.adapter != null) ThirdFragment.adapter.listData.clear();
-
-                    MainActivity.tempConti.removeTitleArrayList();
-                    MainActivity.tempConti.removeChordArrayList();
-                    MainActivity.tempConti.removeDateArrayList();
-                    MainActivity.tempConti.removeExplanationArrayList();
-                    MainActivity.tempConti.removeMusicArrayList();
-                    MainActivity.tempConti.removeSheetArrayList();
-                    MainActivity.tempConti.removeCheck();
-
-                    /*AsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR) 쓰레드 병령실행 때 */
-
-                    searchDB_first = new SearchDB(3, getContext(), latch);
-                    searchDB_first.execute();
-
-                    try {
-                        latch.await();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
-                    if (MainActivity.tempConti.getTitleArrayListSize() == 0){
-                        //초기화
-                        MainActivity.tempConti.removeTitleArrayList();
-                        MainActivity.tempConti.removeChordArrayList();
-                        MainActivity.tempConti.removeDateArrayList();
-                        MainActivity.tempConti.removeExplanationArrayList();
-                        MainActivity.tempConti.removeMusicArrayList();
-                        MainActivity.tempConti.removeSheetArrayList();
-                        MainActivity.tempConti.removeCheck();
-
-                        Toast.makeText(getContext(), "작성된 콘티가 없습니다", Toast.LENGTH_SHORT).show();
-
-                    }else if(MainActivity.tempConti.getTitleArrayListSize() > 0 && MainActivity.tempConti.getBible() != null){
-
-                        Toast.makeText(getContext(), "콘티를 불러왔습니다", Toast.LENGTH_SHORT).show();
-                        SecondFragment.editText_bible.setText(MainActivity.tempConti.getBible().toString());
-                        SecondFragment.editText_title1.setText(MainActivity.tempConti.getSermon().toString());
-                        SecondFragment.editText_title2.setText(MainActivity.tempConti.getLeader().toString());
-                        MainActivity.vpPager.setCurrentItem(2);
-
-                    }else{
-                        MainActivity.tempConti.removeTitleArrayList();
-                        MainActivity.tempConti.removeChordArrayList();
-                        MainActivity.tempConti.removeDateArrayList();
-                        MainActivity.tempConti.removeExplanationArrayList();
-                        MainActivity.tempConti.removeMusicArrayList();
-                        MainActivity.tempConti.removeSheetArrayList();
-                        MainActivity.tempConti.removeCheck();
-                        Toast.makeText(getContext(),"응답없음",Toast.LENGTH_SHORT).show();
-                    }
-
-                    searchDB_first.cancel(true);
-
-                }
-
-            }
-        });
-
 
         return view;
     }
