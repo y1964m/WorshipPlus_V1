@@ -37,11 +37,11 @@
                     app:endIconMode="clear_text"
                     android:layout_marginEnd="8dp"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    app:boxStrokeColor="@color/colorAccent">
+                    app:boxStrokeColor="@color/colorAccent"
+                    android:hint="제목">
                     <AutoCompleteTextView
                         android:id="@+id/editText_search_content"
                         android:paddingStart="12dp"
-                        android:hint="제목"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:completionThreshold="2"
@@ -113,7 +113,7 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="0dp"
-                    android:layout_weight="8.5"
+                    android:layout_weight="8.3"
                     android:layout_height="wrap_content"
                     app:endIconMode="clear_text"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -141,14 +141,23 @@
                     android:hint="태그"
                     android:inputType="text" />-->
 
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1.7"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingTop="10dp"
+                    android:layout_gravity="center"
+                    android:gravity="center_horizontal">
                 <Button
                     android:id="@+id/button_song_search"
-                    android:layout_width="0dp"
-                    android:layout_weight="1.5"
-                    android:layout_height="50dp"
-                    android:layout_marginLeft="10dp"
-                    android:text="검색"
-                    android:background="@drawable/rounded_toggle_button"/>
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/round_search_black_18dp"/>
+
+                </LinearLayout>
+
 
             </LinearLayout>
 

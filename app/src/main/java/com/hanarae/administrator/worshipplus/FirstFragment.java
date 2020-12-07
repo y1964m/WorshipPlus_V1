@@ -20,6 +20,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.android.material.textfield.TextInputLayout;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -29,6 +31,7 @@ import java.util.concurrent.CountDownLatch;
 public class FirstFragment extends Fragment {
     // Store instance variables
     InputMethodManager imm;
+    TextInputLayout textInputLayout;
     CalendarView calendarView;
     CountDownLatch latch;
     SearchDB searchDB_first;
@@ -58,7 +61,7 @@ public class FirstFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_input_first, container, false);
         imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 
-        LinearLayout first = view.findViewById(R.id.linear_layout_first);
+        final LinearLayout first = view.findViewById(R.id.linear_layout_first);
         first.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,6 +71,9 @@ public class FirstFragment extends Fragment {
         });
 
         tvLabe2 = view.findViewById(R.id.textView2);
+        textInputLayout = view.findViewById(R.id.text_input_layout);
+        textInputLayout.setError(null);
+
         TextWatcher watcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -81,7 +87,14 @@ public class FirstFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                getArguments().putString("someDate", tvLabe2.getText().toString());
+                if(s.length()>9 && !s.toString().contains(".")) {
+                    //Toast.makeText(getContext(), "년.월.일/팀 형식에 맞춰주세요", Toast.LENGTH_SHORT).show();
+                    textInputLayout.setError("ex)2000.01.01/찬양팀");
+                }
+                else  {
+                    textInputLayout.setError(null);
+                    getArguments().putString("someDate", tvLabe2.getText().toString());
+                }
             }
         };
         tvLabe2.addTextChangedListener(watcher);
@@ -92,6 +105,7 @@ public class FirstFragment extends Fragment {
         }
 
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
                 //캘린더에 선택한 날짜로 변경하기
@@ -243,6 +257,8 @@ public class FirstFragment extends Fragment {
 
                 getArguments().putLong("someDateAsLong", temp_date);
 
+                if(imm!=null)
+                    imm.hideSoftInputFromWindow(first.getWindowToken(),0);
             }
         });
 

@@ -16,7 +16,7 @@
             android:id="@+id/song_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="3.85"
+            android:layout_weight="4.55"
             android:paddingLeft="12dp"
             android:textIsSelectable="true"
             android:text="Title"
@@ -35,11 +35,11 @@
         <ToggleButton
             android:id="@+id/toggleButton_song_detail"
             android:layout_width="0dp"
-            android:layout_height="25dp"
-            android:layout_weight="1.25"
+            android:layout_height="30dp"
+            android:layout_weight="0.5"
             android:background="@drawable/rounded_toggle_button"
-            android:textOff="열기"
-            android:textOn="닫기" />
+            android:textOff=""
+            android:textOn="" />
 
     </LinearLayout>
 

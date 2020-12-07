@@ -131,12 +131,16 @@ public class Search_Recycler_Adapter extends RecyclerView.Adapter<Search_Recycle
             song_chord.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) { // 길게 누르면 수정가능하게
-                    CustomDialog cd = new CustomDialog(1, itemView.getContext(), getAdapterPosition(), imm, data.getContent());
-                    WindowManager.LayoutParams wm = cd.getWindow().getAttributes();  //다이얼로그의 높이 너비 설정하기위해
-                    wm.copyFrom(cd.getWindow().getAttributes());  //여기서 설정한값을 그대로 다이얼로그에 넣겠다는의미
-                    wm.width = width ;  //화면 너비의 절반
-                    wm.height = height / 2;  //화면 높이의 절반
-                    cd.show();
+                    if(MainActivity.logged_in_db_id.equals("ssyp")){
+
+                        CustomDialog cd = new CustomDialog(1, itemView.getContext(), getAdapterPosition(), imm, data.getContent());
+                        WindowManager.LayoutParams wm = cd.getWindow().getAttributes();  //다이얼로그의 높이 너비 설정하기위해
+                        wm.copyFrom(cd.getWindow().getAttributes());  //여기서 설정한값을 그대로 다이얼로그에 넣겠다는의미
+                        wm.width = width ;  //화면 너비의 절반
+                        wm.height = height / 2;  //화면 높이의 절반
+                        cd.show();
+
+                    }
 
                     return false;
                 }
