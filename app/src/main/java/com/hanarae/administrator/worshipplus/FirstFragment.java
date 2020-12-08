@@ -70,6 +70,83 @@ public class FirstFragment extends Fragment {
         }
     }
 
+    public static void loadConti(Context context, CountDownLatch latch, String loadDate) {
+
+        SearchDB searchDB_first;
+
+        boolean isMobile=true;
+        boolean isWiFi=true;
+        boolean isWiMax=true;
+
+
+        //인터넷 연결확인 작업
+        if(MainActivity.manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)!=null) {
+            isMobile = MainActivity.manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnectedOrConnecting();
+        }
+        if(MainActivity.manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)!=null) {
+            isWiFi = MainActivity.manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnectedOrConnecting();
+        }
+
+        if (!isMobile && !isWiFi) {
+            Toast.makeText(context, "인터넷 연결을 확인해주세요", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        MainActivity.args.putString("someDate", loadDate);
+
+        if(MainActivity.args.get("someDate").toString().isEmpty()){
+            Toast.makeText(context, "날자를 선택해주세요", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        latch = new CountDownLatch(1);
+
+        //초기화작업
+        if(ThirdFragment.adapter != null) ThirdFragment.adapter.listData.clear();
+
+        MainActivity.tempConti.removeTitleArrayList();
+        MainActivity.tempConti.removeChordArrayList();
+        MainActivity.tempConti.removeDateArrayList();
+        MainActivity.tempConti.removeExplanationArrayList();
+        MainActivity.tempConti.removeMusicArrayList();
+        MainActivity.tempConti.removeSheetArrayList();
+        MainActivity.tempConti.removeCheck();
+
+        /*AsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR) 쓰레드 병령실행 때 */
+
+        searchDB_first = new SearchDB(3, context, latch);
+        searchDB_first.execute();
+
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        if(MainActivity.tempConti.getTitleArrayListSize() > 0 && MainActivity.tempConti.getBible() != null){
+
+            Toast.makeText(context, "콘티를 불러왔습니다", Toast.LENGTH_SHORT).show();
+            SecondFragment.editText_bible.setText(MainActivity.tempConti.getBible().toString());
+            SecondFragment.editText_title1.setText(MainActivity.tempConti.getSermon().toString());
+            SecondFragment.editText_title2.setText(MainActivity.tempConti.getLeader().toString());
+
+        }else{
+            MainActivity.tempConti.removeTitleArrayList();
+            MainActivity.tempConti.removeChordArrayList();
+            MainActivity.tempConti.removeDateArrayList();
+            MainActivity.tempConti.removeExplanationArrayList();
+            MainActivity.tempConti.removeMusicArrayList();
+            MainActivity.tempConti.removeSheetArrayList();
+            MainActivity.tempConti.removeCheck();
+            Toast.makeText(context,"응답없음",Toast.LENGTH_SHORT).show();
+        }
+
+        MainActivity.vpPager.setCurrentItem(2);
+        searchDB_first.cancel(true);
+        return;
+    }
+
+
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
@@ -121,6 +198,7 @@ public class FirstFragment extends Fragment {
                 }
 
                     getArguments().putString("someDate", tvLabe2.getText().toString());
+
                     if(getArguments().get("someDate").toString().isEmpty()){
                         Toast.makeText(getContext(), "날자를 선택해주세요", Toast.LENGTH_SHORT).show();
                         return;
@@ -209,6 +287,7 @@ public class FirstFragment extends Fragment {
         };
         tvLabe2.addTextChangedListener(watcher);
         calendarView = view.findViewById(R.id.calender);
+        calendarView.setFocusableInTouchMode(true);
 
         if(getArguments().getString("someDate")!=null){
             calendarView.setDate(getArguments().getLong("someDateAsLong"));

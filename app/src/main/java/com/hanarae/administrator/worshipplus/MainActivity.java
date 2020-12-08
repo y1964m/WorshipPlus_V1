@@ -170,6 +170,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         vpPager = findViewById(R.id.vpPager);
+
         adapterViewPager = new MyPagerAdapter(getSupportFragmentManager());
         vpPager.setAdapter(adapterViewPager);
         vpPager.setOnClickListener(new View.OnClickListener() {
@@ -179,6 +180,8 @@ public class MainActivity extends AppCompatActivity {
                     imm.hideSoftInputFromWindow(v.getWindowToken(),0);
             }
         });
+
+        vpPager.setCurrentItem(2);
 
         date = findViewById(R.id.textview_conti_info_date);
         bible = findViewById(R.id.textview_conti_info_bible_main);
@@ -190,6 +193,7 @@ public class MainActivity extends AppCompatActivity {
         button_list.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                vpPager.setCurrentItem(1);
                 Intent intent_list = new Intent(MainActivity.this, ContiListActivity.class);
                 startActivityForResult(intent_list,2000);
             }
@@ -388,6 +392,7 @@ public class MainActivity extends AppCompatActivity {
                     linearLayout_viewpager.setVisibility(View.GONE);
                     return true;
                 case R.id.navigation_dashboard:
+                    if(FirstFragment.tvLabe2==null)vpPager.setCurrentItem(0);
                     swipeRefreshLayout.setVisibility(View.GONE);
                     linearLayout_viewpager.setVisibility(View.VISIBLE);
                     // Intent intent_add = new Intent(MainActivity.this, PraiseSearch.class);
@@ -419,9 +424,8 @@ public class MainActivity extends AppCompatActivity {
         }
         if(requestCode==2000){//list 버튼 눌렀을 시
             if(resultCode== Activity.RESULT_OK){
+                FirstFragment.loadConti(getApplicationContext(), latch, data.getStringExtra("dateToLoad"));
                 bottomNavigationView.setSelectedItemId(R.id.navigation_dashboard);
-                vpPager.setCurrentItem(0);
-                FirstFragment.tvLabe2.setText(data.getStringExtra("dateToLoad"));
             }
         }
 
