@@ -193,7 +193,10 @@ public class MainActivity extends AppCompatActivity {
         button_list.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                vpPager.setCurrentItem(1);
+                if(FirstFragment.tvLabe2==null) {
+                    vpPager.setCurrentItem(1);
+                    vpPager.setCurrentItem(0);
+                }
                 Intent intent_list = new Intent(MainActivity.this, ContiListActivity.class);
                 startActivityForResult(intent_list,2000);
             }

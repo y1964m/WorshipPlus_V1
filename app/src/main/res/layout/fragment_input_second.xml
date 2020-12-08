@@ -106,7 +106,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
             android:layout_height="34dp"
-            android:text="SKIP"
+            android:text="없음"
             android:background="@drawable/rounded_button"/>
     </LinearLayout>
 

@@ -395,7 +395,7 @@ public class SearchDB extends AsyncTask<Void, Integer, Void> {
             /* 인풋 파라메터값 생성 */
             String param = "title=" + MainActivity.args.getString("someContent") +
                     "&chord=" + MainActivity.args.getString("someChord") +
-                    "&tag=" + MainActivity.args.getString("someTag") +
+                    "&tag=" + MainActivity.args.getString("someTag").replace(" ","") +
                     "&user_account="+ MainActivity.logged_in_db_id +
                     "&team="+ MainActivity.checked_search;
 
@@ -760,8 +760,8 @@ public class SearchDB extends AsyncTask<Void, Integer, Void> {
             String getTime = simpleDate.format(mDate);*/
 
             /* 인풋 파라메터값 생성 */
-            String param = //"date=" + getTime + // php에서 시간 쓸거임
-                    "user_account="+ MainActivity.logged_in_db_id +
+            String param = "more=" + ContiListActivity.more + // 리스트 로드 배수
+                    "&user_account="+ MainActivity.logged_in_db_id +
                     "&team="+ MainActivity.team_info +
                     "&author=" + MainActivity.logged_in_id;
 

@@ -20,6 +20,7 @@ public class ContiListActivity extends AppCompatActivity {
     CountDownLatch latch;
     SearchDB searchDB_list;
     static Data tempList;
+    static int more;
     Conti_List_Adapter adapter;
 
 
@@ -36,14 +37,64 @@ public class ContiListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_conti_list);
 
         tempList = new Data();
+        more = 1;
 
         recyclerView = findViewById(R.id.recycler_view_conti_list);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
 
+        RecyclerView.OnScrollListener onScrollListener = new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                LinearLayoutManager layoutManager = LinearLayoutManager.class.cast(recyclerView.getLayoutManager());
+                int totalItemCount = layoutManager.getItemCount();
+                int lastVisible = layoutManager.findLastCompletelyVisibleItemPosition();
+
+                if (lastVisible >= totalItemCount - 1) {//마지막 포지션일 때 리프레시
+
+                    more++;
+                    latch = new CountDownLatch(1);
+                    searchDB_list = new SearchDB(5, getApplicationContext(), latch);
+                    new AsyncTaskCancelTimerTask(searchDB_list, 10000, 1000, true).start();
+                    searchDB_list.execute();
+                    try {
+                        latch.await();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    searchDB_list.cancel(true);
+                    adapter.listData.clear();//초기화 하고, 안그러면 밑으로 똑같은 뷰가 계속 붙음
+
+                    for (int i = tempList.getTitleArrayListSize()-1; i >= 0; i--) {
+                        // 각 List의 값들을 data 객체에 set 해줍니다.
+                        Data data = new Data();
+                        data.setListDate(tempList.getTitleArrayListItem(i)); // 이때 날짜와 팀 한꺼번에 넣음
+                        data.setListContent(tempList.getDateArrayListItem(i),tempList.getExplanationArrayListItem(i));
+
+                        // 각 값이 들어간 data를 adapter에 추가합니다.
+                        if(data.getListDate()!=null) adapter.addItem(data,getParent());
+                    }
+
+                    recyclerView.post(new Runnable() {
+                        public void run() {
+                            // There is no need to use notifyDataSetChanged()
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
+
+                }
+            }
+        };
+
         adapter = new Conti_List_Adapter();
         recyclerView.setAdapter(adapter);
+        recyclerView.addOnScrollListener(onScrollListener);
+
         latch = new CountDownLatch(1);
 
         searchDB_list = new SearchDB(5, getApplicationContext(), latch);
@@ -56,10 +107,10 @@ public class ContiListActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        searchDB_list.cancel(true);
+        //searchDB_list.cancel(true);
 
 
-        for (int i = tempList.getTitleArrayListSize()-1; i > 0; i--) {
+        for (int i = tempList.getTitleArrayListSize()-1; i >= 0; i--) {
             // 각 List의 값들을 data 객체에 set 해줍니다.
             Data data = new Data();
             data.setListDate(tempList.getTitleArrayListItem(i)); // 이때 날짜와 팀 한꺼번에 넣음
@@ -70,6 +121,10 @@ public class ContiListActivity extends AppCompatActivity {
         }
 
         adapter.notifyDataSetChanged();
+
+        tempList.removeTitleArrayList();
+        tempList.removeDateArrayList();
+        tempList.removeExplanationArrayList();
 
     }
 
