@@ -1,5 +1,6 @@
 package com.hanarae.administrator.worshipplus;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ public class ContiListActivity extends AppCompatActivity {
     static Data tempList;
     static int more;
     Conti_List_Adapter adapter;
+    Activity activity;
 
 
     @Override
@@ -35,6 +37,8 @@ public class ContiListActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conti_list);
+
+        activity = this;
 
         tempList = new Data();
         more = 1;
@@ -77,13 +81,16 @@ public class ContiListActivity extends AppCompatActivity {
                         data.setListContent(tempList.getDateArrayListItem(i),tempList.getExplanationArrayListItem(i));
 
                         // 각 값이 들어간 data를 adapter에 추가합니다.
-                        if(data.getListDate()!=null) adapter.addItem(data,getParent());
+                        if(data.getListDate()!=null) adapter.addItem(data, activity);
                     }
 
                     recyclerView.post(new Runnable() {
                         public void run() {
                             // There is no need to use notifyDataSetChanged()
                             adapter.notifyDataSetChanged();
+                            tempList.removeTitleArrayList();
+                            tempList.removeDateArrayList();
+                            tempList.removeExplanationArrayList();
                         }
                     });
 
