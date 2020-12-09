@@ -152,13 +152,13 @@ public class Search_Recycler_Adapter extends RecyclerView.Adapter<Search_Recycle
                     if(data.getDate(i).equals("기본정보")){
                         tempList.setDate(data.getDate(i),data.getTitle());
                         tempList.setExplanation(data.getExplanation(i),6);
-                        tempList.setMusic(data.getMusic(i),7);
+                        tempList.setMusic(data.getMusic(i),7,data.getTitle());
                         tempList.setSheet(data.getTitle(),999,data.getSheet(i));// 악보검색할때 곡제목 전달
                     }
                     else {
                         tempList.setDate(data.getDate(i));
                         tempList.setExplanation(data.getExplanation(i));
-                        tempList.setMusic(data.getMusic(i),data.getDate(i));
+                        tempList.setMusic(data.getMusic(i),data.getDate(i),data.getTitle());
                         tempList.setSheet(data.getTitle(),888, data.getSheet(i));//메인콘티와 비슷하게 레이아웃
                     }
                     tempList.setDate(data.getDate(i));

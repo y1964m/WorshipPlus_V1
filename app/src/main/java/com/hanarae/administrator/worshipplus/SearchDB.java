@@ -209,24 +209,17 @@ public class SearchDB extends AsyncTask<Void, Integer, Void> {
                                     MainActivity.tempLatestConti.addSheet(jsonObject.getString("sheet"));
 
                                 }
-
                             }
                         }
-
-
-
                     }
-
                     mWakeLock.release();
                     latch_DB.countDown();
-
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                     latch_DB.countDown();
                     error_code = 1;
                 }
-
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();

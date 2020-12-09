@@ -97,17 +97,28 @@
     </LinearLayout>
 
     <LinearLayout
+        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="horizontal"
+        android:gravity="center">
         <Button
             android:id="@+id/button_skip_info"
             android:layout_width="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="10dp"
             android:layout_height="34dp"
             android:text="없음"
+            android:layout_marginEnd="8dp"
             android:background="@drawable/rounded_button"/>
+
+        <Button
+            android:id="@+id/button_next"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:layout_height="34dp"
+            android:text="확인"
+            android:background="@drawable/rounded_button"/>
+
     </LinearLayout>
 
 </LinearLayout>

@@ -140,20 +140,20 @@ public class Latest_Conti_Adapter extends RecyclerView.Adapter<Latest_Conti_Adap
                 }else tempList.setDate("");
                     //tempList.setDate(data.getDate(i));*/
 
-                tempList.setMusic(data.getMusic(i),data.getDate(i));
+                tempList.setMusic(data.getMusic(i),data.getDate(i),data.getTitle());
                 tempList.setSheet(data.getTitle(),888, data.getSingle_Sheet_url());
                 container.addView(tempList);
             }
 
             song_date = itemView.findViewById(R.id.textView_conti_date);
-            song_date.setText("온라인 검색");
+            song_date.setText("가사 검색");
             song_date.setClickable(true);
             song_date.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if(imm!=null)
                         imm.hideSoftInputFromWindow(v.getWindowToken(),0);
-                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/search?q="+data.getTitle()));
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/search?q="+data.getTitle()+" 가사"));
                         context.startActivity(intent.addFlags(FLAG_ACTIVITY_NEW_TASK));
                 }
             });

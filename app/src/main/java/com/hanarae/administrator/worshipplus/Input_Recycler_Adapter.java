@@ -113,7 +113,7 @@ public class Input_Recycler_Adapter extends RecyclerView.Adapter<Input_Recycler_
         ItemViewHolder (View itemView) {
             super(itemView);
 
-            ArrayAdapter auto = new ArrayAdapter(context, android.R.layout.simple_dropdown_item_1line,MainActivity.autoText);
+            ArrayAdapter auto = new ArrayAdapter(context, R.layout.autocomplete_item,MainActivity.autoText);
             container = itemView.findViewById(R.id.linear_layout_container_input);
 
             song_title = itemView.findViewById(R.id.song_title_input);

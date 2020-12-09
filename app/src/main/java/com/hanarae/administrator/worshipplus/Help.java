@@ -38,7 +38,24 @@ public class Help extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                //Toast.makeText(getApplicationContext(),position+1+"/"+helpAdapter.getCount(),Toast.LENGTH_SHORT).show();
+                switch (position){
+                    case 0: Toast.makeText(getApplicationContext(),"보기 화면",Toast.LENGTH_SHORT).show();
+                        break;
+                    case 1:
+                        break;
+                    case 2: Toast.makeText(getApplicationContext(),"콘티 작성",Toast.LENGTH_SHORT).show();
+                        break;
+                    case 3:
+                        break;
+                    case 4:
+                        break;
+                    case 5:
+                        break;
+                    case 6: Toast.makeText(getApplicationContext(),"악보 화면",Toast.LENGTH_SHORT).show();
+                        break;
+                    case 7: Toast.makeText(getApplicationContext(),"검색 화면",Toast.LENGTH_SHORT).show();
+                        break;
+                }
             }
 
             @Override
@@ -89,6 +106,8 @@ public class Help extends AppCompatActivity {
                         break;
                     case 6: imageView.setImageResource(R.drawable.help7);
                         break;
+                    case 7: imageView.setImageResource(R.drawable.help8);
+                        break;
                 }
             }
 
@@ -99,7 +118,7 @@ public class Help extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return 7;
+            return 8;
         }
 
         @Override

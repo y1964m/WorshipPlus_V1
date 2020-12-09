@@ -17,20 +17,14 @@
         android:orientation="vertical"
         android:gravity="center">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_marginBottom="5dp">
-
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 app:boxStrokeColor="@color/colorAccent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="그룹코드"
-                app:endIconMode="clear_text">
+                app:endIconMode="clear_text"
+                android:layout_marginBottom="5dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editText_db_id"
                     android:layout_width="match_parent"
@@ -40,23 +34,14 @@
                     android:ems="10"   />
             </com.google.android.material.textfield.TextInputLayout>
 
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_marginBottom="5dp">
-
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 app:boxStrokeColor="@color/colorAccent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:endIconMode="clear_text"
-                android:hint="ID">
+                android:hint="ID"
+                android:layout_marginBottom="5dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editText_id"
                     android:layout_width="match_parent"
@@ -66,24 +51,15 @@
                     android:ems="10"  />
             </com.google.android.material.textfield.TextInputLayout>
 
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:id="@+id/Linear_layout_login_pw"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            >
-
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/text_input_layout_pw"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 app:boxStrokeColor="@color/colorAccent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:endIconMode="clear_text"
-                android:hint="PW">
+                android:hint="PW"
+                android:layout_marginBottom="5dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editText_pw"
                     android:layout_width="match_parent"
@@ -93,7 +69,6 @@
                     android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
 
-        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -157,9 +132,12 @@
                 android:orientation="vertical" />
         </ScrollView>
 
-
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
         <LinearLayout
             android:layout_weight="0.8"
             android:layout_width="match_parent"
@@ -185,10 +163,20 @@
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/text_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="8dp"
+            android:text="그룹코드 관리자에게 문의"/>
+
+    </LinearLayout>
+
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:clickable="true"
         android:id="@+id/join_button_back"
         android:src="@drawable/baseline_expand_more_black_18"

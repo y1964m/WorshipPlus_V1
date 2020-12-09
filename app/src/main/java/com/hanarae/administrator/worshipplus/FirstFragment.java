@@ -327,7 +327,7 @@ public class FirstFragment extends Fragment {
                         }
                     });
 
-                    builder.setNeutralButton("날자만 변경", new DialogInterface.OnClickListener(){
+                    builder.setNeutralButton("날짜만 변경", new DialogInterface.OnClickListener(){
                         @Override
                         public void onClick(DialogInterface dialog, int id){
                             tvLabe2.setText(date);

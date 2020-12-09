@@ -21,7 +21,7 @@ public class SecondFragment extends Fragment {
     static EditText editText_title2;
     LinearLayout linearLayout;
     InputMethodManager imm;
-    Button button_skip_info;
+    Button button_skip_info, button_next;
 
     // newInstance constructor for creating fragment with arguments
     public static SecondFragment newInstance(int page, String title) {
@@ -59,6 +59,7 @@ public class SecondFragment extends Fragment {
         editText_title1= view.findViewById(R.id.editText_title1);
         editText_title2= view.findViewById(R.id.editText_title2);
         button_skip_info = view.findViewById(R.id.button_skip_info);
+        button_next = view.findViewById(R.id.button_next);
 
         button_skip_info.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,6 +71,14 @@ public class SecondFragment extends Fragment {
                 getArguments().putString("someTitle1", editText_title1.getText().toString());
                 getArguments().putString("someTitle2", editText_title2.getText().toString());
                 MainActivity.vpPager.setCurrentItem(2);
+            }
+        });
+
+        button_next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MainActivity.vpPager.setCurrentItem(2);
+                imm.hideSoftInputFromWindow(view.getWindowToken(),0);
             }
         });
 

@@ -65,7 +65,7 @@ public class PraiseSearch extends AppCompatActivity {
 
         editText_search_content = findViewById(R.id.editText_search_content);
 
-        ArrayAdapter auto = new ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line,MainActivity.autoText);
+        ArrayAdapter auto = new ArrayAdapter(this, R.layout.autocomplete_item, MainActivity.autoText);
         editText_search_content.setAdapter(auto);
         editText_search_content.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,18 +13,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 
@@ -36,7 +37,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -54,6 +54,8 @@ public class LoginActivity extends AppCompatActivity {
     CountDownLatch latch;
     Button login, join;
     ImageButton back;
+    TextView textView_email;
+    TextInputLayout textInputLayout_pw;
 
 
     public static String sha256(String str) {
@@ -92,6 +94,22 @@ public class LoginActivity extends AppCompatActivity {
 
         id = findViewById(R.id.editText_id);
         pw = findViewById(R.id.editText_pw);
+        textInputLayout_pw = findViewById(R.id.text_input_layout_pw);
+        textView_email = findViewById(R.id.text_email);
+        textView_email.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent email = new Intent(Intent.ACTION_SEND);
+                email.setType("plain/text");
+                String[] address = {"y196411m@gmail.com"};
+                email.putExtra(Intent.EXTRA_EMAIL, address);
+                email.putExtra(Intent.EXTRA_SUBJECT, "그룹코드 신규신청");
+                email.putExtra(Intent.EXTRA_TEXT, "다음의 양식을 작성해주세요\n\n교회명:\n찬양팀명:\n\n감사합니다");
+                startActivity(email);
+            }
+        });
+
+
         login = findViewById(R.id.button_login);
         join = findViewById(R.id.button_join);
         back = findViewById(R.id.join_button_back);
@@ -105,6 +123,11 @@ public class LoginActivity extends AppCompatActivity {
                 else onBackPressed();
             }
         });
+
+        if(MainActivity.logged_in_db_id !=null ) {
+            textInputLayout_pw.setVisibility(View.GONE);
+            textView_email.setVisibility(View.INVISIBLE);
+        }
 
         login1 = findViewById(R.id.login_1);
         login_setting = findViewById(R.id.login_setting);
@@ -170,6 +193,9 @@ public class LoginActivity extends AppCompatActivity {
                     pw.setText("");
                     login.setText("Login");
                     join.setText("NEW");
+
+                    textInputLayout_pw.setVisibility(View.VISIBLE);
+                    textView_email.setVisibility(View.VISIBLE);
 
                     Toast.makeText(getApplicationContext(),"로그아웃 되었습니다", Toast.LENGTH_SHORT).show();
                 }
@@ -249,6 +275,7 @@ public class LoginActivity extends AppCompatActivity {
                     login1.setVisibility(View.GONE);
                     login_setting.setVisibility(View.VISIBLE);
 
+                    textView_email.setVisibility(View.INVISIBLE);
                     join.setText("확인");
                     login.setVisibility(View.GONE);
                     back.setVisibility(View.GONE);
@@ -281,6 +308,8 @@ public class LoginActivity extends AppCompatActivity {
 
                     join.setText("Team");
                     login1.setVisibility(View.VISIBLE);
+
+                    if(MainActivity.logged_in_db_id ==null ) textView_email.setVisibility(View.VISIBLE);
 
                     login.setVisibility(View.VISIBLE);
                     login_setting.setVisibility(View.GONE);
