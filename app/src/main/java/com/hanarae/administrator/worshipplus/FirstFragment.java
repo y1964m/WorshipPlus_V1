@@ -334,6 +334,7 @@ public class FirstFragment extends Fragment {
                             getArguments().putString("someDate", tvLabe2.getText().toString());
                             getArguments().putLong("someDateAsLong", temp_date);
                             Toast.makeText(getContext(), "날자가 변경되었습니다", Toast.LENGTH_SHORT).show();
+                            MainActivity.temp_author="";
                         }
                     });
 
@@ -370,6 +371,7 @@ public class FirstFragment extends Fragment {
                             long temp_date = date0.getTime();
                             getArguments().putLong("someDateAsLong", temp_date);*/
 
+                            MainActivity.temp_author="";
                             Toast.makeText(getContext(), "새로운 콘티 "+getArguments().getString("someDate").substring(0,10), Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -398,6 +400,7 @@ public class FirstFragment extends Fragment {
                                 getArguments().putString("someDate", tvLabe2.getText().toString());
                                 getArguments().putLong("someDateAsLong", temp_date);
                                 Toast.makeText(getContext(), "날자가 변경되었습니다", Toast.LENGTH_SHORT).show();
+                                MainActivity.temp_author="";
                             }
                         });
 
@@ -425,6 +428,7 @@ public class FirstFragment extends Fragment {
                                 getArguments().putLong("someDateAsLong", temp_date);
 
                                 Toast.makeText(getContext(), "새로운 콘티를 작성합니다", Toast.LENGTH_SHORT).show();
+                                MainActivity.temp_author="";
                             }
                         });
 

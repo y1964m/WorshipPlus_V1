@@ -15,6 +15,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+
 public class TempList extends LinearLayout {
 
     private TextView song_date;
@@ -26,6 +28,7 @@ public class TempList extends LinearLayout {
     int width, height, position, second_position;
     private CheckBox checkBox;
     String content_string;
+    Context context;
 
 
     public TempList(final Context context, int width, int height, InputMethodManager imm, int case_num, final int position, final int second_position) {
@@ -38,6 +41,7 @@ public class TempList extends LinearLayout {
         this.height=height;
         this.position=position;
         this.second_position=second_position;
+        this.context = context;
 
         checkBox = findViewById(R.id.song_check);
 
@@ -80,7 +84,7 @@ public class TempList extends LinearLayout {
             @Override
             public boolean onLongClick(View v) {
 
-                if(MainActivity.logged_in_db_id.equals("ssyp")) {
+                if(MainActivity.logged_in_id.equals(MainActivity.admin_id)) {
 
                     cd = new CustomDialog(4, getContext(), position, imm, song_name);
                     WindowManager.LayoutParams wm = cd.getWindow().getAttributes();  //다이얼로그의 높이 너비 설정하기위해
@@ -204,14 +208,10 @@ public class TempList extends LinearLayout {
         button_sheet.setOnLongClickListener(new OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-
-                cd = new CustomDialog(5, getContext(), position, imm,
-                        "Web Search\nhttps://www.google.com/search?q=" + explanation.replace(" ","") + "&tbm=isch");
-                WindowManager.LayoutParams wm = cd.getWindow().getAttributes();  //다이얼로그의 높이 너비 설정하기위해
-                wm.copyFrom(cd.getWindow().getAttributes());  //여기서 설정한값을 그대로 다이얼로그에 넣겠다는의미
-                wm.width = width ;  //화면 너비의 절반
-                wm.height = height / 2;  //화면 높이의 절반
-                cd.show();
+                if(imm!=null)
+                    imm.hideSoftInputFromWindow(view.getWindowToken(),0);
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/search?q=" + explanation.replace(" ","") + "&tbm=isch"));
+                    context.startActivity(intent.addFlags(FLAG_ACTIVITY_NEW_TASK));
 
                 return false;
             }
@@ -219,10 +219,9 @@ public class TempList extends LinearLayout {
 
     }
 
-    public void setMusic(String ex, final String date, String title){
+    public void setMusic(String ex, final String date, final String title){
 
         final String music = ex;
-        content_string = "Youtube\nhttps://www.youtube.com/results?search_query=" + title.replace(" ","");
 
         button_music = findViewById(R.id.button_music);
         if(ex.equals("")) button_music.setTextColor(Color.LTGRAY);
@@ -239,24 +238,32 @@ public class TempList extends LinearLayout {
 
             }
         });
-
-        //길게 링크버튼 누르면 성실교회 실황으로 연결
-        if(MainActivity.logged_in_db_id.equals("ssyp")){
-            content_string = content_string.concat("\n\n실황링크\nhttp://ssyp.synology.me:8812/worshipplus/record/" +
-                    (date.substring(0,10)).replace(".","")
-                    + ".mp3");
-        }
-
             button_music.setOnLongClickListener(new OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
 
-                    cd = new CustomDialog(5, getContext(), position, imm, content_string);
-                    WindowManager.LayoutParams wm = cd.getWindow().getAttributes();  //다이얼로그의 높이 너비 설정하기위해
-                    wm.copyFrom(cd.getWindow().getAttributes());  //여기서 설정한값을 그대로 다이얼로그에 넣겠다는의미
-                    wm.width = width ;  //화면 너비의 절반
-                    wm.height = height / 2;  //화면 높이의 절반
-                    cd.show();
+                    content_string = "https://www.youtube.com/results?search_query=" + title.replace(" ","");
+
+                    if(MainActivity.logged_in_db_id.equals("ssyp")){
+                        content_string = content_string.concat("\n\n실황링크\nhttp://ssyp.synology.me:8812/worshipplus/record/" +
+                                (date.substring(0,10)).replace(".","")
+                                + ".mp3");
+
+
+                        cd = new CustomDialog(5, getContext(), position, imm, "Youtube\n" + content_string);
+                        WindowManager.LayoutParams wm = cd.getWindow().getAttributes();  //다이얼로그의 높이 너비 설정하기위해
+                        wm.copyFrom(cd.getWindow().getAttributes());  //여기서 설정한값을 그대로 다이얼로그에 넣겠다는의미
+                        wm.width = width ;  //화면 너비의 절반
+                        wm.height = height / 2;  //화면 높이의 절반
+                        cd.show();
+                    }
+
+                    else {
+                        if(imm!=null)
+                            imm.hideSoftInputFromWindow(v.getWindowToken(),0);
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(content_string));
+                            context.startActivity(intent.addFlags(FLAG_ACTIVITY_NEW_TASK));
+                    }
 
                     return false;
                 }
@@ -265,10 +272,9 @@ public class TempList extends LinearLayout {
 
     }
 
-    public void setMusic(String ex, final int special, String title){
+    public void setMusic(String ex, final int special, final String title){ //검색에서 기본정보일떄
 
         final String music = ex;
-        content_string = "Youtube\nhttps://www.youtube.com/results?search_query=" + title.replace(" ","");
 
         button_music = findViewById(R.id.button_music);
         if(ex.equals("")) button_music.setTextColor(Color.LTGRAY);
@@ -290,12 +296,12 @@ public class TempList extends LinearLayout {
             @Override
             public boolean onLongClick(View v) {
 
-                cd = new CustomDialog(5, getContext(), position, imm, content_string);
-                WindowManager.LayoutParams wm = cd.getWindow().getAttributes();  //다이얼로그의 높이 너비 설정하기위해
-                wm.copyFrom(cd.getWindow().getAttributes());  //여기서 설정한값을 그대로 다이얼로그에 넣겠다는의미
-                wm.width = width ;  //화면 너비의 절반
-                wm.height = height / 2;  //화면 높이의 절반
-                cd.show();
+                content_string = "https://www.youtube.com/results?search_query=" + title.replace(" ","");
+
+                    if(imm!=null)
+                        imm.hideSoftInputFromWindow(v.getWindowToken(),0);
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(content_string));
+                    context.startActivity(intent.addFlags(FLAG_ACTIVITY_NEW_TASK));
 
                 return false;
             }

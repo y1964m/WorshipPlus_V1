@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -241,6 +242,7 @@ public class ThirdFragment extends Fragment {
                                     + "&ex[]=" + temp_ex
                                 + "&music[]=" + adapter.listData.get(i).getSingle_music() //+ temp_link_ssyp
                                 + "&sheet[]=" + adapter.listData.get(i).getSingle_sheet()
+                                    + "&author=" + MainActivity.logged_in_id
                                 + publicOn + pushOn;
                         }
 
@@ -282,6 +284,16 @@ public class ThirdFragment extends Fragment {
                         break;
 
                     case 0: // 확인 단계
+                        if(!MainActivity.logged_in_id.equals(MainActivity.admin_id)){//no admin no control
+                            if(!(MainActivity.temp_author.equals(""))&&!(MainActivity.temp_author.equals(MainActivity.logged_in_id))) { // only first writer can edit
+                                Toast toast = Toast.makeText(getContext(),MainActivity.temp_author + " 작성한 콘티입니다\n수정권한이 없습니다" ,Toast.LENGTH_SHORT);
+                                toast.setGravity(Gravity.CENTER,0,0);
+                                toast.show();
+                                return;
+                        }
+
+                        }
+
                         if(adapter.getItemCount()==0){
                             Toast.makeText(getContext(),"콘티정보를 작성해주세요",Toast.LENGTH_SHORT).show();
                             return;
@@ -291,6 +303,7 @@ public class ThirdFragment extends Fragment {
                         for(int i =0; i < adapter.getItemCount(); i++){
                             if(adapter.listData.get(i).getTitle().isEmpty() || adapter.listData.get(i).getContent().isEmpty()){
                                 Toast.makeText(getContext(),"빈칸없이 콘티정보를 작성해주세요",Toast.LENGTH_SHORT).show();
+                                MainActivity.vpPager.setCurrentItem(2);
                                 return;
                             }
                         }

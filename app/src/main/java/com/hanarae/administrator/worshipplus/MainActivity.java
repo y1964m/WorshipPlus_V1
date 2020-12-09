@@ -64,6 +64,9 @@ public class MainActivity extends AppCompatActivity {
    static String logged_in_id;
    static String team_info;
    static String checked_search;
+   static String temp_author;
+
+   static String admin_id= "david"; // 기본정보 수정 가능 권한가진 id
 
     static ConnectivityManager manager;
 
@@ -134,6 +137,8 @@ public class MainActivity extends AppCompatActivity {
         tempLatestConti = new Data(); //latest conti container
         tempPhoto = new Data(); //악보 그릇
         autoText = new ArrayList(); // 검색어 자동완성 그릇
+
+        temp_author="";
 
         bottomNavigationView = findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);

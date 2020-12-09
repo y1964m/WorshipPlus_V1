@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.net.Uri;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -22,6 +24,8 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import java.util.ArrayList;
+
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 public class Input_Recycler_Adapter extends RecyclerView.Adapter<Input_Recycler_Adapter.ItemViewHolder> implements ItemTouchHelperListener{
 
@@ -236,13 +240,10 @@ public class Input_Recycler_Adapter extends RecyclerView.Adapter<Input_Recycler_
                 @Override
                 public boolean onLongClick(View v) { // 길게 눌러 구글 악보 이미지 검색
 
-                    cd = new CustomDialog(5, context, getAdapterPosition(), imm,
-                            "Web Search\nhttps://www.google.com/search?q=" + data.getTitle().replace(" ","") + "&tbm=isch");
-                    WindowManager.LayoutParams wm = cd.getWindow().getAttributes();  //다이얼로그의 높이 너비 설정하기위해
-                    wm.copyFrom(cd.getWindow().getAttributes());  //여기서 설정한값을 그대로 다이얼로그에 넣겠다는의미
-                    wm.width = width ;  //화면 너비의 절반
-                    wm.height = height / 2;  //화면 높이의 절반
-                    cd.show();
+                    if(imm!=null)
+                        imm.hideSoftInputFromWindow(v.getWindowToken(),0);
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/search?q=" + data.getTitle().replace(" ","")+ "&tbm=isch"));
+                        context.startActivity(intent.addFlags(FLAG_ACTIVITY_NEW_TASK));
 
                     return false;
                 }
@@ -266,13 +267,10 @@ public class Input_Recycler_Adapter extends RecyclerView.Adapter<Input_Recycler_
                 @Override
                 public boolean onLongClick(View v) { // 길게눌러 유투브 링크로 이동
 
-                    cd = new CustomDialog(5, context, getAdapterPosition(), imm,
-                            "Youtube\nhttps://www.youtube.com/results?search_query=" + data.getTitle().replace(" ",""));
-                    WindowManager.LayoutParams wm = cd.getWindow().getAttributes();  //다이얼로그의 높이 너비 설정하기위해
-                    wm.copyFrom(cd.getWindow().getAttributes());  //여기서 설정한값을 그대로 다이얼로그에 넣겠다는의미
-                    wm.width = width ;  //화면 너비의 절반
-                    wm.height = height / 2;  //화면 높이의 절반
-                    cd.show();
+                    if(imm!=null)
+                        imm.hideSoftInputFromWindow(v.getWindowToken(),0);
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/results?search_query=" + data.getTitle().replace(" ","")));
+                        context.startActivity(intent.addFlags(FLAG_ACTIVITY_NEW_TASK));
 
                     return false;
                 }

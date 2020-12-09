@@ -131,7 +131,7 @@ public class Search_Recycler_Adapter extends RecyclerView.Adapter<Search_Recycle
             song_chord.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) { // 길게 누르면 수정가능하게
-                    if(MainActivity.logged_in_db_id.equals("ssyp") && data.getDate(0).equals("기본정보") ){
+                    if(MainActivity.logged_in_id.equals(MainActivity.admin_id) && data.getDate(0).equals("기본정보") ){
 
                         CustomDialog cd = new CustomDialog(1, itemView.getContext(), getAdapterPosition(), imm, data.getContent());
                         WindowManager.LayoutParams wm = cd.getWindow().getAttributes();  //다이얼로그의 높이 너비 설정하기위해

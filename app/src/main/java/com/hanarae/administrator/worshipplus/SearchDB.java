@@ -532,6 +532,8 @@ public class SearchDB extends AsyncTask<Void, Integer, Void> {
 
         if(case_number==3){ // 콘티 수정 할때 불러오는 코드
 
+            MainActivity.temp_author="";
+
             /* 인풋 파라메터값 생성 */
             String param = "date=" + MainActivity.args.getString("someDate") +
                     "&user_account="+ MainActivity.logged_in_db_id +
@@ -610,6 +612,8 @@ public class SearchDB extends AsyncTask<Void, Integer, Void> {
                                 MainActivity.tempConti.addMusic(jsonObject.getString("music"));
                                 MainActivity.tempConti.addSheet(jsonObject.getString("sheet"));
 
+                                MainActivity.temp_author=jsonObject.getString("author"); //콘티 작성자 확인
+
 
                                 tempDate.clear();
                                 break;
@@ -624,11 +628,12 @@ public class SearchDB extends AsyncTask<Void, Integer, Void> {
 
                                 tempDate.add(jsonObject.getString("id_date"));
 
-
                                 MainActivity.tempConti.setDateArrayList(tempDate);
                                 MainActivity.tempConti.addExplanation(jsonObject.getString("explanation"));
                                 MainActivity.tempConti.addMusic(jsonObject.getString("music"));
                                 MainActivity.tempConti.addSheet(jsonObject.getString("sheet"));
+
+                                MainActivity.temp_author=jsonObject.getString("author"); //콘티 작성자 확인
 
                                 tempDate.clear();
 
@@ -669,7 +674,8 @@ public class SearchDB extends AsyncTask<Void, Integer, Void> {
             /* 인풋 파라메터값 생성 */
 
                 String param = "song="+ photo_param.replace(" ","")
-                        +"&user_account="+ MainActivity.logged_in_db_id;
+                        + "&user_account="+ MainActivity.logged_in_db_id
+                        + "&team="+ MainActivity.checked_search;
 
             try {
                 /* 서버연결 */

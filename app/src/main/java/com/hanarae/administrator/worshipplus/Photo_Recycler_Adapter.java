@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
@@ -81,7 +82,6 @@ public class Photo_Recycler_Adapter extends RecyclerView.Adapter<Photo_Recycler_
                 photo_name.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
                         /*PhotoSelect.imageView.setImageURI(data.getSingle_sheet_temp());
                         PhotoSelect.isFile = false;
                         PhotoSelect.imageView.setVisibility(View.VISIBLE);
@@ -110,7 +110,8 @@ public class Photo_Recycler_Adapter extends RecyclerView.Adapter<Photo_Recycler_
                 });
 
 
-
+                if(data.getTitle().equals("기본정보")) button.setVisibility(View.INVISIBLE);
+                if(MainActivity.logged_in_id.equals(MainActivity.admin_id)) button.setVisibility(View.VISIBLE);
                 photo_name.setText(data.getTitle());
                 photo_name.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -128,6 +129,11 @@ public class Photo_Recycler_Adapter extends RecyclerView.Adapter<Photo_Recycler_
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+
+                        if(!data.getTitle().contains("/"+ MainActivity.team_info + "/")){
+                            Toast.makeText(PhotoSelect.context, "다른 팀의 정보를 삭제할수 없습니다", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(PhotoSelect.context);
                         builder.setTitle("삭제하시겠습니까?");
@@ -161,11 +167,11 @@ public class Photo_Recycler_Adapter extends RecyclerView.Adapter<Photo_Recycler_
 
                                 if(PhotoSelect.temp_string!=null)
                                     PhotoSelect.temp_string = PhotoSelect.temp_string.replace(listData.get(getAdapterPosition()).getSingle_Sheet_url() + ",","");
-                                listData.remove(position);
-                                notifyDataSetChanged();
+                                    listData.remove(position);
+                                    notifyDataSetChanged();
 
-                                //PhotoSelect.imageView.setVisibility(View.VISIBLE);
-                                PhotoSelect.refreshViewPager();
+                                    //PhotoSelect.imageView.setVisibility(View.VISIBLE);
+                                    PhotoSelect.refreshViewPager();
                             }
                         });
 
