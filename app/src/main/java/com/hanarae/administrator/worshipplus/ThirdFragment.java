@@ -287,7 +287,6 @@ public class ThirdFragment extends Fragment {
                         if(!MainActivity.logged_in_id.equals(MainActivity.admin_id)){//no admin no control
                             if(!(MainActivity.temp_author.equals(""))&&!(MainActivity.temp_author.equals(MainActivity.logged_in_id))) { // only first writer can edit
                                 Toast toast = Toast.makeText(getContext(),MainActivity.temp_author + " 작성한 콘티입니다\n수정권한이 없습니다" ,Toast.LENGTH_SHORT);
-                                toast.setGravity(Gravity.CENTER,0,0);
                                 toast.show();
                                 return;
                         }

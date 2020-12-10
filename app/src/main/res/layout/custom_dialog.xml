@@ -16,8 +16,8 @@
         android:autoLink="web"
         android:gravity="left"
         android:hint="세부콘티"
-        android:textColor="@android:color/black"
         android:textSize="15sp"
+        android:textColor="@color/DarkModeBlack"
         android:overScrollMode="ifContentScrolls"
         android:padding="15dp" />
 
@@ -28,8 +28,8 @@
         android:layout_weight="8.5"
         android:autoLink="web"
         android:textIsSelectable="false"
-        android:textColor="@android:color/black"
         android:textSize="15sp"
+        android:textColor="@color/DarkModeBlack"
         android:gravity="left"
         android:overScrollMode="ifContentScrolls"
         android:padding="15dp"

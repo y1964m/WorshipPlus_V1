@@ -4,14 +4,16 @@
     <!-- 평상시 -->
     <item
         android:state_checked="false">
-        <bitmap android:src="@drawable/round_expand_more_black_36dp"/>
+        <bitmap android:src="@drawable/round_expand_more_black_36dp"
+            android:tint="@color/DarkModeBlack"/>
 
     </item>
 
     <!-- 클릭했을 때 -->
     <item
         android:state_checked="true">
-        <bitmap android:src="@drawable/round_expand_less_black_36dp"/>
+        <bitmap android:src="@drawable/round_expand_less_black_36dp"
+            android:tint="@color/DarkModeBlack"/>
 
     </item>
 

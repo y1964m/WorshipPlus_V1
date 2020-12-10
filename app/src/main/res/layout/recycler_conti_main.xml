@@ -20,7 +20,7 @@
             android:layout_weight="0.7"
             android:gravity="right"
             android:text="#"
-            android:textColor="@android:color/black"
+            android:textColor="@color/DarkModeBlack"
             android:textSize="16sp" />
 
         <TextView
@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="4.1"
             android:text="Title"
-            android:textColor="@android:color/black"
+            android:textColor="@color/DarkModeBlack"
             android:textSize="16sp" />
 
         <TextView
@@ -39,8 +39,8 @@
             android:layout_weight="1"
             android:gravity="center"
             android:inputType="textCapSentences"
-            android:textColor="@android:color/black"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:textColor="@color/DarkModeBlack"/>
 
         <!--  <ToggleButton
             android:id="@+id/toggleButton_song_detail_main"

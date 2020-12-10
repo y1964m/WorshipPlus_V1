@@ -1,5 +1,6 @@
 package com.hanarae.administrator.worshipplus;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -191,7 +192,7 @@ public class TempList extends LinearLayout {
 
         button_sheet = findViewById(R.id.button_sheet);
         button_sheet.setText("악보");
-        if(url.equals("")) button_sheet.setTextColor(Color.LTGRAY);
+        if(url.equals("")) button_sheet.setTextColor(getResources().getColor(R.color.DarkModeGraytoBlack));
         button_sheet.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -219,12 +220,13 @@ public class TempList extends LinearLayout {
 
     }
 
+    @SuppressLint("ResourceAsColor")
     public void setMusic(String ex, final String date, final String title){
 
         final String music = ex;
 
         button_music = findViewById(R.id.button_music);
-        if(ex.equals("")) button_music.setTextColor(Color.LTGRAY);
+        if(ex.equals("")) button_music.setTextColor(getResources().getColor(R.color.DarkModeGraytoBlack));
         button_music.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -272,12 +274,13 @@ public class TempList extends LinearLayout {
 
     }
 
+    @SuppressLint("ResourceAsColor")
     public void setMusic(String ex, final int special, final String title){ //검색에서 기본정보일떄
 
         final String music = ex;
 
         button_music = findViewById(R.id.button_music);
-        if(ex.equals("")) button_music.setTextColor(Color.LTGRAY);
+        if(ex.equals("")) button_music.setTextColor(getResources().getColor(R.color.DarkModeGraytoBlack));
         button_music.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

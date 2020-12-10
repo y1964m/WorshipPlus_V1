@@ -1,6 +1,7 @@
 package com.hanarae.administrator.worshipplus;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,20 @@ public class Help extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.help);
+
+        int nightModeFlags =
+                getApplicationContext().getResources().getConfiguration().uiMode &
+                        Configuration.UI_MODE_NIGHT_MASK;
+
+        switch (nightModeFlags) {
+            case Configuration.UI_MODE_NIGHT_YES:
+                break;
+            case Configuration.UI_MODE_NIGHT_NO:
+                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                break;
+            case Configuration.UI_MODE_NIGHT_UNDEFINED:
+                break;
+        }
 
         viewPager = findViewById(R.id.viewpager_help);
         final HelpAdapter helpAdapter = new HelpAdapter(getApplicationContext());

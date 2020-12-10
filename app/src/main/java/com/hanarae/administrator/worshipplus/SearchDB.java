@@ -761,7 +761,8 @@ public class SearchDB extends AsyncTask<Void, Integer, Void> {
             /* 인풋 파라메터값 생성 */
             String param = "more=" + ContiListActivity.more + // 리스트 로드 배수
                     "&user_account="+ MainActivity.logged_in_db_id +
-                    "&team="+ MainActivity.team_info +
+                    //"&team="+ MainActivity.team_info + // 소속팀 콘티만 부르고 싶을때
+                    "&team="+ MainActivity.checked_search +
                     "&author=" + MainActivity.logged_in_id;
 
             Log.e("SEND DATA", param);

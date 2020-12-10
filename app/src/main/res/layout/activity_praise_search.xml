@@ -36,9 +36,9 @@
                     android:layout_height="match_parent"
                     app:endIconMode="clear_text"
                     android:layout_marginEnd="8dp"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    app:boxStrokeColor="@color/colorAccent"
-                    android:hint="제목">
+                    style="@style/TextInputLayoutStyle"
+                    android:hint="제목"
+                    app:hintTextColor="@color/DarkModeBlack">
                     <AutoCompleteTextView
                         android:id="@+id/editText_search_content"
                         android:paddingStart="12dp"
@@ -71,9 +71,9 @@
                     android:layout_width="0dp"
                     android:layout_weight="1.5"
                     android:layout_height="match_parent"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    app:boxStrokeColor="@color/colorAccent"
-                    android:hint="코드">
+                    style="@style/TextInputLayoutStyle"
+                    android:hint="코드"
+                    app:hintTextColor="@color/DarkModeBlack">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editText_search_chord"
                         android:layout_width="match_parent"
@@ -116,15 +116,16 @@
                     android:layout_weight="8.3"
                     android:layout_height="wrap_content"
                     app:endIconMode="clear_text"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    app:boxStrokeColor="@color/colorAccent"
-                    android:hint="태그">
+                    style="@style/TextInputLayoutStyle"
+                    android:hint="태그"
+                    app:hintTextColor="@color/DarkModeBlack">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editText_search_tag"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:imeOptions="actionSearch"
-                        android:inputType="text" />
+                        android:inputType="text"
+                        android:textColor="@color/DarkModeBlack"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
               <!--  <EditText
@@ -154,7 +155,8 @@
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:layout_marginLeft="5dp"
-                    android:background="@drawable/round_search_black_18dp"/>
+                    android:background="@drawable/round_search_black_18dp"
+                    android:backgroundTint="@color/DarkModeBlack" />
 
                 </LinearLayout>
 

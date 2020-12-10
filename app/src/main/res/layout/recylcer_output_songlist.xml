@@ -20,7 +20,7 @@
             android:paddingLeft="12dp"
             android:textIsSelectable="true"
             android:text="Title"
-            android:textColor="@android:color/black"
+            android:textColor="@color/DarkModeBlack"
             android:textSize="16sp" />
 
         <TextView
@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.8"
             android:inputType="textCapSentences"
-            android:textColor="@android:color/black"
+            android:textColor="@color/DarkModeBlack"
             android:textSize="16sp" />
 
         <ToggleButton

@@ -4,14 +4,20 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import androidx.annotation.NonNull;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -30,6 +36,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import me.relex.circleindicator.CircleIndicator;
@@ -66,7 +73,11 @@ public class MainActivity extends AppCompatActivity {
    static String checked_search;
    static String temp_author;
 
-   static String admin_id= "david"; // 기본정보 수정 가능 권한가진 id
+   static String admin_id= "david"; // 기본정보 수정 가능 권한가진 id.
+
+    boolean isFirstClicked = false;
+    boolean isFromList = false;
+    static boolean isFirstClickedCalendar = true;
 
     static ConnectivityManager manager;
 
@@ -99,9 +110,89 @@ public class MainActivity extends AppCompatActivity {
         System.exit(0);
     }
 
+
+    final void dialogShow() {
+        final List<String> ListItems = new ArrayList<>();
+        ListItems.add("기본정보");
+        ListItems.add("찬양제목");
+        ListItems.add("세부내용");
+        ListItems.add("악보/링크");
+        final CharSequence[] items =  ListItems.toArray(new String[ListItems.size()]);
+        final List SelectedItems  = new ArrayList();
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("복사할 항목을 선택해주세요");
+        builder.setMultiChoiceItems(items, null,
+                new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which,
+                                        boolean isChecked) {
+                        if (isChecked) {
+                            //사용자가 체크한 경우 리스트에 추가
+                            SelectedItems.add(ListItems.get(which));
+                        } else if (SelectedItems.contains(ListItems.get(which))) {
+                            //이미 리스트에 들어있던 아이템이면 제거
+                            SelectedItems.remove(Integer.valueOf(which));
+                        }
+                    }
+                });
+        builder.setPositiveButton("복사",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        String temp_string = "";
+                            if(SelectedItems.contains("기본정보"))
+                                temp_string+="@ "+ tempLatestConti.getBibleDate()+ "\n말씀본문: "+ tempLatestConti.getBible()+ "\n말씀제목: "+ tempLatestConti.getSermon()+ "\n찬양인도: "+ tempLatestConti.getLeader();
+
+                            if(SelectedItems.contains("세부내용") && SelectedItems.contains("악보/링크")){
+                                for (int i = 0; i < MainActivity.tempLatestConti.getTitleArrayListSize(); i++) {
+                                    // 각 List의 값들을 data 객체에 set 해줍니다.
+                                    temp_string += "\n\n" + i + ". " + adapter_main.listData.get(i).getTitle() + " - " + adapter_main.listData.get(i).getContent() + "\n"
+                                            + adapter_main.listData.get(i).getExplanation(0) + "\n링크: " + adapter_main.listData.get(i).getMusic(0) + "\n악보: " + adapter_main.listData.get(i).getSheet(0);
+                                }
+                            }else if(SelectedItems.contains("세부내용")){
+                                for (int i = 0; i < MainActivity.tempLatestConti.getTitleArrayListSize(); i++) {
+                                    // 각 List의 값들을 data 객체에 set 해줍니다.
+                                    temp_string += "\n\n" + i + ". " + adapter_main.listData.get(i).getTitle() + " - " + adapter_main.listData.get(i).getContent() + "\n"
+                                            + adapter_main.listData.get(i).getExplanation(0) ;
+                                }
+                            } else if(SelectedItems.contains("찬양제목")){
+                                for (int i = 0; i < MainActivity.tempLatestConti.getTitleArrayListSize(); i++) {
+                                    // 각 List의 값들을 data 객체에 set 해줍니다.
+                                    temp_string += "\n" + i + ". " + adapter_main.listData.get(i).getTitle() + " - " + adapter_main.listData.get(i).getContent();
+                                }
+                           }
+
+                        ClipboardManager clipboard = (ClipboardManager) getApplicationContext().getSystemService(CLIPBOARD_SERVICE);
+                        clipboard.setText(temp_string);
+                        Toast.makeText(getApplicationContext(),"클립보드에 복사완료",Toast.LENGTH_SHORT).show();
+                    }
+                });
+        builder.setNegativeButton("취소",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+        builder.show();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        int nightModeFlags =
+                getApplicationContext().getResources().getConfiguration().uiMode &
+                        Configuration.UI_MODE_NIGHT_MASK;
+
+        switch (nightModeFlags) {
+            case Configuration.UI_MODE_NIGHT_YES:
+                break;
+            case Configuration.UI_MODE_NIGHT_NO:
+                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                break;
+            case Configuration.UI_MODE_NIGHT_UNDEFINED:
+                break;
+        }
 
         //인터넷 연결확인 작업
         manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -199,8 +290,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(FirstFragment.tvLabe2==null) {
-                    vpPager.setCurrentItem(1);
                     vpPager.setCurrentItem(0);
+                    vpPager.setCurrentItem(2);
                 }
                 Intent intent_list = new Intent(MainActivity.this, ContiListActivity.class);
                 startActivityForResult(intent_list,2000);
@@ -229,16 +320,7 @@ public class MainActivity extends AppCompatActivity {
         button_copy_all.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                String temp_string = "";
-                for (int i = 0; i < MainActivity.tempLatestConti.getTitleArrayListSize(); i++) {
-                    // 각 List의 값들을 data 객체에 set 해줍니다.
-                    temp_string += i + ". " + adapter_main.listData.get(i).getTitle() + " - " + adapter_main.listData.get(i).getContent() + "\n"
-                            + adapter_main.listData.get(i).getExplanation(0) + " \n\n";
-                }
-
-                ClipboardManager clipboard = (ClipboardManager) getApplicationContext().getSystemService(CLIPBOARD_SERVICE);
-                clipboard.setText(temp_string);
-                Toast.makeText(getApplicationContext(),"클립보드에 복사완료",Toast.LENGTH_SHORT).show();
+                dialogShow();
                 return false;
             }
         });
@@ -400,7 +482,11 @@ public class MainActivity extends AppCompatActivity {
                     linearLayout_viewpager.setVisibility(View.GONE);
                     return true;
                 case R.id.navigation_dashboard:
-                    if(FirstFragment.tvLabe2==null)vpPager.setCurrentItem(0);
+                    if(!isFirstClicked&&!isFromList) {
+                        vpPager.setCurrentItem(0);
+                        isFirstClicked=true;
+                    }
+                    //if(FirstFragment.tvLabe2==null)vpPager.setCurrentItem(0);
                     swipeRefreshLayout.setVisibility(View.GONE);
                     linearLayout_viewpager.setVisibility(View.VISIBLE);
                     // Intent intent_add = new Intent(MainActivity.this, PraiseSearch.class);
@@ -433,6 +519,7 @@ public class MainActivity extends AppCompatActivity {
         if(requestCode==2000){//list 버튼 눌렀을 시
             if(resultCode== Activity.RESULT_OK){
                 FirstFragment.loadConti(getApplicationContext(), latch, data.getStringExtra("dateToLoad"));
+                isFromList=true;
                 bottomNavigationView.setSelectedItemId(R.id.navigation_dashboard);
             }
         }

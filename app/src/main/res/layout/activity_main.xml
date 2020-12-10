@@ -45,8 +45,8 @@
                         android:gravity="center_vertical"
                         android:paddingLeft="25dp"
                         android:text="이번주 콘티"
+                        android:textColor="@color/DarkModeBlack"
                         android:longClickable="true"
-                        android:textColor="@android:color/background_dark"
                         android:textSize="20sp" />
 
                     <Button
@@ -60,11 +60,12 @@
 
                     <Button
                         android:id="@+id/button_id_change"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
+                        android:layout_width="20dp"
+                        android:layout_height="22dp"
                         android:layout_gravity="center"
                         android:layout_marginRight="10dp"
-                        android:background="@drawable/baseline_account_circle_black_18" />
+                        android:background="@drawable/baseline_account_circle_black_18"
+                        android:backgroundTint="@color/DarkModeBlack"/>
 
 
                     <Button
@@ -176,6 +177,9 @@
         android:layout_marginEnd="0dp"
         android:layout_marginStart="0dp"
         android:background="?android:attr/windowBackground"
-        app:menu="@menu/navigation" />
+        app:menu="@menu/navigation"
+        app:labelVisibilityMode="unlabeled"
+        app:itemTextColor="@drawable/menu_color_selector"
+        app:itemIconTint="@drawable/menu_color_selector"/>
 
 </LinearLayout>

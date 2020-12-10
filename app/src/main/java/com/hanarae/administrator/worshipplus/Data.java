@@ -288,6 +288,7 @@ public class Data  {
         music.clear();
     }
     public String getMusic(int i) {
+        if(music.size()==0) return "링크없음";
         return music.get(i).toString();
     }
     public void setMusic(ArrayList ex) {
@@ -313,6 +314,7 @@ public class Data  {
         sheet_url_Arraylist.clear();
     }
     public String getSheet(int i) {
+        if(sheet.size()==0) return "악보없음";
         return sheet.get(i).toString();
     }
     public void setSheet(ArrayList ex) {

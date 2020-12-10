@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -37,6 +38,8 @@ public class PraiseSearch extends AppCompatActivity {
     static Button button_save;
     static Search_Recycler_Adapter adapter;
 
+    RecyclerView recyclerView;
+
     static SearchDB searchDB;
     CountDownLatch latch_DB, latch_all;
     InputMethodManager imm;
@@ -61,6 +64,20 @@ public class PraiseSearch extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_praise_search);
 
+        int nightModeFlags =
+                getApplicationContext().getResources().getConfiguration().uiMode &
+                        Configuration.UI_MODE_NIGHT_MASK;
+
+        switch (nightModeFlags) {
+            case Configuration.UI_MODE_NIGHT_YES:
+                break;
+            case Configuration.UI_MODE_NIGHT_NO:
+                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                break;
+            case Configuration.UI_MODE_NIGHT_UNDEFINED:
+                break;
+        }
+
         all_good = false;
 
         editText_search_content = findViewById(R.id.editText_search_content);
@@ -81,6 +98,7 @@ public class PraiseSearch extends AppCompatActivity {
                 switch (actionId) {
                     case EditorInfo.IME_ACTION_SEARCH:
                         songSearch();
+                        recyclerView.requestFocus();
                         break;
                     default:
                         // 기본 엔터키 동작
@@ -165,7 +183,7 @@ public class PraiseSearch extends AppCompatActivity {
             }
         });
 
-        RecyclerView recyclerView = findViewById(R.id.recycler_view_search_result);
+        recyclerView = findViewById(R.id.recycler_view_search_result);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);

@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:weightSum="10"
     android:gravity="center"
-    android:background="@color/design_default_color_background">
+    android:background="@color/DarkModeWhite">
 
     <LinearLayout
         android:id="@+id/login_1"
@@ -18,11 +18,11 @@
         android:gravity="center">
 
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                app:boxStrokeColor="@color/colorAccent"
+                style="@style/TextInputLayoutStyle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="그룹코드"
+                app:hintTextColor="@color/DarkModeBlack"
                 app:endIconMode="clear_text"
                 android:layout_marginBottom="5dp">
                 <com.google.android.material.textfield.TextInputEditText
@@ -35,12 +35,12 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                app:boxStrokeColor="@color/colorAccent"
+                style="@style/TextInputLayoutStyle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:endIconMode="clear_text"
                 android:hint="ID"
+                app:hintTextColor="@color/DarkModeBlack"
                 android:layout_marginBottom="5dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editText_id"
@@ -53,12 +53,12 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/text_input_layout_pw"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                app:boxStrokeColor="@color/colorAccent"
+                style="@style/TextInputLayoutStyle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:endIconMode="clear_text"
                 android:hint="PW"
+                app:hintTextColor="@color/DarkModeBlack"
                 android:layout_marginBottom="5dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editText_pw"
@@ -173,13 +173,13 @@
 
     </LinearLayout>
 
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <Button
+        android:layout_width="60dp"
+        android:layout_height="25dp"
         android:layout_marginTop="15dp"
         android:clickable="true"
         android:id="@+id/join_button_back"
-        android:src="@drawable/baseline_expand_more_black_18"
-        android:background="@color/design_default_color_background"/>
+        android:background="@drawable/baseline_expand_more_black_18"
+        android:backgroundTint="@color/DarkModeBlack" />
 
 </LinearLayout>

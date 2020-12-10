@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.ParseException;
@@ -37,6 +38,7 @@ public class FirstFragment extends Fragment {
     CountDownLatch latch;
     SearchDB searchDB_first;
     static EditText tvLabe2;
+
 
     // newInstance constructor for creating fragment with arguments
     public static FirstFragment newInstance(int page, String title) {
@@ -319,15 +321,16 @@ public class FirstFragment extends Fragment {
 
                 if(!MainActivity.tempConti.isEmpty()){//로드 한번이라도 했다면
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle("작성하던 콘티정보가 삭제됩니다\n새로운 콘티를 작성하시겠습니까?");
-                    builder.setPositiveButton("취소", new DialogInterface.OnClickListener(){
+                    builder.setTitle("작성하던 콘티정보가 삭제됩니다\n새로운 콘티를 작성하시겠습니까?"+getArguments().getLong("someDateAsLong"));
+                    builder.setNeutralButton("취소", new DialogInterface.OnClickListener(){
                         @Override
                         public void onClick(DialogInterface dialog, int id){
-                            calendarView.setDate(getArguments().getLong("someDateAsLong"));
+                            if((getArguments().getLong("someDateAsLong"))!=0) calendarView.setDate(getArguments().getLong("someDateAsLong"));
+
                         }
                     });
 
-                    builder.setNeutralButton("날짜만 변경", new DialogInterface.OnClickListener(){
+                    builder.setNegativeButton("날짜만 변경", new DialogInterface.OnClickListener(){
                         @Override
                         public void onClick(DialogInterface dialog, int id){
                             tvLabe2.setText(date);
@@ -338,7 +341,7 @@ public class FirstFragment extends Fragment {
                         }
                     });
 
-                    builder.setNegativeButton("새로운 콘티", new DialogInterface.OnClickListener(){
+                    builder.setPositiveButton("새로운 콘티", new DialogInterface.OnClickListener(){
                         @Override
                         public void onClick(DialogInterface dialog, int id)
                         {
@@ -386,14 +389,14 @@ public class FirstFragment extends Fragment {
                     if(ThirdFragment.adapter.getItemCount()!=0){
                         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                         builder.setTitle("작성하던 콘티정보가 삭제됩니다\n새로운 콘티를 작성하시겠습니까?");
-                        builder.setPositiveButton("취소", new DialogInterface.OnClickListener(){
+                        builder.setNeutralButton("취소", new DialogInterface.OnClickListener(){
                             @Override
                             public void onClick(DialogInterface dialog, int id){
-                                calendarView.setDate(getArguments().getLong("someDateAsLong"));
+                                if((getArguments().getLong("someDateAsLong"))!=0)calendarView.setDate(getArguments().getLong("someDateAsLong"));
                             }
                         });
 
-                        builder.setNeutralButton("날자만 변경", new DialogInterface.OnClickListener(){
+                        builder.setNegativeButton("날짜만 변경", new DialogInterface.OnClickListener(){
                             @Override
                             public void onClick(DialogInterface dialog, int id){
                                 tvLabe2.setText(date);
@@ -404,7 +407,7 @@ public class FirstFragment extends Fragment {
                             }
                         });
 
-                        builder.setNegativeButton("새로운 콘티", new DialogInterface.OnClickListener(){
+                        builder.setPositiveButton("새로운 콘티", new DialogInterface.OnClickListener(){
                             @Override
                             public void onClick(DialogInterface dialog, int id)
                             {

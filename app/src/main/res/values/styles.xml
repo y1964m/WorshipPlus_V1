@@ -1,16 +1,22 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar.Bridge">
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar.Bridge">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/DarkModeTopBar</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:colorBackground">@color/DarkModeTopBar</item>
+        <item name="bottomNavigationStyle">@color/DarkModeTopBar</item>
+
         <!-- No Title Bar-->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
 
+    </style>
 
+    <style name="TextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/color_text</item>
     </style>
 
 </resources>

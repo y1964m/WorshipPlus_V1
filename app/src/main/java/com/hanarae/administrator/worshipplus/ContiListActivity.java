@@ -2,10 +2,12 @@ package com.hanarae.administrator.worshipplus;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import java.util.concurrent.CountDownLatch;
@@ -37,6 +39,20 @@ public class ContiListActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conti_list);
+
+        int nightModeFlags =
+                getApplicationContext().getResources().getConfiguration().uiMode &
+                        Configuration.UI_MODE_NIGHT_MASK;
+
+        switch (nightModeFlags) {
+            case Configuration.UI_MODE_NIGHT_YES:
+                break;
+            case Configuration.UI_MODE_NIGHT_NO:
+                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                break;
+            case Configuration.UI_MODE_NIGHT_UNDEFINED:
+                break;
+        }
 
         activity = this;
 
@@ -128,6 +144,7 @@ public class ContiListActivity extends AppCompatActivity {
         }
 
         adapter.notifyDataSetChanged();
+        if(adapter.getItemCount()==0) Toast.makeText(ContiListActivity.this,"최근 1년 동안 작성된 콘티가 없습니다",Toast.LENGTH_SHORT).show();
 
         tempList.removeTitleArrayList();
         tempList.removeDateArrayList();
