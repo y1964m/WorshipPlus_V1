@@ -9,6 +9,8 @@
     <color name="DarkModeGray">#aaaaaa</color>
     <color name="DarkModeGraytoBlack">#BFBFBF</color>
     <color name="DarkModeTopBar">#F8F8F8</color>
+    <color name="White">#FFFFFF</color>
+    <color name="Black">#000000</color>
 
     <color name="Primary">#6200EE</color>
     <color name="PrimaryVariant">#3700B3</color>

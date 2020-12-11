@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
     boolean isFirstClicked = false;
     boolean isFromList = false;
     static boolean isFirstClickedCalendar = true;
+    static int currentMode;
 
     static ConnectivityManager manager;
 
@@ -179,21 +180,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        int nightModeFlags =
-                getApplicationContext().getResources().getConfiguration().uiMode &
-                        Configuration.UI_MODE_NIGHT_MASK;
-
-        switch (nightModeFlags) {
-            case Configuration.UI_MODE_NIGHT_YES:
-                break;
-            case Configuration.UI_MODE_NIGHT_NO:
-                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-                break;
-            case Configuration.UI_MODE_NIGHT_UNDEFINED:
-                break;
-        }
-
         //인터넷 연결확인 작업
         manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
@@ -207,6 +193,12 @@ public class MainActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("login",0);
         // SharedPreferences 수정을 위한 Editor 객체를 얻어옵니다.
         editor = sharedPreferences.edit();
+
+        //theme check
+        currentMode =  sharedPreferences.getInt("mode",1);
+        if(currentMode == AppCompatDelegate.MODE_NIGHT_NO) {
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
 
         if(sharedPreferences.getString("id","")==null || sharedPreferences.getString("id","").equals("")){
             //Toast.makeText(getApplicationContext(),sharedPreferences.getString("id",""),Toast.LENGTH_SHORT).show();

@@ -130,7 +130,10 @@ public class Photo_Recycler_Adapter extends RecyclerView.Adapter<Photo_Recycler_
                     @Override
                     public void onClick(View v) {
 
-                        if(!data.getTitle().contains("/"+ MainActivity.team_info + "/")){
+                        if(MainActivity.logged_in_id.equals(MainActivity.admin_id)){
+                            //관리자만 기본정보 삭제가능
+                        }
+                        else if(!data.getTitle().contains("/"+ MainActivity.team_info + "/")){
                             Toast.makeText(PhotoSelect.context, "다른 팀의 정보를 삭제할수 없습니다", Toast.LENGTH_SHORT).show();
                             return;
                         }

@@ -9,6 +9,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatDelegate;
+
 public class PersonalSetting extends LinearLayout {
 
     TextView team_id;
@@ -27,6 +29,10 @@ public class PersonalSetting extends LinearLayout {
 
         team_id = findViewById(R.id.team_id);
         team_id.setText(content);
+
+        if(MainActivity.currentMode == AppCompatDelegate.MODE_NIGHT_YES) team_id.setTextColor(getResources().getColor(R.color.White));
+        else if (MainActivity.currentMode == AppCompatDelegate.MODE_NIGHT_NO) team_id.setTextColor(getResources().getColor(R.color.Black));
+
 
         write = findViewById(R.id.checkbox_write);
         if(sharedPreferences.getString("write","team").equals(content)) write.setChecked(true);

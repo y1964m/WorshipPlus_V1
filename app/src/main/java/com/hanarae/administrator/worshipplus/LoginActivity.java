@@ -13,13 +13,18 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.view.WindowInsetsCompat;
+
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,6 +62,8 @@ public class LoginActivity extends AppCompatActivity {
     Button back;
     TextView textView_email;
     TextInputLayout textInputLayout_pw;
+    Switch switch_night;
+    boolean isCancelled = false;
 
 
     public static String sha256(String str) {
@@ -81,28 +88,78 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login);     //다이얼로그에서 사용할 레이아웃입니다.
 
-        int nightModeFlags =
-                getApplicationContext().getResources().getConfiguration().uiMode &
-                        Configuration.UI_MODE_NIGHT_MASK;
-
-        switch (nightModeFlags) {
-            case Configuration.UI_MODE_NIGHT_YES:
-                break;
-            case Configuration.UI_MODE_NIGHT_NO:
-                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-                break;
-            case Configuration.UI_MODE_NIGHT_UNDEFINED:
-                break;
+        if(MainActivity.currentMode == AppCompatDelegate.MODE_NIGHT_NO) {
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
+
+        setContentView(R.layout.login);  //다이얼로그에서 사용할 레이아웃입니다.
+
+        sharedPreferences = getApplicationContext().getSharedPreferences("login",0);
+        editor = sharedPreferences.edit();
+
+        switch_night = findViewById(R.id.switch_night);
+        if(sharedPreferences.getInt("mode",1)==AppCompatDelegate.MODE_NIGHT_YES){
+            switch_night.setChecked(true);
+        }
+
+        switch_night.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
+
+                if(isCancelled){
+                    isCancelled=false;
+                    return;
+                }
+
+
+                String message;
+                if (isChecked) {
+                    message = "다크모드 설정";
+                    editor.putInt("mode", AppCompatDelegate.MODE_NIGHT_YES);
+                    editor.apply();
+                } else {
+                    message = "화이트모드 설정";
+                    editor.putInt("mode", AppCompatDelegate.MODE_NIGHT_NO);
+                    editor.apply();
+                }
+
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                builder.setTitle(message);
+                builder.setMessage("테마적용을 위해 APP을 다시 시작합니다");
+                builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        finishAffinity();
+                    }
+                });
+                builder.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (isChecked) {
+                            editor.putInt("mode", AppCompatDelegate.MODE_NIGHT_NO);
+                            editor.apply();
+                        } else {
+                            editor.putInt("mode", AppCompatDelegate.MODE_NIGHT_YES);
+                            editor.apply();
+                        }
+                        isCancelled = true;
+                        switch_night.setChecked(!isChecked);
+                        return;
+                    }
+                });
+
+                AlertDialog alertDialog = builder.create();
+                alertDialog.setCanceledOnTouchOutside(false);
+                alertDialog.show();
+            }
+
+        });
 
         final EditText id, pw, editText_db_id;
         final LinearLayout background, login1, login_setting, login_setting_team;
         final InputMethodManager imm;
-
-        sharedPreferences = getApplicationContext().getSharedPreferences("login",0);
-        editor = sharedPreferences.edit();
 
         editText_db_id= findViewById(R.id.editText_db_id);
         editText_db_id.setText(MainActivity.logged_in_db_id);
@@ -294,6 +351,7 @@ public class LoginActivity extends AppCompatActivity {
                     join.setText("확인");
                     login.setVisibility(View.GONE);
                     back.setVisibility(View.GONE);
+                    switch_night.setVisibility(View.INVISIBLE);
 
                 }
                 else if(join.getText().equals("확인")){
@@ -330,6 +388,7 @@ public class LoginActivity extends AppCompatActivity {
                     login_setting.setVisibility(View.GONE);
 
                     back.setVisibility(View.VISIBLE);
+                    switch_night.setVisibility(View.VISIBLE);
 
                     team.clear();
 

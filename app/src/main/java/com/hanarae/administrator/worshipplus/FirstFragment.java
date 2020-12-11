@@ -97,7 +97,7 @@ public class FirstFragment extends Fragment {
         MainActivity.args.putString("someDate", loadDate);
 
         if(MainActivity.args.get("someDate").toString().isEmpty()){
-            Toast.makeText(context, "날자를 선택해주세요", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "날짜를 선택해주세요", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -202,7 +202,7 @@ public class FirstFragment extends Fragment {
                     getArguments().putString("someDate", tvLabe2.getText().toString());
 
                     if(getArguments().get("someDate").toString().isEmpty()){
-                        Toast.makeText(getContext(), "날자를 선택해주세요", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "날짜를 선택해주세요", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
@@ -336,7 +336,7 @@ public class FirstFragment extends Fragment {
                             tvLabe2.setText(date);
                             getArguments().putString("someDate", tvLabe2.getText().toString());
                             getArguments().putLong("someDateAsLong", temp_date);
-                            Toast.makeText(getContext(), "날자가 변경되었습니다", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "날짜가 변경되었습니다", Toast.LENGTH_SHORT).show();
                             MainActivity.temp_author="";
                         }
                     });
@@ -402,7 +402,7 @@ public class FirstFragment extends Fragment {
                                 tvLabe2.setText(date);
                                 getArguments().putString("someDate", tvLabe2.getText().toString());
                                 getArguments().putLong("someDateAsLong", temp_date);
-                                Toast.makeText(getContext(), "날자가 변경되었습니다", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "날짜가 변경되었습니다", Toast.LENGTH_SHORT).show();
                                 MainActivity.temp_author="";
                             }
                         });

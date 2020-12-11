@@ -60,7 +60,7 @@
 
                     <Button
                         android:id="@+id/button_id_change"
-                        android:layout_width="20dp"
+                        android:layout_width="22dp"
                         android:layout_height="22dp"
                         android:layout_gravity="center"
                         android:layout_marginRight="10dp"

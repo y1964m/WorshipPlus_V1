@@ -537,8 +537,11 @@ public class SearchDB extends AsyncTask<Void, Integer, Void> {
             /* 인풋 파라메터값 생성 */
             String param = "date=" + MainActivity.args.getString("someDate") +
                     "&user_account="+ MainActivity.logged_in_db_id +
-                    "&team="+ MainActivity.team_info +
                     "&author=" + MainActivity.logged_in_id;
+
+            if(MainActivity.logged_in_id.equals(MainActivity.admin_id)){
+                param = param + "&team="+ MainActivity.checked_search;
+            }else param = param + "&team="+ MainActivity.team_info;
 
             try {
                 /* 서버연결 */
@@ -833,9 +836,9 @@ public class SearchDB extends AsyncTask<Void, Integer, Void> {
                             JSONObject next_jsonObject = jsonArray.getJSONObject(i + 1);
 
                             if (!(
-                                    (jsonObject.getString("id_date").substring(0,10))
+                                    (jsonObject.getString("id_date").substring(0,jsonObject.getString("id_date").lastIndexOf("/")))
                                             .equalsIgnoreCase
-                                                    (next_jsonObject.getString("id_date").substring(0,10))
+                                                    (next_jsonObject.getString("id_date").substring(0,jsonObject.getString("id_date").lastIndexOf("/")))
 
                             )) {
                                 ContiListActivity.tempList.addTitleArrayListItem(jsonObject.getString("id_date")); // 날짜다

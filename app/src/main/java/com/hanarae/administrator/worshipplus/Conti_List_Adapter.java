@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -68,10 +70,12 @@ public class Conti_List_Adapter extends RecyclerView.Adapter<Conti_List_Adapter.
             conti_list_date.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    Intent intent = new Intent();
-                    intent.putExtra("dateToLoad",data.getListDate()+"/"+data.getListTeam());
-                    activity.setResult(Activity.RESULT_OK,intent);
-                    activity.finish();
+                    if(data.getListTeam().equals(MainActivity.team_info) || MainActivity.logged_in_id.equals(MainActivity.admin_id)){
+                        Intent intent = new Intent();
+                        intent.putExtra("dateToLoad",data.getListDate()+"/"+data.getListTeam());
+                        activity.setResult(Activity.RESULT_OK,intent);
+                        activity.finish();
+                    }else Toast.makeText(v.getContext(), "다른 팀의 콘티입니다", Toast.LENGTH_SHORT).show();
                     return false;
                 }
             });

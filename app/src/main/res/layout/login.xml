@@ -10,6 +10,13 @@
     android:gravity="center"
     android:background="@color/DarkModeWhite">
 
+   <Switch
+       android:id="@+id/switch_night"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:text="NIGHT "
+       android:layout_marginBottom="5dp"/>
+
     <LinearLayout
         android:id="@+id/login_1"
         android:layout_width="wrap_content"
@@ -175,7 +182,7 @@
 
     <Button
         android:layout_width="60dp"
-        android:layout_height="25dp"
+        android:layout_height="20dp"
         android:layout_marginTop="15dp"
         android:clickable="true"
         android:id="@+id/join_button_back"
