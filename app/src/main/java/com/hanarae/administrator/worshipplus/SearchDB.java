@@ -80,15 +80,15 @@ public class SearchDB extends AsyncTask<Void, Integer, Void> {
     @Override
     protected Void doInBackground(Void... unused) {
 
-        if(case_number==0) {//맨처음 메인콘티 불러오기 + 자동검색단어 저장
+/*        if(case_number==0) {//맨처음 메인콘티 불러오기 + 자동검색단어 저장
 
-            /* 인풋 파라메터값 생성 */
+            *//* 인풋 파라메터값 생성 *//*
             String param = "user_account="+ MainActivity.logged_in_db_id + "&team=" + MainActivity.team_info;
 
             try {
-                /* 서버연결 */
-             /*   URL url = new URL(
-                        "http://y1964m.dothome.co.kr/worshipplus/search_latest_conti.php");*/
+                *//* 서버연결 *//*
+             *//*   URL url = new URL(
+                        "http://y1964m.dothome.co.kr/worshipplus/search_latest_conti.php");*//*
                 URL url = new URL(
                         server_address+"worshipplus/initial_start.php");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -97,13 +97,13 @@ public class SearchDB extends AsyncTask<Void, Integer, Void> {
                 conn.setDoInput(true);
                 conn.connect();
 
-                /* 안드로이드 -> 서버 파라메터값 전달 */
+                *//* 안드로이드 -> 서버 파라메터값 전달 *//*
                 OutputStream outs = conn.getOutputStream();
                 outs.write(param.getBytes("UTF-8"));
                 outs.flush();
                 outs.close();
 
-                /* 서버 -> 안드로이드 파라메터값 전달 */
+                *//* 서버 -> 안드로이드 파라메터값 전달 *//*
                 InputStream is = null;
                 BufferedReader in = null;
                 String data = "";
@@ -118,7 +118,7 @@ public class SearchDB extends AsyncTask<Void, Integer, Void> {
                 }
                 data = buff.toString().trim();
 
-                /* 서버에서 응답 */
+                *//* 서버에서 응답 *//*
                 Log.e("RECV DATA", data);
 
                 //서버에서 개인정보 가져오기
@@ -234,13 +234,13 @@ public class SearchDB extends AsyncTask<Void, Integer, Void> {
 
         if(case_number==1) {//메인콘티 불러오기
 
-            /* 인풋 파라메터값 생성 */
+            *//* 인풋 파라메터값 생성 *//*
             String param = "user_account="+ MainActivity.logged_in_db_id + "&team=" + MainActivity.team_info;
 
             try {
-                /* 서버연결 */
-             /*   URL url = new URL(
-                        "http://y1964m.dothome.co.kr/worshipplus/search_latest_conti.php");*/
+                *//* 서버연결 *//*
+             *//*   URL url = new URL(
+                        "http://y1964m.dothome.co.kr/worshipplus/search_latest_conti.php");*//*
                 URL url = new URL(
                         server_address+"worshipplus/search_latest_conti.php");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -249,13 +249,13 @@ public class SearchDB extends AsyncTask<Void, Integer, Void> {
                 conn.setDoInput(true);
                 conn.connect();
 
-                /* 안드로이드 -> 서버 파라메터값 전달 */
+                *//* 안드로이드 -> 서버 파라메터값 전달 *//*
                 OutputStream outs = conn.getOutputStream();
                 outs.write(param.getBytes("UTF-8"));
                 outs.flush();
                 outs.close();
 
-                /* 서버 -> 안드로이드 파라메터값 전달 */
+                *//* 서버 -> 안드로이드 파라메터값 전달 *//*
                 InputStream is = null;
                 BufferedReader in = null;
                 String data = "";
@@ -270,7 +270,7 @@ public class SearchDB extends AsyncTask<Void, Integer, Void> {
                 }
                 data = buff.toString().trim();
 
-                /* 서버에서 응답 */
+                *//* 서버에서 응답 *//*
                 Log.e("RECV DATA", data);
 
                 //서버에서 개인정보 가져오기
@@ -381,11 +381,14 @@ public class SearchDB extends AsyncTask<Void, Integer, Void> {
                 latch_DB.countDown();
                 error_code = 3;
             }
-        }
+        }*/
+/*
 
         if(case_number==2){ // notification 누르면 실행되는 검색
 
-            /* 인풋 파라메터값 생성 */
+            */
+/* 인풋 파라메터값 생성 *//*
+
             String param = "title=" + MainActivity.args.getString("someContent") +
                     "&chord=" + MainActivity.args.getString("someChord") +
                     "&tag=" + MainActivity.args.getString("someTag").replace(" ","") +
@@ -394,9 +397,13 @@ public class SearchDB extends AsyncTask<Void, Integer, Void> {
 
             Log.e("SENT DATA", param);
             try {
-                /* 서버연결 */
-               /* URL url = new URL(
-                        "http://y1964m.dothome.co.kr/worshipplus/search.php");*/
+                */
+/* 서버연결 *//*
+
+               */
+/* URL url = new URL(
+                        "http://y1964m.dothome.co.kr/worshipplus/search.php");*//*
+
                 URL url = new URL(
                         server_address+"worshipplus/search.php");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -405,13 +412,17 @@ public class SearchDB extends AsyncTask<Void, Integer, Void> {
                 conn.setDoInput(true);
                 conn.connect();
 
-                /* 안드로이드 -> 서버 파라메터값 전달 */
+                */
+/* 안드로이드 -> 서버 파라메터값 전달 *//*
+
                 OutputStream outs = conn.getOutputStream();
                 outs.write(param.getBytes("UTF-8"));
                 outs.flush();
                 outs.close();
 
-                /* 서버 -> 안드로이드 파라메터값 전달 */
+                */
+/* 서버 -> 안드로이드 파라메터값 전달 *//*
+
                 InputStream is = null;
                 BufferedReader in = null;
                 String data = "";
@@ -426,7 +437,9 @@ public class SearchDB extends AsyncTask<Void, Integer, Void> {
                 }
                 data = buff.toString().trim();
 
-                /* 서버에서 응답 */
+                */
+/* 서버에서 응답 *//*
+
                 Log.e("RECV DATA", data);
 
                 //서버에서 정보 가져오기
@@ -472,10 +485,12 @@ public class SearchDB extends AsyncTask<Void, Integer, Void> {
                                             &&(jsonObject.getString("chord")
                                             .equalsIgnoreCase(
                                                     (next_jsonObject.getString("chord"))))
-                           /* (jsonObject.getString("title").substring(0,jsonObject.getString("title").indexOf("("))
+                           */
+/* (jsonObject.getString("title").substring(0,jsonObject.getString("title").indexOf("("))
                                     .equalsIgnoreCase
                                             (next_jsonObject.getString("title").substring(0,next_jsonObject.getString("title").indexOf("("))))
-                                    &&(jsonObject.getString("chord").equalsIgnoreCase((next_jsonObject.getString("chord"))))*/
+                                    &&(jsonObject.getString("chord").equalsIgnoreCase((next_jsonObject.getString("chord"))))*//*
+
                             )) {
                                 MainActivity.tempData.addTitleArrayListItem(jsonObject.getString("title"));
                                 MainActivity.tempData.setChordArrayList(jsonObject.getString("chord"));
@@ -528,6 +543,7 @@ public class SearchDB extends AsyncTask<Void, Integer, Void> {
                 error_code = 3;
             }
         }
+*/
 
 
         if(case_number==3){ // 콘티 수정 할때 불러오는 코드
@@ -754,14 +770,14 @@ public class SearchDB extends AsyncTask<Void, Integer, Void> {
         }
 
 
-        if(case_number==5){ // 콘티 리스트로 불러오기
+/*        if(case_number==5){ // 콘티 리스트로 불러오기
 
-            /*long now = System.currentTimeMillis();
+            *//*long now = System.currentTimeMillis();
             Date mDate = new Date(now);
             SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy.MM");
-            String getTime = simpleDate.format(mDate);*/
+            String getTime = simpleDate.format(mDate);*//*
 
-            /* 인풋 파라메터값 생성 */
+            *//* 인풋 파라메터값 생성 *//*
             String param = "more=" + ContiListActivity.more + // 리스트 로드 배수
                     "&user_account="+ MainActivity.logged_in_db_id +
                     //"&team="+ MainActivity.team_info + // 소속팀 콘티만 부르고 싶을때
@@ -771,9 +787,9 @@ public class SearchDB extends AsyncTask<Void, Integer, Void> {
             Log.e("SEND DATA", param);
 
             try {
-                /* 서버연결 */
-               /* URL url = new URL(
-                        "http://y1964m.dothome.co.kr/worshipplus/load_conti.php");*/
+                *//* 서버연결 *//*
+               *//* URL url = new URL(
+                        "http://y1964m.dothome.co.kr/worshipplus/load_conti.php");*//*
                 URL url = new URL(
                         server_address+"worshipplus/load_list.php");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -782,13 +798,13 @@ public class SearchDB extends AsyncTask<Void, Integer, Void> {
                 conn.setDoInput(true);
                 conn.connect();
 
-                /* 안드로이드 -> 서버 파라메터값 전달 */
+                *//* 안드로이드 -> 서버 파라메터값 전달 *//*
                 OutputStream outs = conn.getOutputStream();
                 outs.write(param.getBytes("UTF-8"));
                 outs.flush();
                 outs.close();
 
-                /* 서버 -> 안드로이드 파라메터값 전달 */
+                *//* 서버 -> 안드로이드 파라메터값 전달 *//*
                 InputStream is = null;
                 BufferedReader in = null;
                 String data = "";
@@ -804,7 +820,7 @@ public class SearchDB extends AsyncTask<Void, Integer, Void> {
                 }
                 data = buff.toString().trim();
 
-                /* 서버에서 응답 */
+                *//* 서버에서 응답 *//*
                 Log.e("RECV DATA", data);
 
                 //서버에서 정보 가져오기
@@ -882,7 +898,7 @@ public class SearchDB extends AsyncTask<Void, Integer, Void> {
                 latch_DB.countDown();
                 error_code = 3;
             }
-        }
+        }*/
 
         return null;
     }
@@ -891,6 +907,7 @@ public class SearchDB extends AsyncTask<Void, Integer, Void> {
     protected void onPostExecute(Void aVoid) {
         //super.onPostExecute(aVoid);
 
+        if(mWakeLock.isHeld())mWakeLock.release();
         if(pd!=null) pd.dismiss();
 
         if(error_code != 0) {

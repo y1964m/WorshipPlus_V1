@@ -26,7 +26,10 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.os.PowerManager;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -35,6 +38,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -362,13 +377,13 @@ public class MainActivity extends AppCompatActivity {
 
         adapter_main = new Latest_Conti_Adapter(1, imm, width, height, getApplicationContext());
         recyclerView.setAdapter(adapter_main);
-        if(isInitial) searchDB_main = new SearchDB(0, this, latch);
+        if(isInitial) searchDB_main = new SearchDB(0, this, latch, progressDialog);
         //else searchDB_main = new SearchDB(1, this, latch);
         else searchDB_main = new SearchDB(1, this, latch, progressDialog);
-        new AsyncTaskCancelTimerTask(searchDB_main, 5000, 1000, true).start();
+        new AsyncTaskCancelTimerTask(searchDB_main, 8000, 1000, true).start();
         searchDB_main.execute();
         adapter_main.listData.clear();//초기화 하고, 안그러면 밑으로 똑같은 뷰가 계속 붙음
-        try {
+       /* try {
             latch.await();
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -394,12 +409,8 @@ public class MainActivity extends AppCompatActivity {
             // 각 값이 들어간 data를 adapter에 추가합니다.
             if(data.getTitle()!=null) adapter_main.addItem(data);
         }
-        adapter_main.notifyDataSetChanged();
+        adapter_main.notifyDataSetChanged();*/
 
-        if(!isInitial) Toast.makeText(getApplicationContext(),"업데이트 완료",Toast.LENGTH_SHORT).show();
-        else if(sharedPreferences.getString("id","")!=null || !sharedPreferences.getString("id","").equals("")){
-            Toast.makeText(getApplicationContext(),"환영합니다! "+ sharedPreferences.getString("id","Guest") +"님",Toast.LENGTH_SHORT).show();
-        }
         swipeRefreshLayout.setRefreshing(false);
     }
 
@@ -448,6 +459,7 @@ public class MainActivity extends AppCompatActivity {
                         asyncTask.getStatus() == AsyncTask.Status.RUNNING ) {
 
                     asyncTask.cancel(interrupt);
+                    if(progressDialog.isShowing()) progressDialog.dismiss();
                     Toast.makeText(MainActivity.this,"네트워크 에러",Toast.LENGTH_SHORT).show();
                 }
             } catch(Exception e) {
@@ -517,6 +529,414 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+    public class SearchDB extends AsyncTask<Void, Integer, Void> {
+
+        int case_number;
+        Context context;
+        CountDownLatch latch_DB;
+        PowerManager.WakeLock mWakeLock;
+        int error_code = 0;
+        String photo_param;
+        ProgressDialog pd;
+        String server_address = "http://ssyp.synology.me:8812/";
+
+        SearchDB(int case_number, Context context, CountDownLatch latch_DB, ProgressDialog pd){
+            this.case_number = case_number;
+            this.context = context;
+            this.latch_DB = latch_DB;
+            this.pd = pd;
+        }
+
+        SearchDB(int case_number, Context context, CountDownLatch latch_DB){
+            this.case_number = case_number;
+            this.context = context;
+            this.latch_DB = latch_DB;
+        }
+
+
+        SearchDB(int case_number, Context context, CountDownLatch latch_DB, String param){
+            this.case_number = case_number;
+            this.context = context;
+            this.latch_DB = latch_DB;
+            this.photo_param = param;
+        }
+
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            if(pd!=null) {
+                pd.show();
+            }
+
+            //cpu 잠들지 않도록 하는 처리
+            PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+            mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, getClass().getName());
+            mWakeLock.acquire();
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... unused) {
+
+            if(case_number==0) {//맨처음 메인콘티 불러오기 + 자동검색단어 저장
+
+                /* 인풋 파라메터값 생성 */
+                String param = "user_account="+ MainActivity.logged_in_db_id + "&team=" + MainActivity.team_info;
+
+                try {
+                    /* 서버연결 */
+             /*   URL url = new URL(
+                        "http://y1964m.dothome.co.kr/worshipplus/search_latest_conti.php");*/
+                    URL url = new URL(
+                            server_address+"worshipplus/initial_start.php");
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                    conn.setRequestMethod("POST");
+                    conn.setDoInput(true);
+                    conn.connect();
+
+                    /* 안드로이드 -> 서버 파라메터값 전달 */
+                    OutputStream outs = conn.getOutputStream();
+                    outs.write(param.getBytes("UTF-8"));
+                    outs.flush();
+                    outs.close();
+
+                    /* 서버 -> 안드로이드 파라메터값 전달 */
+                    InputStream is = null;
+                    BufferedReader in = null;
+                    String data = "";
+
+                    is = conn.getInputStream();
+                    in = new BufferedReader(new InputStreamReader(is), 8 * 1024);
+                    String line = null;
+                    StringBuffer buff = new StringBuffer();
+
+                    while ((line = in.readLine()) != null) {
+                        buff.append(line + "\n");
+                    }
+                    data = buff.toString().trim();
+
+                    /* 서버에서 응답 */
+                    Log.e("RECV DATA", data);
+
+                    //서버에서 개인정보 가져오기
+                    //서버에서 정보 가져오기
+                    try {
+                        JSONArray jsonArray = new JSONArray(data);
+
+                        ArrayList tempDate = new ArrayList();
+                        ArrayList tempExplanation = new ArrayList();
+                        ArrayList tempMusic = new ArrayList();
+                        // ArrayList tempSheet = new ArrayList();
+
+                        for (int i = 0; i < jsonArray.length(); i++) {
+
+                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+
+                            if(jsonObject.has("auto_title"))
+                                MainActivity.autoText.add(jsonObject.getString("auto_title"));
+
+                            else {
+                                if(i == jsonArray.length()-1){
+
+                                    MainActivity.tempLatestConti.setBibleDate(jsonObject.getString("date"));
+                                    MainActivity.tempLatestConti.setBible(jsonObject.getString("bible"));
+                                    MainActivity.tempLatestConti.setSermon(jsonObject.getString("sermon"));
+                                    MainActivity.tempLatestConti.setLeader(jsonObject.getString("leader"));
+                                    break;
+
+
+                                }else {
+                                    JSONObject next_jsonObject = jsonArray.getJSONObject(i + 1);
+
+                                    if(next_jsonObject.has("bible")){
+                                        MainActivity.tempLatestConti.setBibleDate(next_jsonObject.getString("date"));
+                                        MainActivity.tempLatestConti.setBible(next_jsonObject.getString("bible"));
+                                        MainActivity.tempLatestConti.setSermon(next_jsonObject.getString("sermon"));
+                                        MainActivity.tempLatestConti.setLeader(next_jsonObject.getString("leader"));
+
+                                        MainActivity.tempLatestConti.addTitleArrayListItem(jsonObject.getString("title"));
+                                        MainActivity.tempLatestConti.setChordArrayList(jsonObject.getString("chord"));
+
+                                        tempDate.add(jsonObject.getString("id_date"));
+                                        tempExplanation.add(jsonObject.getString("explanation"));
+                                        tempMusic.add(jsonObject.getString("music"));
+                                        //tempSheet.add(jsonObject.getString("sheet"));
+
+                                        MainActivity.tempLatestConti.setDateArrayList(tempDate);
+                                        MainActivity.tempLatestConti.setExplanationArrayList(tempExplanation);
+                                        MainActivity.tempLatestConti.setMusicArrayList(tempMusic);
+                                        MainActivity.tempLatestConti.addSheet(jsonObject.getString("sheet"));
+
+                                        tempDate.clear();
+                                        tempExplanation.clear();
+                                        tempMusic.clear();
+                                        // tempSheet.clear();
+                                        break;
+                                    }
+
+                                    if (!(
+                                            (jsonObject.getString("title").equalsIgnoreCase(next_jsonObject.getString("title")))&&
+                                                    (jsonObject.getString("chord").equalsIgnoreCase((next_jsonObject.getString("chord"))))
+                                    )) {
+                                        MainActivity.tempLatestConti.addTitleArrayListItem(jsonObject.getString("title"));
+                                        MainActivity.tempLatestConti.setChordArrayList(jsonObject.getString("chord"));
+
+                                        tempDate.add(jsonObject.getString("id_date"));
+                                        tempExplanation.add(jsonObject.getString("explanation"));
+                                        tempMusic.add(jsonObject.getString("music"));
+                                        //tempSheet.add(jsonObject.getString("sheet"));
+
+                                        MainActivity.tempLatestConti.setDateArrayList(tempDate);
+                                        MainActivity.tempLatestConti.setExplanationArrayList(tempExplanation);
+                                        MainActivity.tempLatestConti.setMusicArrayList(tempMusic);
+                                        MainActivity.tempLatestConti.addSheet(jsonObject.getString("sheet"));
+
+                                        tempDate.clear();
+                                        tempExplanation.clear();
+                                        tempMusic.clear();
+                                        //tempSheet.clear();
+
+                                    } else {
+
+                                        tempDate.add(jsonObject.getString("id_date"));
+                                        tempExplanation.add(jsonObject.getString("explanation"));
+                                        tempMusic.add(jsonObject.getString("music"));
+                                        //tempSheet.add(jsonObject.getString("sheet"));
+                                        MainActivity.tempLatestConti.addSheet(jsonObject.getString("sheet"));
+
+                                    }
+                                }
+                            }
+                        }
+                        mWakeLock.release();
+                        latch_DB.countDown();
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        latch_DB.countDown();
+                        error_code = 1;
+                    }
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                    latch_DB.countDown();
+                    error_code = 2;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    latch_DB.countDown();
+                    error_code = 3;
+                }
+            }
+
+            if(case_number==1) {//메인콘티 불러오기
+
+                /* 인풋 파라메터값 생성 */
+                String param = "user_account="+ MainActivity.logged_in_db_id + "&team=" + MainActivity.team_info;
+
+                try {
+                    /* 서버연결 */
+             /*   URL url = new URL(
+                        "http://y1964m.dothome.co.kr/worshipplus/search_latest_conti.php");*/
+                    URL url = new URL(
+                            server_address+"worshipplus/search_latest_conti.php");
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                    conn.setRequestMethod("POST");
+                    conn.setDoInput(true);
+                    conn.connect();
+
+                    /* 안드로이드 -> 서버 파라메터값 전달 */
+                    OutputStream outs = conn.getOutputStream();
+                    outs.write(param.getBytes("UTF-8"));
+                    outs.flush();
+                    outs.close();
+
+                    /* 서버 -> 안드로이드 파라메터값 전달 */
+                    InputStream is = null;
+                    BufferedReader in = null;
+                    String data = "";
+
+                    is = conn.getInputStream();
+                    in = new BufferedReader(new InputStreamReader(is), 8 * 1024);
+                    String line = null;
+                    StringBuffer buff = new StringBuffer();
+
+                    while ((line = in.readLine()) != null) {
+                        buff.append(line + "\n");
+                    }
+                    data = buff.toString().trim();
+
+                    /* 서버에서 응답 */
+                    Log.e("RECV DATA", data);
+
+                    //서버에서 개인정보 가져오기
+                    //서버에서 정보 가져오기
+                    try {
+                        JSONArray jsonArray = new JSONArray(data);
+
+                        ArrayList tempDate = new ArrayList();
+                        ArrayList tempExplanation = new ArrayList();
+                        ArrayList tempMusic = new ArrayList();
+                        // ArrayList tempSheet = new ArrayList();
+
+                        for (int i = 0; i < jsonArray.length(); i++) {
+
+                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                            if(i == jsonArray.length()-1){
+
+                                MainActivity.tempLatestConti.setBibleDate(jsonObject.getString("date"));
+                                MainActivity.tempLatestConti.setBible(jsonObject.getString("bible"));
+                                MainActivity.tempLatestConti.setSermon(jsonObject.getString("sermon"));
+                                MainActivity.tempLatestConti.setLeader(jsonObject.getString("leader"));
+                                break;
+
+
+                            }else {
+                                JSONObject next_jsonObject = jsonArray.getJSONObject(i + 1);
+
+                                if(next_jsonObject.has("bible")){
+                                    MainActivity.tempLatestConti.setBibleDate(next_jsonObject.getString("date"));
+                                    MainActivity.tempLatestConti.setBible(next_jsonObject.getString("bible"));
+                                    MainActivity.tempLatestConti.setSermon(next_jsonObject.getString("sermon"));
+                                    MainActivity.tempLatestConti.setLeader(next_jsonObject.getString("leader"));
+
+                                    MainActivity.tempLatestConti.addTitleArrayListItem(jsonObject.getString("title"));
+                                    MainActivity.tempLatestConti.setChordArrayList(jsonObject.getString("chord"));
+
+                                    tempDate.add(jsonObject.getString("id_date"));
+                                    tempExplanation.add(jsonObject.getString("explanation"));
+                                    tempMusic.add(jsonObject.getString("music"));
+                                    //tempSheet.add(jsonObject.getString("sheet"));
+
+                                    MainActivity.tempLatestConti.setDateArrayList(tempDate);
+                                    MainActivity.tempLatestConti.setExplanationArrayList(tempExplanation);
+                                    MainActivity.tempLatestConti.setMusicArrayList(tempMusic);
+                                    MainActivity.tempLatestConti.addSheet(jsonObject.getString("sheet"));
+
+                                    tempDate.clear();
+                                    tempExplanation.clear();
+                                    tempMusic.clear();
+                                    // tempSheet.clear();
+                                    break;
+                                }
+
+                                if (!(
+                                        (jsonObject.getString("title").equalsIgnoreCase(next_jsonObject.getString("title")))
+                                                && (jsonObject.getString("chord").equalsIgnoreCase((next_jsonObject.getString("chord"))))
+                                )) {
+                                    MainActivity.tempLatestConti.addTitleArrayListItem(jsonObject.getString("title"));
+                                    MainActivity.tempLatestConti.setChordArrayList(jsonObject.getString("chord"));
+
+                                    tempDate.add(jsonObject.getString("id_date"));
+                                    tempExplanation.add(jsonObject.getString("explanation"));
+                                    tempMusic.add(jsonObject.getString("music"));
+                                    //tempSheet.add(jsonObject.getString("sheet"));
+
+                                    MainActivity.tempLatestConti.setDateArrayList(tempDate);
+                                    MainActivity.tempLatestConti.setExplanationArrayList(tempExplanation);
+                                    MainActivity.tempLatestConti.setMusicArrayList(tempMusic);
+                                    MainActivity.tempLatestConti.addSheet(jsonObject.getString("sheet"));
+
+                                    tempDate.clear();
+                                    tempExplanation.clear();
+                                    tempMusic.clear();
+                                    //tempSheet.clear();
+
+                                } else {
+
+                                    tempDate.add(jsonObject.getString("id_date"));
+                                    tempExplanation.add(jsonObject.getString("explanation"));
+                                    tempMusic.add(jsonObject.getString("music"));
+                                    //tempSheet.add(jsonObject.getString("sheet"));
+                                    MainActivity.tempLatestConti.addSheet(jsonObject.getString("sheet"));
+
+                                }
+
+                            }
+
+                        }
+
+                        mWakeLock.release();
+                        latch_DB.countDown();
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        latch_DB.countDown();
+                        error_code = 1;
+                    }
+
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                    latch_DB.countDown();
+                    error_code = 2;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    latch_DB.countDown();
+                    error_code = 3;
+                }
+            }return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            //super.onPostExecute(aVoid);
+
+            //searchDB_main.cancel(true);
+
+            date.setText("@ "+tempLatestConti.getBibleDate());
+            bible.setText("말씀본문: "+ tempLatestConti.getBible());
+            sermon.setText("말씀제목: "+ tempLatestConti.getSermon());
+            leader.setText("찬양인도: "+ tempLatestConti.getLeader());
+
+            for (int i = 0; i < MainActivity.tempLatestConti.getTitleArrayListSize(); i++) {
+                // 각 List의 값들을 data 객체에 set 해줍니다.
+                Data data = new Data();
+                MainActivity.tempData.Check.add(0);
+                data.setTitle(MainActivity.tempLatestConti.getTitleArrayListItem(i));
+                data.setContent(MainActivity.tempLatestConti.getChordArrayListItem(i));
+                data.setDate(MainActivity.tempLatestConti.getDateArrayListItem(i));
+                data.setExplanation(MainActivity.tempLatestConti.getExplanationArrayListItem(i));
+                data.setMusic(MainActivity.tempLatestConti.getMusicArrayListItem(i));
+                data.setSingle_Sheet_url(MainActivity.tempLatestConti.getSheet(i));
+
+                // 각 값이 들어간 data를 adapter에 추가합니다.
+                if(data.getTitle()!=null) adapter_main.addItem(data);
+            }
+            adapter_main.notifyDataSetChanged();
+
+            if(case_number == 1) Toast.makeText(getApplicationContext(),"업데이트 완료",Toast.LENGTH_SHORT).show();
+            else if(sharedPreferences.getString("id","")!=null || !sharedPreferences.getString("id","").equals("")){
+                Toast.makeText(getApplicationContext(),"환영합니다! "+ sharedPreferences.getString("id","Guest") +"님",Toast.LENGTH_SHORT).show();
+            }
+
+            if(mWakeLock.isHeld())mWakeLock.release();
+            if(pd!=null) pd.dismiss();
+
+            if(error_code != 0) {
+                if(error_code==3) Toast.makeText(context,"인터넷이 불안정합니다",Toast.LENGTH_SHORT).show();
+                //else Toast.makeText(context,"error: " + error_code,Toast.LENGTH_SHORT).show();
+            }
+            if(context==null) return;
+
+        }
+    }
+
+
+
 
     public class MyPagerAdapter extends FragmentPagerAdapter {
         private int NUM_ITEMS = 3;

@@ -372,7 +372,7 @@ public class CustomDialog extends Dialog {
                     MainActivity.tempData.removeCheck();
 
                     latch = new CountDownLatch(1);
-                    PraiseSearch.searchDB = new SearchDB(2, getContext(), latch);
+                    PraiseSearch.searchDB = new PraiseSearch.SearchDB(2, getContext(), latch);
                     PraiseSearch.searchDB.execute();
                     adapter.listData.clear();//초기화 하고, 안그러면 밑으로 똑같은 뷰가 계속 붙음
 

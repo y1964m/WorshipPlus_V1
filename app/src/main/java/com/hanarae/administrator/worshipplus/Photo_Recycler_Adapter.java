@@ -130,56 +130,52 @@ public class Photo_Recycler_Adapter extends RecyclerView.Adapter<Photo_Recycler_
                     @Override
                     public void onClick(View v) {
 
-                        if(MainActivity.logged_in_id.equals(MainActivity.admin_id)){
-                            //관리자만 기본정보 삭제가능
-                        }
-                        else if(!data.getTitle().contains("/"+ MainActivity.team_info + "/")){
-                            Toast.makeText(PhotoSelect.context, "다른 팀의 정보를 삭제할수 없습니다", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
+                        if(data.getTitle().contains("/"+ MainActivity.team_info + "/") || data.getTitle().contains("-temp") || MainActivity.logged_in_id.equals(MainActivity.admin_id)){
 
-                        AlertDialog.Builder builder = new AlertDialog.Builder(PhotoSelect.context);
-                        builder.setTitle("삭제하시겠습니까?");
-                        builder.setPositiveButton("취소", new DialogInterface.OnClickListener(){
-                            @Override
-                            public void onClick(DialogInterface dialog, int id){
+                            AlertDialog.Builder builder = new AlertDialog.Builder(PhotoSelect.context);
+                            builder.setTitle("삭제하시겠습니까?");
+                            builder.setNegativeButton("취소", new DialogInterface.OnClickListener(){
+                                @Override
+                                public void onClick(DialogInterface dialog, int id){
 
-                            }
-                        });
-
-                        builder.setNegativeButton("삭제", new DialogInterface.OnClickListener(){
-                            @Override
-                            public void onClick(DialogInterface dialog, int id)
-                            {
-                                String db_data="";
-
-                                db_data += "&url="+listData.get(getAdapterPosition()).getSingle_Sheet_url();
-
-                                latch = new CountDownLatch(1);
-                                InputDB inputDB = new InputDB(latch, db_data,3);
-                                inputDB.execute();
-
-                                try {
-                                    latch.await();
-
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
                                 }
+                            });
 
-                                inputDB.cancel(true);
+                            builder.setPositiveButton("삭제", new DialogInterface.OnClickListener(){
+                                @Override
+                                public void onClick(DialogInterface dialog, int id)
+                                {
+                                    String db_data="";
 
-                                if(PhotoSelect.temp_string!=null)
-                                    PhotoSelect.temp_string = PhotoSelect.temp_string.replace(listData.get(getAdapterPosition()).getSingle_Sheet_url() + ",","");
+                                    db_data += "&url="+listData.get(getAdapterPosition()).getSingle_Sheet_url();
+
+                                    latch = new CountDownLatch(1);
+                                    InputDB inputDB = new InputDB(latch, db_data,3);
+                                    inputDB.execute();
+
+                                    try {
+                                        latch.await();
+
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    inputDB.cancel(true);
+
+                                    if(PhotoSelect.temp_string!=null)
+                                        PhotoSelect.temp_string = PhotoSelect.temp_string.replace(listData.get(getAdapterPosition()).getSingle_Sheet_url() + ",","");
                                     listData.remove(position);
                                     notifyDataSetChanged();
 
                                     //PhotoSelect.imageView.setVisibility(View.VISIBLE);
                                     PhotoSelect.refreshViewPager();
-                            }
-                        });
+                                }
+                            });
 
-                        AlertDialog alertDialog = builder.create();
-                        alertDialog.show();
+                            AlertDialog alertDialog = builder.create();
+                            alertDialog.show();
+
+                        }else Toast.makeText(PhotoSelect.context, "다른 팀의 정보를 삭제할수 없습니다", Toast.LENGTH_SHORT).show();
 
                     }
                 });

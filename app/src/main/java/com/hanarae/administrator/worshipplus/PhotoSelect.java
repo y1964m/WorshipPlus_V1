@@ -702,7 +702,7 @@ public class PhotoSelect extends AppCompatActivity {
                 }
                 else {
                     Data temp_data_photo = new Data();
-                    temp_data_photo.setTitle(song_name+"-temp");
+                    temp_data_photo.setTitle(song_name +"/"+ MainActivity.team_info + "-temp");
                     temp_data_photo.setSingle_Sheet_url(serverAddress+"sheet_images/"+mImageTitle+"."+mImageType);
                     //temp_data_photo.setSingle_sheet_temp(uri);
                     adapter.addItem(temp_data_photo);

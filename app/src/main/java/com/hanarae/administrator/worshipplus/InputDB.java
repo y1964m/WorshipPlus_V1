@@ -59,7 +59,7 @@ public class InputDB extends AsyncTask<Void,Integer,Void>{
         String param = "";
         switch (case_num){
             case 0: // 일반 콘티 추가
-                 param = "date=" + MainActivity.args.getString("someDate") +
+/*                 param = "date=" + MainActivity.args.getString("someDate") +
                         "&bible=" + MainActivity.args.getString("someBible") +
                         "&sermon=" + MainActivity.args.getString("someTitle1") +
                         "&leader=" + MainActivity.args.getString("someTitle2") +
@@ -68,7 +68,7 @@ public class InputDB extends AsyncTask<Void,Integer,Void>{
                          +"&author="+MainActivity.logged_in_id
                          +"&team="+ MainActivity.team_info;
                  param = param.replace("null", "");
-                 Log.e("SENT DATA", param);
+                 Log.e("SENT DATA", param);*/
                  break;
             case 1: // 곡 따로 추가할때
                 param = db_data+

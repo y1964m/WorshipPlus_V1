@@ -1,5 +1,6 @@
 package com.hanarae.administrator.worshipplus;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -8,7 +9,10 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.ItemTouchHelper;
+
+import android.os.PowerManager;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +26,14 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 
@@ -40,6 +52,9 @@ public class ThirdFragment extends Fragment {
     String publicOn, pushOn;
     CustomDialog cd;
     static boolean isUploaded;
+    Button button_add;
+    Button button_done;
+    ProgressDialog progressDialog;
 
 
     // newInstance constructor for creating fragment with arguments
@@ -166,9 +181,8 @@ public class ThirdFragment extends Fragment {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback(adapter));
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
-
-        final Button button_add = view.findViewById(R.id.button_add);
-        final Button button_done = view.findViewById(R.id.button_done);
+        button_add = view.findViewById(R.id.button_add);
+        button_done = view.findViewById(R.id.button_done);
 
         button_add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -246,11 +260,15 @@ public class ThirdFragment extends Fragment {
                                 + publicOn + pushOn;
                         }
 
-                        latch = new CountDownLatch(1);
-                        InputDB inputDB = new InputDB(getContext(),latch,db_data,0);
-                        new AsyncTaskCancelTimerTask(inputDB, 10000, 1000, true).start();
-                        inputDB.execute();
+                        progressDialog = new ProgressDialog(getContext());
+                        progressDialog.setMessage("정보를 저장하는 중...");
+                        progressDialog.setCancelable(true);
 
+                        latch = new CountDownLatch(1);
+                        InputDB inputDB = new InputDB(getContext(),latch,db_data,0, progressDialog);
+                        new AsyncTaskCancelTimerTask(inputDB, 8000, 1000, true).start();
+                        inputDB.execute();
+/*
                         try {
                             latch.await();
 
@@ -279,7 +297,7 @@ public class ThirdFragment extends Fragment {
 
                             Toast.makeText(getContext(),"저장되었습니다",Toast.LENGTH_SHORT).show();
                             MainActivity.vpPager.setCurrentItem(0);
-                        }else Toast.makeText(getContext(),"콘티내용 중 특수문자 에러입니다",Toast.LENGTH_SHORT).show();
+                        }else Toast.makeText(getContext(),"콘티내용 중 특수문자 에러입니다",Toast.LENGTH_SHORT).show();*/
 
                         break;
 
@@ -331,16 +349,159 @@ public class ThirdFragment extends Fragment {
 
                             state_code = 1;
                         }
-
                 }
-
-
             }
         });
 
         return view;
 
     }
+
+
+    public class InputDB extends AsyncTask<Void,Integer,Void>{
+
+        Context context;
+        CountDownLatch latch;
+        PowerManager.WakeLock mWakeLock;
+        String db_data;
+        int case_num;
+        ProgressDialog pd;
+
+
+        InputDB (Context context, CountDownLatch latch, String db_data, int case_num, ProgressDialog progressDialog){
+            this.context = context;
+            this.latch = latch;
+            this.db_data=db_data;
+            this.case_num = case_num;
+            this.pd = progressDialog;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            if(pd!=null) {
+                pd.show();
+            }
+
+            //cpu 잠들지 않도록 하는 처리
+            if(context!=null){
+                PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+                mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, getClass().getName());
+                mWakeLock.acquire();
+            }
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            /* 인풋 파라메터값 생성 */
+            String param = "";
+            switch (case_num){
+                case 0: // 일반 콘티 추가
+                    param = "date=" + MainActivity.args.getString("someDate") +
+                            "&bible=" + MainActivity.args.getString("someBible") +
+                            "&sermon=" + MainActivity.args.getString("someTitle1") +
+                            "&leader=" + MainActivity.args.getString("someTitle2") +
+                            db_data +
+                            "&user_account="+ MainActivity.logged_in_db_id
+                            +"&author="+MainActivity.logged_in_id
+                            +"&team="+ MainActivity.team_info;
+                    param = param.replace("null", "");
+                    Log.e("SENT DATA", param);
+                    break;
+            }
+
+            try {
+                /* 서버연결 */
+            /*URL url = new URL(
+                    "http://y1964m.dothome.co.kr/worshipplus/inputDB.php");*/
+                URL url = new URL(
+                        "http://ssyp.synology.me:8812/worshipplus/inputDB.php");
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                conn.setRequestMethod("POST");
+                conn.setDoInput(true);
+                conn.connect();
+
+                /* 안드로이드 -> 서버 파라메터값 전달 */
+                OutputStream outs = conn.getOutputStream();
+                outs.write(param.getBytes("UTF-8"));
+                outs.flush();
+                outs.close();
+
+                /* 서버 -> 안드로이드 파라메터값 전달 */
+                InputStream is = null;
+                BufferedReader in = null;
+                String data = "";
+
+                is = conn.getInputStream();
+                in = new BufferedReader(new InputStreamReader(is), 8 * 1024);
+                String line = null;
+                StringBuffer buff = new StringBuffer();
+
+                while ((line = in.readLine()) != null) {
+                    buff.append(line + "\n");
+                }
+                data = buff.toString().trim();
+
+                /* 서버에서 응답 */
+                Log.e("RECV DATA", data);
+                if(data.contains("곡중복"))PraiseSearch.double_check =1;
+                else PraiseSearch.double_check=0;
+
+                if(data.contains("1064")) ThirdFragment.isUploaded = false;
+                else ThirdFragment.isUploaded = true;
+
+                latch.countDown();
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            //초기화 시작
+            if(isUploaded){
+                adapter.listData.clear();
+                adapter.notifyDataSetChanged();
+
+                MainActivity.args.clear();
+                MainActivity.args.remove("someDate");
+
+                SecondFragment.editText_bible.setText("");
+                SecondFragment.editText_title1.setText("");
+                SecondFragment.editText_title2.setText("");
+
+                state_code = 0;
+                conti_info.setVisibility(View.GONE);
+                button_add.setText("+");
+                button_done.setText(">");
+
+                adapter.num_on = false; //번호 가리기
+
+                Toast.makeText(getContext(),"저장되었습니다",Toast.LENGTH_SHORT).show();
+                MainActivity.vpPager.setCurrentItem(0);
+
+            }else Toast.makeText(getContext(),"콘티내용 중 특수문자 에러입니다",Toast.LENGTH_SHORT).show();
+
+            if(mWakeLock.isHeld())mWakeLock.release();
+            if(pd!=null) pd.dismiss();
+
+            if(context==null) return;
+        }
+
+    }
+
+
 
 
     private void addData(){
@@ -403,6 +564,7 @@ public class ThirdFragment extends Fragment {
                         asyncTask.getStatus() == AsyncTask.Status.RUNNING ) {
 
                     asyncTask.cancel(interrupt);
+                    if(progressDialog.isShowing()) progressDialog.dismiss();
                     Toast.makeText(getContext(),"네트워크 에러",Toast.LENGTH_SHORT).show();
                 }
             } catch(Exception e) {
