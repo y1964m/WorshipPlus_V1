@@ -361,7 +361,6 @@ public class MainActivity extends AppCompatActivity {
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("정보를 불러오는 중...");
-        progressDialog.setCancelable(true);
 
         MainActivity.tempLatestConti.removeContiInfo();
 
@@ -377,9 +376,15 @@ public class MainActivity extends AppCompatActivity {
 
         adapter_main = new Latest_Conti_Adapter(1, imm, width, height, getApplicationContext());
         recyclerView.setAdapter(adapter_main);
-        if(isInitial) searchDB_main = new SearchDB(0, this, latch, progressDialog);
+        if(isInitial) {
+            progressDialog.setCancelable(false);
+            searchDB_main = new SearchDB(0, this, latch, progressDialog);
+        }
         //else searchDB_main = new SearchDB(1, this, latch);
-        else searchDB_main = new SearchDB(1, this, latch, progressDialog);
+        else {
+            progressDialog.setCancelable(true);
+            searchDB_main = new SearchDB(1, this, latch, progressDialog);
+        }
         new AsyncTaskCancelTimerTask(searchDB_main, 8000, 1000, true).start();
         searchDB_main.execute();
         adapter_main.listData.clear();//초기화 하고, 안그러면 밑으로 똑같은 뷰가 계속 붙음

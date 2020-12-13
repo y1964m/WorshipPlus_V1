@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import android.os.PowerManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -262,12 +261,12 @@ public class ThirdFragment extends Fragment {
 
                         progressDialog = new ProgressDialog(getContext());
                         progressDialog.setMessage("정보를 저장하는 중...");
-                        progressDialog.setCancelable(true);
+                        progressDialog.setCancelable(false);
 
                         latch = new CountDownLatch(1);
-                        InputDB inputDB = new InputDB(getContext(),latch,db_data,0, progressDialog);
-                        new AsyncTaskCancelTimerTask(inputDB, 8000, 1000, true).start();
-                        inputDB.execute();
+                        InputDB_ThirdFragment inputDBThirdFragment = new InputDB_ThirdFragment(getContext(),latch, db_data,0, progressDialog);
+                        new AsyncTaskCancelTimerTask(inputDBThirdFragment, 8000, 1000, true).start();
+                        inputDBThirdFragment.execute();
 /*
                         try {
                             latch.await();
@@ -358,7 +357,7 @@ public class ThirdFragment extends Fragment {
     }
 
 
-    public class InputDB extends AsyncTask<Void,Integer,Void>{
+    public class InputDB_ThirdFragment extends AsyncTask<Void,Integer,Void>{
 
         Context context;
         CountDownLatch latch;
@@ -368,7 +367,7 @@ public class ThirdFragment extends Fragment {
         ProgressDialog pd;
 
 
-        InputDB (Context context, CountDownLatch latch, String db_data, int case_num, ProgressDialog progressDialog){
+        InputDB_ThirdFragment(Context context, CountDownLatch latch, String db_data, int case_num, ProgressDialog progressDialog){
             this.context = context;
             this.latch = latch;
             this.db_data=db_data;
@@ -405,6 +404,28 @@ public class ThirdFragment extends Fragment {
                             "&sermon=" + MainActivity.args.getString("someTitle1") +
                             "&leader=" + MainActivity.args.getString("someTitle2") +
                             db_data +
+                            "&user_account="+ MainActivity.logged_in_db_id
+                            +"&author="+MainActivity.logged_in_id
+                            +"&team="+ MainActivity.team_info;
+                    param = param.replace("null", "");
+                    Log.e("SENT DATA", param);
+                    break;
+                case 1: // 곡 따로 추가할때
+                    param = db_data+
+                            "&user_account="+ MainActivity.logged_in_db_id
+                            +"&author="+MainActivity.logged_in_id
+                            +"&team="+ MainActivity.team_info;
+                    param = param.replace("null", "");
+                    break;
+                case 2://곡 추가 후 기본정보에 상세내용 넣어서 업데이트
+                    param = db_data +"&remark=updated"+
+                            "&user_account="+ MainActivity.logged_in_db_id
+                            +"&author="+MainActivity.logged_in_id
+                            +"&team="+ MainActivity.team_info;
+                    param = param.replace("null", "");
+                    break;
+                case 3://악보 및 사진 삭제 시
+                    param = db_data+
                             "&user_account="+ MainActivity.logged_in_db_id
                             +"&author="+MainActivity.logged_in_id
                             +"&team="+ MainActivity.team_info;
@@ -454,7 +475,6 @@ public class ThirdFragment extends Fragment {
                 if(data.contains("1064")) ThirdFragment.isUploaded = false;
                 else ThirdFragment.isUploaded = true;
 
-                latch.countDown();
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -500,8 +520,6 @@ public class ThirdFragment extends Fragment {
         }
 
     }
-
-
 
 
     private void addData(){
@@ -553,12 +571,15 @@ public class ThirdFragment extends Fragment {
 
         @Override
         public void onFinish() {
-            if(asyncTask == null || asyncTask.isCancelled() )
+            if(asyncTask == null || asyncTask.isCancelled()){
+                if(progressDialog.isShowing()) progressDialog.dismiss();
                 return;
-
+            }
             try {
-                if(asyncTask.getStatus() == AsyncTask.Status.FINISHED)
+                if(asyncTask.getStatus() == AsyncTask.Status.FINISHED){
+                    if(progressDialog.isShowing()) progressDialog.dismiss();
                     return;
+                }
 
                 if(asyncTask.getStatus() == AsyncTask.Status.PENDING ||
                         asyncTask.getStatus() == AsyncTask.Status.RUNNING ) {

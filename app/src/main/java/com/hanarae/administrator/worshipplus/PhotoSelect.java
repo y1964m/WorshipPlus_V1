@@ -428,7 +428,26 @@ public class PhotoSelect extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                 new HttpRequestAsyncTask().execute(mImgPath, mImgTitle, mImgOrient, mImgType); // 파일받아서 서버에 업로드
+                boolean isMobile=true;
+                boolean isWiFi=true;
+                boolean isWiMax=true;
+
+                //인터넷 연결확인 작업
+                if(MainActivity.manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)!=null) {
+                    isMobile = MainActivity.manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnectedOrConnecting();
+                }
+                if(MainActivity.manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)!=null) {
+                    isWiFi = MainActivity.manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnectedOrConnecting();
+                }
+                if(MainActivity.manager.getNetworkInfo(ConnectivityManager.TYPE_WIMAX)!=null) {
+                    isWiMax = MainActivity.manager.getNetworkInfo(ConnectivityManager.TYPE_WIMAX).isConnectedOrConnecting();
+                }
+
+                if (!isMobile && !isWiFi) {
+                    Toast.makeText(getApplicationContext(), "인터넷 연결을 확인해주세요", Toast.LENGTH_SHORT).show();
+                    return;
+
+                }else new HttpRequestAsyncTask().execute(mImgPath, mImgTitle, mImgOrient, mImgType); // 파일받아서 서버에 업로드
             }
         }
     }
@@ -671,7 +690,7 @@ public class PhotoSelect extends AppCompatActivity {
 
                     latch = new CountDownLatch(1);
                     InputDB inputDB = new InputDB(getApplicationContext(),latch, db_data,2);
-                    new AsyncTaskCancelTimerTask(inputDB, 10000, 1000, true).start();
+                    new AsyncTaskCancelTimerTask(inputDB, 8000, 1000, true).start();
                     inputDB.execute();
 
                     try {
