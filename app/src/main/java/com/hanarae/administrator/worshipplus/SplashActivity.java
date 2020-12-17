@@ -72,10 +72,10 @@ public class SplashActivity extends AppCompatActivity {
         }
         if(manager.getNetworkInfo(ConnectivityManager.TYPE_WIMAX)!=null) {
             isWiMax = manager.getNetworkInfo(ConnectivityManager.TYPE_WIMAX).isConnectedOrConnecting();
-        }
+        }else isWiMax = false;
 
 
-        if (!isMobile && !isWiFi) {
+        if (!isMobile && !isWiFi && !isWiMax) {
             AlertDialog.Builder adb = new AlertDialog.Builder(this);
             adb.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                 @Override
