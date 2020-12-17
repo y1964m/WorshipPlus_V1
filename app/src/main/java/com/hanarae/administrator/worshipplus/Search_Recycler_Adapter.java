@@ -2,6 +2,10 @@ package com.hanarae.administrator.worshipplus;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.annotation.SuppressLint;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -126,6 +130,9 @@ public class Search_Recycler_Adapter extends RecyclerView.Adapter<Search_Recycle
 
             container.removeAllViews();
 
+            if(!MainActivity.autoText.contains(data.getTitle()) && MainActivity.logged_in_id.equals(MainActivity.admin_id))
+                song_title.setTextColor(itemView.getContext().getResources().getColor(R.color.colorAccent));//기본정보 있으면 파란색으로 표시
+            else song_title.setTextColor(itemView.getContext().getResources().getColor(R.color.DarkModeBlack));
             song_title.setText(data.getTitle());
             song_chord.setText(data.getContent());
             song_chord.setOnLongClickListener(new View.OnLongClickListener() {

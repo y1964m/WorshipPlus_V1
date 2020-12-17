@@ -220,7 +220,7 @@ public class PraiseSearch extends AppCompatActivity {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
                 builder.setTitle("곡을 추가하시겠어요?");
-                builder.setPositiveButton("취소", new DialogInterface.OnClickListener(){
+                builder.setNegativeButton("취소", new DialogInterface.OnClickListener(){
                     @Override
                     public void onClick(DialogInterface dialog, int id)
                     {
@@ -228,7 +228,7 @@ public class PraiseSearch extends AppCompatActivity {
                     }
                 });
 
-                builder.setNegativeButton("추가", new DialogInterface.OnClickListener(){
+                builder.setPositiveButton("추가", new DialogInterface.OnClickListener(){
                     @Override
                     public void onClick(DialogInterface dialog, int id){
                         if(all_good){

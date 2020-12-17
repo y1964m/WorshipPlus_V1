@@ -6,6 +6,7 @@
     <color name="colorPrimary">#FFFFFF</color>
     <color name="DarkModeWhite">#121212</color>
     <color name="DarkModeTopBar">#151515</color>
+    <color name="Gray">#919191</color>
 
     <color name="Primary">#BB86FC</color>
     <color name="PrimaryVariant">#3700B3</color>

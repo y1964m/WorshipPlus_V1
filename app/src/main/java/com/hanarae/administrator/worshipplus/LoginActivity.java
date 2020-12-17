@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -14,15 +13,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.view.WindowInsetsCompat;
 
+import android.text.InputType;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageButton;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -55,6 +57,7 @@ import java.util.concurrent.CountDownLatch;
 public class LoginActivity extends AppCompatActivity {
 
     static ArrayList team = new ArrayList();
+    static ArrayList password = new ArrayList();
     SharedPreferences sharedPreferences;
     static SharedPreferences.Editor editor;
     CountDownLatch latch;
@@ -176,7 +179,7 @@ public class LoginActivity extends AppCompatActivity {
                 String[] address = {"y196411m@gmail.com"};
                 email.putExtra(Intent.EXTRA_EMAIL, address);
                 email.putExtra(Intent.EXTRA_SUBJECT, "그룹코드 신규신청");
-                email.putExtra(Intent.EXTRA_TEXT, "다음의 양식을 작성해주세요\n\n교회명:\n찬양팀명:\n\n감사합니다");
+                email.putExtra(Intent.EXTRA_TEXT, "다음의 양식을 작성해주세요\n\n교회명:\n찬양팀명:\n요청사항:\n\n추가 보안사항으로 팀비밀번호 설정을 원하시면 요청사항에 적어주세요\n\n감사합니다");
                 startActivity(email);
             }
         });
@@ -391,6 +394,7 @@ public class LoginActivity extends AppCompatActivity {
                     switch_night.setVisibility(View.VISIBLE);
 
                     team.clear();
+                    password.clear();
 
                     Toast.makeText(getApplicationContext(),"업데이트 완료", Toast.LENGTH_SHORT).show();
                 }
@@ -398,6 +402,118 @@ public class LoginActivity extends AppCompatActivity {
         });
 
     }
+
+    public class PersonalSetting extends LinearLayout {
+
+        TextView team_id;
+        CheckBox write,search,notify;
+ /*       SharedPreferences sharedPreferences;
+        static SharedPreferences.Editor editor;*/
+
+        public PersonalSetting(Context context, final String content) {
+            super(context);
+
+/*            sharedPreferences = getContext().getSharedPreferences("login",0);
+            editor = sharedPreferences.edit();*/
+
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            inflater.inflate(R.layout.setting_temp_layout,this);
+
+            team_id = findViewById(R.id.team_id);
+            team_id.setText(content);
+
+            if(MainActivity.currentMode == AppCompatDelegate.MODE_NIGHT_YES) team_id.setTextColor(getResources().getColor(R.color.White));
+            else if (MainActivity.currentMode == AppCompatDelegate.MODE_NIGHT_NO) team_id.setTextColor(getResources().getColor(R.color.Black));
+
+
+            write = findViewById(R.id.checkbox_write);
+            if(sharedPreferences.getString("write","team").equals(content)) write.setChecked(true);
+            write.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if(isChecked){
+                        if(!sharedPreferences.getString("write","team").equals("team") && !sharedPreferences.getString("write","team").equals(content)){
+                            //중복장지 코드, 선택한게 이것도 아니고 비어있지도 않으면, 다른것을 선택하려는 것 그럴때에는 선택 못하게 막고 헤지하고 하라함
+                            write.setChecked(false);
+                            Toast.makeText(getContext(),"작성권한은 하나만 선택할 수 있습니다\n기존체크를 해제한 후, 다시 체크해주세요",Toast.LENGTH_LONG).show();
+                        }
+                        else {
+                            if(LoginActivity.password.get(LoginActivity.team.indexOf(content)).equals("")){
+                                editor.putString("write",content);
+                                MainActivity.team_info = content;
+                                editor.apply();
+                                return;
+                            }
+
+                            EditText editText = new EditText(LoginActivity.this);
+                            FrameLayout container = new FrameLayout(getContext());
+                            FrameLayout.LayoutParams params = new  FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                            params.topMargin = getResources().getDimensionPixelSize(R.dimen.activity_horizontal_margin);
+                            params.leftMargin = getResources().getDimensionPixelSize(R.dimen.activity_horizontal_margin);
+                            params.rightMargin = getResources().getDimensionPixelSize(R.dimen.activity_horizontal_margin);
+                            editText.setLayoutParams(params);
+                            editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+                            container.addView(editText);
+
+                            AlertDialog.Builder adb = new AlertDialog.Builder(LoginActivity.this);
+                            adb.setTitle("비밀번호를 입력해주세요");
+                            adb.setView(container);
+                            adb.setCancelable(false);
+                            adb.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    if(LoginActivity.password.get(LoginActivity.team.indexOf(content)).equals(editText.getText().toString())){
+                                        editor.putString("write",content);
+                                        MainActivity.team_info = content;
+                                        editor.apply();
+                                    }
+                                    else {
+                                        write.setChecked(false);
+                                        Toast.makeText(LoginActivity.this,"비밀번호가 일치하지 않습니다",Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
+                            adb.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    write.setChecked(false);
+                                }
+                            });
+                            adb.show();
+                        }
+                    }
+                    else {
+                        editor.putString("write",null);
+                        editor.apply();
+                    }
+                }
+            });
+            search = findViewById(R.id.checkbox_search);
+            if(sharedPreferences.getInt(content+"_search",0) != 0) search.setChecked(true);
+            search.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if(isChecked) editor.putInt(content+"_search",1);
+                    else editor.putInt(content+"_search",0);
+                    editor.apply();
+                }
+            });
+            notify = findViewById(R.id.checkbox_notify);
+            if(sharedPreferences.getInt(content+"_notify",0) != 0) notify.setChecked(true);
+            notify.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if(isChecked) editor.putInt(content+"_notify",1);
+                    else editor.putInt(content+"_notify",0);
+                    editor.apply();
+                }
+            });
+
+        }
+    }
+
+
+
 
     @Override
     public void onBackPressed() {
@@ -501,6 +617,7 @@ public class LoginActivity extends AppCompatActivity {
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject jsonObject = jsonArray.getJSONObject(i);
                             team.add(jsonObject.getString("team_name"));
+                            password.add(jsonObject.getString("pw"));
                         }
 
                     } catch (JSONException e) {

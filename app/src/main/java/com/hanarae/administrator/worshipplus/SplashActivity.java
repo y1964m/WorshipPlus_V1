@@ -182,6 +182,7 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if(appUpdateManager==null) return;
         appUpdateManager
                 .getAppUpdateInfo()
                 .addOnSuccessListener(

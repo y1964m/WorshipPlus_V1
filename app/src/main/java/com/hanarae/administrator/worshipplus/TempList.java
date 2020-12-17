@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -196,6 +197,26 @@ public class TempList extends LinearLayout {
         button_sheet.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                boolean isMobile=true;
+                boolean isWiFi=true;
+                boolean isWiMax=true;
+
+                //인터넷 연결확인 작업
+                if(MainActivity.manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)!=null) {
+                    isMobile = MainActivity.manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnectedOrConnecting();
+                }
+                if(MainActivity.manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)!=null) {
+                    isWiFi = MainActivity.manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnectedOrConnecting();
+                }
+                if(MainActivity.manager.getNetworkInfo(ConnectivityManager.TYPE_WIMAX)!=null) {
+                    isWiMax = MainActivity.manager.getNetworkInfo(ConnectivityManager.TYPE_WIMAX).isConnectedOrConnecting();
+                }
+
+                if (!isMobile && !isWiFi) {
+                    Toast.makeText(context, "인터넷 연결을 확인해주세요", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 Intent photoSelect = new Intent(getContext(),PhotoSelect.class);
                 photoSelect.putExtra("position", special);//검색창에 쓸 예외처리
                 photoSelect.putExtra("song_name", explanation);//
