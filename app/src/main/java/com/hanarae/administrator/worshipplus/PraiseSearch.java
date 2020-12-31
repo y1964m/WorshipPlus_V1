@@ -450,6 +450,7 @@ public class PraiseSearch extends AppCompatActivity {
         super.onDestroy();
         adapter.listData.clear();
         finishAndRemoveTask();
+        searchDB.cancel(true);
     }
 
     public static void getData(){
@@ -529,6 +530,7 @@ public class PraiseSearch extends AppCompatActivity {
             if(case_number==2){ // notification 누르면 실행되는 검색
 
                 /* 인풋 파라메터값 생성 */
+                if(MainActivity.args.getString("someTag")==null) return null;
                 String param = "title=" + MainActivity.args.getString("someContent") +
                         "&chord=" + MainActivity.args.getString("someChord") +
                         "&tag=" + MainActivity.args.getString("someTag").replace(" ","") +
